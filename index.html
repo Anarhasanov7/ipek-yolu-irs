@@ -608,6 +608,9 @@ footer p {
   .card, .craft-card, .stat-card, .partner-card, .timeline-card { page-break-inside: avoid !important; }
   .cta-group, .btn, .btn-primary, .btn-ghost { display: none !important; box-shadow: none !important; }
   .card:hover, .btn:hover, .feature-card:hover { transform: none !important; box-shadow: none !important; }
+  .feature-card .icon.terracotta, .feature-card .icon.gold, .feature-card .icon.indigo, .feature-card .icon.teal { background: rgba(255,255,255,0.08) !important; }
+  .craft-card .bg { opacity: 0.08 !important; }
+  .hero h1 .accent, .cta-section h2 .accent { -webkit-text-fill-color: var(--terracotta) !important; background: none !important; }
   * { box-shadow: none !important; max-width: 100% !important; }
   html, body { overflow-x: hidden !important; }
   #about, #phases, #crafts, #impact, #sitemap, #partners, #contact { page-break-before: always !important; }
@@ -821,10 +824,10 @@ footer p {
         <p>Abra bandaj texnikası — parça toxunmamışdan əvvəl saplar boyanır.</p>
       </div>
     </div>
-    <div class="card craft-card reveal" style="background: linear-gradient(135deg, var(--terracotta-glow), var(--gold-glow)); border-color: var(--terracotta);">
+    <div class="card craft-card reveal" style="border-color: var(--terracotta);">
       <div class="content">
-        <h3 style="color: var(--text);">✨ AZ + UZ Birləşmə</h3>
-        <p style="color: var(--text);">Kəlağayı naxışları + Ikat parçaları = unikal mədəni brend. Yalnız bu layihədə.</p>
+        <h3 style="color: var(--terracotta);">✨ AZ + UZ Birləşmə</h3>
+        <p>Kəlağayı naxışları + Ikat parçaları = unikal mədəni brend. Yalnız bu layihədə.</p>
       </div>
     </div>
   </div>
@@ -1025,6 +1028,12 @@ footer p {
       <div class="icon indigo">📍</div>
       <h3>Layihə ünvanı</h3>
       <p>Layihə əsasən Özbəkistanın Səmərqənd şəhərində həyata keçirilir. Səmərqənd 2500 illik tekstil ənənəsinə malikdir və UNESCO Ümumdünya İrsi siyahısına daxil edilib.</p>
+    </div>
+
+    <div class="card feature-card col-2 reveal">
+      <div class="icon teal">🌐</div>
+      <h3>Vebsayt</h3>
+      <p>ipek-yolu-irs.az — layihənin daimi internet məlumat mərkəzi. 8 səhifə, 3 dil (AZ/UZ/EN).</p>
     </div>
   </div>
 </section>
