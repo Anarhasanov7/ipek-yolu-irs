@@ -4,873 +4,672 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>İpək Yolu İrsi: İki Mədəniyyət, Bir Çərçivə — Two Cultures, One Frame</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* === DESIGN TOKENS === */
 :root {
-  --bg: #0a0a0f;
-  --bg-2: #12121a;
-  --surface: rgba(255,255,255,0.04);
-  --surface-hover: rgba(255,255,255,0.08);
-  --border: rgba(255,255,255,0.08);
-  --border-hover: rgba(255,255,255,0.15);
-  --text: #f0f0f5;
-  --text-dim: #8888a0;
-  --text-faint: #555568;
-  --terracotta: #e8704a;
-  --terracotta-glow: rgba(232,112,74,0.3);
-  --gold: #f0c050;
-  --gold-glow: rgba(240,192,80,0.25);
-  --indigo: #4a6cf7;
-  --indigo-glow: rgba(74,108,247,0.25);
-  --teal: #2dd4bf;
-  --radius: 20px;
-  --radius-sm: 12px;
-  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+  --indigo: #2c3e7b;
+  --indigo-dark: #1a2854;
+  --terracotta: #c65d3a;
+  --terracotta-dark: #a04828;
+  --gold: #d4a843;
+  --gold-light: #e8c878;
+  --cream: #faf6ee;
+  --silk: #f4ead5;
+  --gray: #6b6b6b;
+  --white: #ffffff;
+  --shadow: 0 2px 16px rgba(44,62,123,0.1);
+  --shadow-warm: 0 4px 20px rgba(198,93,58,0.15);
 }
 
-* { margin:0; padding:0; box-sizing:border-box; }
-
-html { scroll-behavior: smooth; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: 'Inter', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  overflow-x: hidden;
+  font-family: 'Georgia', 'Segoe UI', serif;
+  line-height: 1.7;
+  color: #3a3a3a;
+  background: var(--cream);
   -webkit-font-smoothing: antialiased;
 }
 
-/* === GRADIENT MESH BACKGROUND === */
-.mesh-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background:
-    radial-gradient(ellipse 600px 400px at 15% 20%, var(--terracotta-glow), transparent 60%),
-    radial-gradient(ellipse 500px 500px at 85% 60%, var(--indigo-glow), transparent 60%),
-    radial-gradient(ellipse 400px 300px at 50% 90%, var(--gold-glow), transparent 60%);
-  filter: blur(40px);
-  opacity: 0.7;
-}
+a { text-decoration: none; color: var(--terracotta); }
+a:hover { color: var(--gold); }
 
-/* === NAV === */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  padding: 16px 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  backdrop-filter: blur(20px);
-  background: rgba(10,10,15,0.6);
-  border-bottom: 1px solid var(--border);
+/* HEADER */
+header {
+  background: var(--indigo-dark);
+  color: var(--white);
+  padding: 20px 0;
+  border-bottom: 4px solid var(--gold);
 }
-nav .logo {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-nav .logo-dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: var(--terracotta);
-  box-shadow: 0 0 12px var(--terracotta-glow);
-}
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 4px;
-}
-nav ul a {
-  color: var(--text-dim);
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 8px 16px;
-  border-radius: 8px;
-  transition: var(--transition);
-}
-nav ul a:hover {
-  color: var(--text);
-  background: var(--surface);
-}
-
-/* === LAYOUT === */
-section {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 100px 32px;
-}
-
-/* === HERO === */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-top: 80px;
-}
-.hero .tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  border-radius: 100px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-dim);
-  margin-bottom: 24px;
-  width: fit-content;
-}
-.hero .tag .pulse {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--teal);
-  animation: pulse 2s infinite;
-}
-@keyframes pulse {
-  0%,100% { opacity: 1; box-shadow: 0 0 0 0 var(--teal); }
-  50% { opacity: 0.6; box-shadow: 0 0 0 6px transparent; }
-}
-.hero h1 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(40px, 7vw, 80px);
-  font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  margin-bottom: 24px;
+.header-inner {
   max-width: 900px;
-}
-.hero h1 .accent {
-  background: linear-gradient(135deg, var(--terracotta), var(--gold));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.hero .subtitle {
-  font-size: clamp(16px, 2vw, 22px);
-  color: var(--text-dim);
-  max-width: 600px;
-  margin-bottom: 40px;
-  line-height: 1.5;
-}
-.hero .cta-group {
+  margin: 0 auto;
+  padding: 0 24px;
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.btn {
-  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 14px 28px;
-  border-radius: 12px;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: var(--transition);
-  cursor: pointer;
-  border: none;
-}
-.btn-primary {
-  background: linear-gradient(135deg, var(--terracotta), #d05a36);
-  color: #fff;
-  box-shadow: 0 4px 20px var(--terracotta-glow);
-}
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px var(--terracotta-glow);
-}
-.btn-ghost {
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn-ghost:hover {
-  background: var(--surface-hover);
-  border-color: var(--border-hover);
-}
-
-/* === BENTO GRID === */
-.bento {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 }
-.bento .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
-  transition: var(--transition);
+.logo-mark {
+  width: 56px; height: 56px;
+  background: var(--terracotta);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  border: 3px solid var(--gold);
+  flex-shrink: 0;
+}
+.logo-text h1 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  font-family: 'Georgia', serif;
+}
+.logo-text span {
+  font-size: 13px;
+  color: var(--gold-light);
+  font-style: italic;
+}
+
+/* MAIN */
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, var(--indigo-dark) 0%, var(--indigo) 50%, var(--terracotta) 100%);
+  color: var(--white);
+  padding: 70px 32px;
+  text-align: center;
+  border-radius: 0 0 24px 24px;
+  margin-bottom: 48px;
   position: relative;
   overflow: hidden;
 }
-.bento .card:hover {
-  background: var(--surface-hover);
-  border-color: var(--border-hover);
-  transform: translateY(-4px);
-}
-.bento .card::before {
+.hero::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border-hover), transparent);
-  opacity: 0;
-  transition: var(--transition);
+  inset: 0;
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(212,168,67,0.05) 20px, rgba(212,168,67,0.05) 22px);
 }
-.bento .card:hover::before { opacity: 1; }
-
-/* Bento spans */
-.bento .col-2 { grid-column: span 2; }
-.bento .col-4 { grid-column: span 4; }
-.bento .row-2 { grid-row: span 2; }
-
-/* === STAT CARDS === */
-.stat-card {
-  text-align: center;
-  padding: 32px 20px;
-}
-.stat-card .number {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 48px;
-  font-weight: 700;
-  line-height: 1;
-  margin-bottom: 8px;
-}
-.stat-card .number.terracotta { color: var(--terracotta); }
-.stat-card .number.gold { color: var(--gold); }
-.stat-card .number.indigo { color: var(--indigo); }
-.stat-card .number.teal { color: var(--teal); }
-.stat-card .label {
-  font-size: 13px;
-  color: var(--text-dim);
-  font-weight: 500;
-}
-
-/* === SECTION HEADER === */
-.section-header {
-  margin-bottom: 48px;
-}
-.section-header .eyebrow {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--terracotta);
+.hero-content { position: relative; z-index: 1; }
+.hero h2 {
+  font-size: 34px;
   margin-bottom: 12px;
-}
-.section-header h2 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(28px, 4vw, 44px);
   font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  margin-bottom: 12px;
+  font-family: 'Georgia', serif;
 }
-.section-header p {
-  font-size: 16px;
-  color: var(--text-dim);
-  max-width: 600px;
-}
-
-/* === FEATURE CARD === */
-.feature-card .icon {
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.hero .subtitle {
   font-size: 20px;
-  margin-bottom: 16px;
+  color: var(--gold-light);
+  font-style: italic;
+  margin-bottom: 24px;
 }
-.feature-card .icon.terracotta { background: var(--terracotta-glow); }
-.feature-card .icon.gold { background: var(--gold-glow); }
-.feature-card .icon.indigo { background: var(--indigo-glow); }
-.feature-card .icon.teal { background: rgba(45,212,191,0.15); }
-.feature-card h3 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-.feature-card p {
-  font-size: 14px;
-  color: var(--text-dim);
+.hero p {
+  font-size: 16px;
+  max-width: 700px;
+  margin: 0 auto;
+  opacity: 0.92;
+  font-family: 'Segoe UI', sans-serif;
   line-height: 1.6;
 }
 
-/* === TIMELINE === */
-.timeline-card {
-  padding: 32px;
+/* SECTIONS */
+.section { margin-bottom: 48px; }
+.section h2 {
+  font-size: 26px;
+  color: var(--indigo-dark);
+  margin-bottom: 20px;
+  border-bottom: 3px solid var(--terracotta);
+  display: inline-block;
+  padding-bottom: 6px;
+  font-family: 'Georgia', serif;
 }
-.timeline-item {
-  display: flex;
-  gap: 16px;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border);
+.section h3 {
+  font-size: 18px;
+  color: var(--terracotta-dark);
+  margin: 20px 0 10px;
+  font-family: 'Georgia', serif;
 }
-.timeline-item:last-child { border-bottom: none; }
-.timeline-item .step {
-  flex-shrink: 0;
-  width: 32px; height: 32px;
+.section p {
+  margin-bottom: 12px;
+  color: #444;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* BADGE */
+.badge {
+  display: inline-block;
+  background: var(--terracotta);
+  color: var(--white);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Segoe UI', sans-serif;
+  margin-bottom: 12px;
+}
+
+/* CARDS */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin: 20px 0;
+}
+.card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--terracotta);
+}
+.card .icon {
+  width: 52px; height: 52px;
+  background: var(--silk);
   border-radius: 10px;
-  background: var(--surface);
-  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--terracotta);
+  font-size: 24px;
+  margin-bottom: 14px;
 }
-.timeline-item .content h4 {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 4px;
+.card h3 {
+  margin-bottom: 8px;
+  color: var(--indigo-dark);
+  font-size: 17px;
 }
-.timeline-item .content .date {
-  font-size: 12px;
-  color: var(--text-faint);
-  margin-bottom: 4px;
-}
-.timeline-item .content p {
-  font-size: 13px;
-  color: var(--text-dim);
+.card p {
+  font-size: 14px;
+  color: var(--gray);
 }
 
-/* === CRAFT SHOWCASE === */
-.craft-card {
-  position: relative;
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  overflow: hidden;
+/* STATS */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin: 32px 0;
 }
-.craft-card .bg {
-  position: absolute;
-  inset: 0;
-  opacity: 0.15;
-  transition: var(--transition);
+.stat {
+  text-align: center;
+  background: var(--white);
+  border-radius: 12px;
+  padding: 28px 12px;
+  box-shadow: var(--shadow);
+  border-bottom: 4px solid var(--gold);
 }
-.craft-card:hover .bg { opacity: 0.25; }
-.craft-card.kelaghayi .bg { background: linear-gradient(135deg, var(--terracotta), var(--gold)); }
-.craft-card.suzani .bg { background: linear-gradient(135deg, var(--indigo), var(--terracotta)); }
-.craft-card.ikat .bg { background: linear-gradient(135deg, var(--gold), var(--indigo)); }
-.craft-card.carpet .bg { background: linear-gradient(135deg, var(--terracotta), #8b3a1e); }
-.craft-card .content {
-  position: relative;
-  z-index: 1;
-}
-.craft-card h3 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 20px;
+.stat .number {
+  font-size: 36px;
   font-weight: 700;
-  margin-bottom: 6px;
+  color: var(--terracotta);
+  font-family: 'Georgia', serif;
 }
-.craft-card .origin {
-  font-size: 12px;
-  color: var(--text-dim);
-  font-weight: 500;
-}
-.craft-card p {
+.stat .label {
   font-size: 13px;
-  color: var(--text-dim);
-  margin-top: 8px;
+  color: var(--gray);
+  margin-top: 6px;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-/* === BUDGET TABLE === */
-.budget-card { padding: 32px; }
-.budget-table {
+/* TABLE */
+table {
   width: 100%;
   border-collapse: collapse;
+  margin: 20px 0;
+  background: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  font-family: 'Segoe UI', sans-serif;
 }
-.budget-table th {
+th, td {
+  padding: 12px 16px;
   text-align: left;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-faint);
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid #eee;
 }
-.budget-table td {
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border);
+th {
+  background: var(--indigo);
+  color: var(--white);
+  font-weight: 600;
   font-size: 14px;
 }
-.budget-table td:last-child {
-  text-align: right;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 600;
-  color: var(--gold);
+td { font-size: 14px; color: #444; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--silk); }
+
+/* TIMELINE */
+.timeline {
+  list-style: none;
+  position: relative;
+  padding-left: 28px;
 }
-.budget-table tr:last-child td {
-  border-bottom: none;
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--terracotta);
+}
+.timeline li {
+  position: relative;
+  margin-bottom: 20px;
+}
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: -26px; top: 6px;
+  width: 12px; height: 12px;
+  background: var(--indigo);
+  border-radius: 50%;
+  border: 3px solid var(--gold);
+}
+.timeline .date {
   font-weight: 700;
-  font-size: 16px;
-  color: var(--text);
-}
-.budget-table tr:last-child td:last-child {
   color: var(--terracotta);
+  font-size: 14px;
+  font-family: 'Segoe UI', sans-serif;
+}
+.timeline .title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--indigo-dark);
+}
+.timeline p {
+  font-size: 14px;
+  color: var(--gray);
+  margin-top: 4px;
 }
 
-/* === PARTNERS === */
-.partner-card {
-  padding: 28px;
+/* CRAFT GRID */
+.craft-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin: 20px 0;
+}
+.craft {
+  background: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.craft .visual {
+  height: 120px;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
 }
-.partner-card .flag {
-  font-size: 32px;
-  margin-bottom: 4px;
-}
-.partner-card h3 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 16px;
+.craft .visual.kelaghayi { background: linear-gradient(135deg, var(--terracotta), var(--gold)); }
+.craft .visual.suzani { background: linear-gradient(135deg, var(--indigo), var(--terracotta)); }
+.craft .visual.ikat { background: linear-gradient(135deg, var(--gold), var(--indigo)); }
+.craft .visual.carpet { background: linear-gradient(135deg, var(--terracotta), var(--terracotta-dark)); }
+.craft .info { padding: 16px 18px; }
+.craft .info h3 { font-size: 16px; margin-bottom: 6px; }
+.craft .info p { font-size: 13px; color: var(--gray); }
+.craft .origin {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--terracotta);
   font-weight: 600;
 }
+
+/* QUOTE */
+.quote {
+  background: var(--silk);
+  border-left: 5px solid var(--terracotta);
+  padding: 24px 28px;
+  border-radius: 0 12px 12px 0;
+  margin: 24px 0;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--indigo-dark);
+  font-family: 'Georgia', serif;
+}
+
+/* PARTNER CARDS */
+.partner-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--indigo);
+}
+.partner-card .flag { font-size: 28px; margin-bottom: 8px; }
+.partner-card h3 { font-size: 16px; color: var(--indigo-dark); margin-bottom: 8px; }
 .partner-card .role {
   font-size: 12px;
   color: var(--terracotta);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  margin-bottom: 6px;
 }
-.partner-card p {
-  font-size: 13px;
-  color: var(--text-dim);
-}
+.partner-card p { font-size: 14px; color: var(--gray); margin-bottom: 8px; }
 .partner-card .contact {
-  font-size: 12px;
-  color: var(--text-faint);
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-}
-
-/* === CTA SECTION === */
-.cta-section {
-  text-align: center;
-  padding: 120px 32px;
-}
-.cta-section h2 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(32px, 5vw, 56px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 20px;
-}
-.cta-section h2 .accent {
-  background: linear-gradient(135deg, var(--terracotta), var(--gold));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.cta-section p {
-  font-size: 18px;
-  color: var(--text-dim);
-  max-width: 500px;
-  margin: 0 auto 40px;
-}
-
-/* === FOOTER === */
-footer {
-  padding: 48px 32px;
-  border-top: 1px solid var(--border);
-  text-align: center;
-}
-footer p {
   font-size: 13px;
-  color: var(--text-faint);
+  color: #888;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
 }
 
-/* === SCROLL ANIMATIONS === */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+/* FOOTER */
+footer {
+  background: var(--indigo-dark);
+  color: var(--white);
+  padding: 36px 24px;
+  margin-top: 48px;
 }
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+.footer-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+footer h4 { font-size: 15px; margin-bottom: 10px; color: var(--gold-light); }
+footer p { font-size: 13px; line-height: 1.5; opacity: 0.85; }
+.footer-bottom {
+  max-width: 900px;
+  margin: 24px auto 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.6;
 }
 
-/* === RESPONSIVE === */
-@media (max-width: 900px) {
-  .bento { grid-template-columns: repeat(2, 1fr); }
-  .bento .col-2 { grid-column: span 2; }
-  .bento .col-4 { grid-column: span 2; }
-  .bento .row-2 { grid-row: span 1; }
-  nav ul { display: none; }
-}
-@media (max-width: 600px) {
-  .bento { grid-template-columns: 1fr; }
-  .bento .col-2, .bento .col-4 { grid-column: span 1; }
-  section { padding: 60px 20px; }
+/* PRINT */
+@media print {
+  .hero { border-radius: 0; }
+  section { page-break-inside: avoid; }
+  .card, .craft, .stat, .partner-card { page-break-inside: avoid; }
 }
 </style>
 </head>
 <body>
 
-<div class="mesh-bg"></div>
-
-<!-- NAV -->
-<nav>
-  <div class="logo">
-    <div class="logo-dot"></div>
-    İpək Yolu İrsi
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-mark">🧵</div>
+    <div class="logo-text">
+      <h1>İpək Yolu İrsi: İki Mədəniyyət, Bir Çərçivə</h1>
+      <span>Two Cultures, One Frame — Silk Road Heritage</span>
+    </div>
   </div>
-  <ul>
-    <li><a href="#about">Haqqında</a></li>
-    <li><a href="#phases">Mərhələlər</a></li>
-    <li><a href="#crafts">Sənətkarlıq</a></li>
-    <li><a href="#impact">Təsir</a></li>
-    <li><a href="#partners">Tərəfdaşlar</a></li>
-  </ul>
-</nav>
+</header>
+
+<main>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="tag reveal">
-    <div class="pulse"></div>
-    QHT Dövlət Dəstəyi Agentliyi — 2026 Qrant
+<div class="hero">
+  <div class="hero-content">
+    <h2>İpək Yolu İrsi: İki Mədəniyyət, Bir Çərçivə</h2>
+    <p class="subtitle">Two Cultures, One Frame</p>
+    <p>Azərbaycan və Özbəkistan qadın sənətkarlarının 2500 illik tekstil ənənəsini — kəlağayı, xalça, suzani, ikat, atlas, adras — dayanıqlı biznes modelinə transformasiya edirik. 30 gənc qadın sənətkardan sahibkara.</p>
   </div>
-  <h1 class="reveal">
-    İpək Yolu İrsi:<br>
-    <span class="accent">İki Mədəniyyət,</span><br>
-    Bir Çərçivə
-  </h1>
-  <p class="subtitle reveal" style="font-style: italic; color: var(--gold); margin-bottom: 16px;">
-    Two Cultures, One Frame
-  </p>
-  <p class="subtitle reveal">
-    Azərbaycan və Özbəkistan qadın sənətkarlarının 2500 illik tekstil ənənəsini dayanıqlı biznes modelinə transformasiya edirik. 30 gənc qadın — sənətkardan sahibkara.
-  </p>
-  <div class="cta-group reveal">
-    <a href="#about" class="btn btn-primary">Layihəni kəşf et →</a>
-    <a href="#impact" class="btn btn-ghost">Rəqəmlərlə</a>
-  </div>
-</section>
+</div>
 
-<!-- ABOUT + STATS BENTO -->
-<section id="about">
-  <div class="section-header reveal">
-    <div class="eyebrow">Layihə haqqında</div>
-    <h2>2500 illik irsi<br>geleceyə daşıyırıq</h2>
-    <p>Səmərqənd — UNESCO Ümumdünya İrsi №603. Məhəllə qadınları mədəni sənətkarlığı ucuz qiymətə satırlar. Biznes bacarıqlarının olmaması səbəbindən əsrlərin irsi iqtisadi gəlirə çevrilmir.</p>
+<!-- ABOUT -->
+<div class="section">
+  <span class="badge">Ümumi məqsəd</span>
+  <h2>Layihə haqqında</h2>
+  <p>Azərbaycan və Özbəkistan diplomatik əlaqələrinin 30-cu ildönümü ilində İpək Yolu mədəni irsini yaşadan 30 gənc qadın sənətkarı iqtisadi cəhətdən sərbəst sahibkarlara çevirmək — UNESCO Ümumdünya İrsi siyahısına daxil edilmiş Səmərqənd şəhərinin 2500 illik tekstil ənənəsini dayanıqlı biznes modelinə transformasiya etmək.</p>
+
+  <div class="quote">
+    "Məhəllə qadınları bu sənəti yalnız yerli bazarda ucuz qiymətə satırlar: bir ədəd kəlağayı beş-on manat, əsl dəyəri isə əlli-yüz manatdır. Biznes bacarıqlarının, rəqəmsal savadın və bazar əlaqələrinin olmaması səbəbindən əsrlərin irsi iqtisadi gəlirə çevrilmir."
   </div>
 
-  <div class="bento">
-    <!-- Stats row -->
-    <div class="card stat-card reveal">
-      <div class="number terracotta">30</div>
-      <div class="label">Gənc qadın sənətkar<br>15 AZ + 15 UZ</div>
+  <div class="stats">
+    <div class="stat">
+      <div class="number">30</div>
+      <div class="label">Gənc qadın sənətkar<br>(15 AZ + 15 UZ)</div>
     </div>
-    <div class="card stat-card reveal">
-      <div class="number gold">2500</div>
+    <div class="stat">
+      <div class="number">2500</div>
       <div class="label">İllik tekstil ənənəsi<br>Səmərqənd</div>
     </div>
-    <div class="card stat-card reveal">
-      <div class="number indigo">490</div>
+    <div class="stat">
+      <div class="number">490</div>
       <div class="label">Metodik kitabça<br>Məktəblərə</div>
     </div>
-    <div class="card stat-card reveal">
-      <div class="number teal">200+</div>
+    <div class="stat">
+      <div class="number">200+</div>
       <div class="label">Sorğu iştirakçısı<br>Məhəllə qadını</div>
     </div>
-
-    <!-- Feature cards -->
-    <div class="card feature-card col-2 reveal">
-      <div class="icon terracotta">🎯</div>
-      <h3>Məqsəd</h3>
-      <p>30 gənc qadın sənətkarı iqtisadi cəhətdən sərbəst sahibkarlara çevirmək — UNESCO Ümumdünya İrsi siyahısına daxil edilmiş Səmərqəndin 2500 illik tekstil ənənəsini dayanıqlı biznes modelinə transformasiya etmək.</p>
+    <div class="stat">
+      <div class="number">6</div>
+      <div class="label">Ay layihə müddəti</div>
     </div>
-    <div class="card feature-card reveal">
-      <div class="icon gold">📍</div>
-      <h3>Yer</h3>
-      <p>Səmərqənd, Özbəkistan — UNESCO №603. 4M+ illik turist. İpək Yolu mədəni irs mərkəzi.</p>
-    </div>
-    <div class="card feature-card reveal">
-      <div class="icon indigo">⏱️</div>
-      <h3>Müddət</h3>
-      <p>6 ay — oktyabr 2026-dan mart 2027-yə qədər. 8 fəaliyyət, 12 təlim modulu.</p>
-    </div>
-
-    <!-- Problem statement -->
-    <div class="card col-4 reveal" style="padding: 36px;">
-      <div class="eyebrow" style="margin-bottom: 16px;">İlkin vəziyyət</div>
-      <p style="font-size: 18px; line-height: 1.6; color: var(--text);">
-        "Məhəllə qadınları bu sənəti yalnız yerli bazarda ucuz qiymətə satırlar: bir ədəd kəlağayı <span style="color: var(--terracotta); font-weight: 600;">beş-on manat</span>, əsl dəyəri isə <span style="color: var(--gold); font-weight: 600;">əlli-yüz manatdır</span>. Biznes bacarıqlarının, rəqəmsal savadın və bazar əlaqələrinin olmaması səbəbindən əsrlərin irsi iqtisadi gəlirə çevrilmir."
-      </p>
+    <div class="stat">
+      <div class="number">50+</div>
+      <div class="label">Alıcı və distribütor</div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- PHASES TIMELINE -->
-<section id="phases">
-  <div class="section-header reveal">
-    <div class="eyebrow">Mərhələlər</div>
-    <h2>4 mərhələ, 6 ay</h2>
-    <p>Layihənin hər mərhələsi məntiqi çərçivəyə uyğun olaraq xüsusi göstəricilərlə ölçülür.</p>
-  </div>
-
-  <div class="bento">
-    <div class="card timeline-card col-2 row-2 reveal">
-      <div class="timeline-item">
-        <div class="step">1</div>
-        <div class="content">
-          <div class="date">01.10.2026 – 15.11.2026</div>
-          <h4>İştirakçı seçimi və sorğu</h4>
-          <p>200+ müraciətdən 30 qadın seçilir (15 AZ + 15 UZ). 200+ məhəllə qadını arasında iqtisadi vəziyyət sorğusu — bazis məlumat yaradılır.</p>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="step">2</div>
-        <div class="content">
-          <div class="date">18.11.2026 – 20.11.2026</div>
-          <h4>3 günlük intensiv təlim — Səmərqənd</h4>
-          <p>12 modul: mədəni brend, turist satışı, Instagram/Etsy, qiymət strategiyası, rəqəmsal marketinq, sənətkarlıq mübadiləsi (AZ kəlağayı ↔ UZ suzani).</p>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="step">3</div>
-        <div class="content">
-          <div class="date">21.11.2026</div>
-          <h4>Bazar günü — Səmərqənd</h4>
-          <p>50+ alıcı, distribütor və media. Real alıcılarla tanışlıq, satış/niyyət protokolları, uzunmüddətli müqavilələr.</p>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="step">4</div>
-        <div class="content">
-          <div class="date">01.12.2026 – 31.03.2027</div>
-          <h4>Kitabça + Virtual mentorluq + Şəbəkə</h4>
-          <p>490 nüsxə metodik kitabça məktəblərə. 3 aylıq onlayn mentorluq. Qadın Mədəni İrs Şəbəkəsi Telegram-da fəaliyyətə başlayır.</p>
-        </div>
-      </div>
+<!-- PHASES -->
+<div class="section">
+  <h2>Layihənin 4 mərhələsi</h2>
+  <div class="cards">
+    <div class="card">
+      <div class="icon">📋</div>
+      <h3>1. Sorğu</h3>
+      <p>200+ məhəllə qadını arasında iqtisadi vəziyyət sorğusu. Bazis məlumat yaradılır — gəlir, bazar çıxışı, biznes bacarıqları.</p>
     </div>
-
-    <div class="card feature-card reveal">
-      <div class="icon terracotta">📚</div>
-      <h3>12 Təlim Modulu</h3>
-      <p>Brend yaratma, turist satışı, Instagram, Etsy, qiymət, hekayə danışma, rəqəmsal marketinq, brendinq, maliyyə, biznes modeli, sənətkarlıq mübadiləsi, alıcı əlaqələri.</p>
+    <div class="card">
+      <div class="icon">🎓</div>
+      <h3>2. Təlim</h3>
+      <p>Səmərqənddə 3 günlük intensiv təlim — biznes planı, qiymət strategiyası, rəqəmsal marketinq, Etsy platforması, sənətkarlıq mübadiləsi.</p>
     </div>
-
-    <div class="card feature-card reveal">
-      <div class="icon gold">🤝</div>
-      <h3>Birgə Mübadilə</h3>
-      <p>Azərbaycan kəlağayı + Özbəkistan ikat birləşməsi — unikal mədəni brend məhsulları. İlk dəfə iki ölkənin sənətkarlıq ənənələri birgə mübadilə olunur.</p>
+    <div class="card">
+      <div class="icon">🏪</div>
+      <h3>3. Sənətkarlıq bazarı</h3>
+      <p>Bazar günü — 50+ alıcı, distribütor və media ilə. Real alıcılarla tanışlıq və uzunmüddətli müqavilələr.</p>
     </div>
-
-    <div class="card feature-card reveal">
-      <div class="icon indigo">📱</div>
-      <h3>Onlayn Satış</h3>
-      <p>Etsy (beynəlxalq), Instagram Shop (vizual vitrin), WhatsApp Business (oflayn kataloq). Hədəf: 15 iştirakçı 6 ayda satışa başlayır.</p>
-    </div>
-
-    <div class="card feature-card reveal">
-      <div class="icon teal">🏆</div>
-      <h3>Sertifikat + Şəbəkə</h3>
-      <p>30 sertifikatlı iştirakçı. Qadın Mədəni İrs Şəbəkəsi — Telegram, 6 ay davamlı. Mentor-mentee cütləri, həftəlik məsləhət sessiyaları.</p>
+    <div class="card">
+      <div class="icon">📖</div>
+      <h3>4. Mədəni irs kitabçası</h3>
+      <p>490 nüsxə metodik kitabça — məktəblərə və kitabxanalara paylanılır. Növbəti nəsil məhəllə qadınları üçün ilham mənbəyi.</p>
     </div>
   </div>
-</section>
+</div>
 
-<!-- CRAFTS SHOWCASE -->
-<section id="crafts">
-  <div class="section-header reveal">
-    <div class="eyebrow">Sənətkarlıq ənənələri</div>
-    <h2>İki mədəniyyət<br>bir parçada</h2>
-    <p>Azərbaycan və Özbəkistan tekstil ənənələrinin ilk dəfə birgə mübadiləsi — unikal məhsullar yaradır.</p>
+<!-- TIMELINE -->
+<div class="section">
+  <h2>Fəaliyyətlər və tarixçə</h2>
+  <ul class="timeline">
+    <li>
+      <div class="date">01.10.2026 – 31.10.2026</div>
+      <div class="title">1. İştirakçı seçimi və sorğunun hazırlanması</div>
+      <p>200+ müraciətdən 30 qadın seçilir (15 AZ + 15 UZ). Seçim meyarları: 18-30 yaş, tekstil bacarığı, sahibkarlıq motivasiyası.</p>
+    </li>
+    <li>
+      <div class="date">01.11.2026 – 15.11.2026</div>
+      <div class="title">2. Sorğunun aparılması və təhlili</div>
+      <p>200+ məhəllə qadını, 30 sual, 15 məhəllə ərazisində. Bazis məlumat yaradılır.</p>
+    </li>
+    <li>
+      <div class="date">18.11.2026 – 20.11.2026</div>
+      <div class="title">3. Üç günlük intensiv təlim — Səmərqənd</div>
+      <p>6 sessiya, 12 modul: mədəni brend, turist satışı, Instagram/Etsy, qiymət, hekayə danışma, rəqəmsal marketinq, sənətkarlıq mübadiləsi.</p>
+    </li>
+    <li>
+      <div class="date">21.11.2026</div>
+      <div class="title">4. Bazar günü — Səmərqənd</div>
+      <p>50+ alıcı, distribütor və media nümayəndəsi. Məhsul nümayişi və müqavilə imzalama.</p>
+    </li>
+    <li>
+      <div class="date">01.12.2026 – 31.01.2027</div>
+      <div class="title">5. Kitabçanın hazırlanması və paylanılması</div>
+      <p>490 nüsxə, A4 formatında, 32 səhifə, rəngli çap. Məktəblərə və kitabxanalara paylanılır.</p>
+    </li>
+    <li>
+      <div class="date">01.12.2026 – 31.03.2027</div>
+      <div class="title">6. Virtual izləmə və mentorluq</div>
+      <p>3 aylıq onlayn dəstək — həftəlik məsləhət sessiyaları, mentor-mentee cütləri, Telegram qrupu.</p>
+    </li>
+    <li>
+      <div class="date">01.03.2027 – 31.03.2027</div>
+      <div class="title">7. Yekun hesabat və Şəbəkənin rəsmiləşdirilməsi</div>
+      <p>Agentliyə yekun hesabat təqdim edilir, Qadın Mədəni İrs Şəbəkəsinin uzunmüddətli fəaliyyət planı hazırlanır.</p>
+    </li>
+  </ul>
+</div>
+
+<!-- TRAINING -->
+<div class="section">
+  <h2>Təlim proqramı — 12 modul</h2>
+  <p>3 günlük intensiv təlim, Səmərqənd, 18-20 noyabr 2026. 4 qadın tekstil sahibkarı təlimçi (2 AZ + 2 UZ), 30 iştirakçı (15 AZ + 15 UZ).</p>
+  <div class="cards">
+    <div class="card"><div class="icon">01</div><h3>Mədəni brend yaratma</h3><p>Sənətkarlığı brendə çevirmə</p></div>
+    <div class="card"><div class="icon">02</div><h3>Turist satışı</h3><p>Turist bazarı, alıcı segmentləri</p></div>
+    <div class="card"><div class="icon">03</div><h3>Instagram</h3><p>Biznes hesabı, satış</p></div>
+    <div class="card"><div class="icon">04</div><h3>Etsy</h3><p>Mağaza açılışı, ixrac qaydaları</p></div>
+    <div class="card"><div class="icon">05</div><h3>Qiymət strategiyası</h3><p>Maya dəyəri, bazar qiyməti</p></div>
+    <div class="card"><div class="icon">06</div><h3>Hekayə danışma</h3><p>Mədəni hekayə, təqdimat</p></div>
+    <div class="card"><div class="icon">07</div><h3>Rəqəmsal marketinq</h3><p>Sosial media, content</p></div>
+    <div class="card"><div class="icon">08</div><h3>Brendinq</h3><p>Kimlik, loqo, vizual</p></div>
+    <div class="card"><div class="icon">09</div><h3>Maliyyə idarəetməsi</h3><p>Gəlir-xərc, büdcə</p></div>
+    <div class="card"><div class="icon">10</div><h3>Biznes modeli</h3><p>Biznes planı, əsaslar</p></div>
+    <div class="card"><div class="icon">11</div><h3>Sənətkarlıq mübadiləsi</h3><p>AZ kəlağayı ↔ UZ suzani</p></div>
+    <div class="card"><div class="icon">12</div><h3>Alıcı əlaqələri</h3><p>Müqavilə, danışıq, xidmət</p></div>
   </div>
+</div>
 
-  <div class="bento">
-    <div class="card craft-card kelaghayi col-2 reveal">
-      <div class="bg"></div>
-      <div class="content">
+<!-- CRAFTS -->
+<div class="section">
+  <h2>İki mədəniyyətin birləşməsi</h2>
+  <div class="craft-grid">
+    <div class="craft">
+      <div class="visual kelaghayi">🧣</div>
+      <div class="info">
         <h3>Kəlağayı</h3>
-        <div class="origin">Azərbaycan — Basma texnikası, təbii boyalar</div>
-        <p>Ənənəvi ipək örtük. Azərbaycanlı qadınlar bu sənəti Özbəkistan qadınlarına öyrədirlər.</p>
-      </div>
-    </div>
-    <div class="card craft-card suzani col-2 reveal">
-      <div class="bg"></div>
-      <div class="content">
-        <h3>Suzani</h3>
-        <div class="origin">Özbəkistan, Səmərqənd — 2000+ illik əl tikmə</div>
-        <p>Pambıq və ipək parça üzərində ipək saplarla tikilir. Toy, bayram və ev dekorasiyası üçün.</p>
-      </div>
-    </div>
-    <div class="card craft-card carpet reveal">
-      <div class="bg"></div>
-      <div class="content">
-        <h3>Xalça</h3>
+        <p>Azərbaycanın ənənəvi ipək örtüyü. Basma texnikası, təbii boyalar.</p>
         <div class="origin">Azərbaycan</div>
-        <p>Ənənəvi toxuma sənətkarlığı.</p>
       </div>
     </div>
-    <div class="card craft-card ikat reveal">
-      <div class="bg"></div>
-      <div class="content">
+    <div class="craft">
+      <div class="visual carpet">🧶</div>
+      <div class="info">
+        <h3>Xalça</h3>
+        <p>Azərbaycanın ənənəvi xalça sənətkarlığı. Toxuma texnikası.</p>
+        <div class="origin">Azərbaycan</div>
+      </div>
+    </div>
+    <div class="craft">
+      <div class="visual suzani">🪡</div>
+      <div class="info">
+        <h3>Suzani</h3>
+        <p>Özbəkistanın 2000+ illik əl tikmə ənənəsi. Toy və ev dekorasiyası.</p>
+        <div class="origin">Özbəkistan — Səmərqənd</div>
+      </div>
+    </div>
+    <div class="craft">
+      <div class="visual ikat">🎨</div>
+      <div class="info">
         <h3>Ikat / Atlas / Adras</h3>
-        <div class="origin">Özbəkistan, Səmərqənd</div>
-        <p>Abra bandaj texnikası — parça toxunmamışdan əvvəl saplar boyanır.</p>
-      </div>
-    </div>
-    <div class="card craft-card reveal" style="background: linear-gradient(135deg, var(--terracotta-glow), var(--gold-glow)); border-color: var(--terracotta);">
-      <div class="content">
-        <h3 style="color: var(--text);">✨ AZ + UZ Birləşmə</h3>
-        <p style="color: var(--text);">Kəlağayı naxışları + Ikat parçaları = unikal mədəni brend. Yalnız bu layihədə.</p>
+        <p>Abra bandaj texnikası. Səmərqənd atlası və adras parçaları.</p>
+        <div class="origin">Özbəkistan — Səmərqənd</div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- IMPACT + BUDGET -->
-<section id="impact">
-  <div class="section-header reveal">
-    <div class="eyebrow">Təsir və nəticələr</div>
-    <h2>Rəqəmlərlə</h2>
-    <p>Layihənin uğuru konkret, ölçüləbilən göstəricilərlə izlənilir.</p>
-  </div>
+<!-- IMPACT -->
+<div class="section">
+  <h2>Nəticələr və göstəricilər</h2>
+  <table>
+    <tr><th>Göstərici</th><th>Hədəf</th></tr>
+    <tr><td>Təlim bitirdikdən 30 gün sonra tam biznes planı hazırlayan iştirakçı</td><td>27 nəfər (90%)</td></tr>
+    <tr><td>6 ay sonunda onlayn satış başladan iştirakçı (Etsy, Instagram Shop)</td><td>15 nəfər (50%)</td></tr>
+    <tr><td>Bazar günündə alıcılarla uzunmüddətli müqavilə imzalayan</td><td>10 nəfər (33%)</td></tr>
+    <tr><td>Yeni AZ-UZ birləşmə dizaynları yaradan</td><td>20 nəfər (67%)</td></tr>
+    <tr><td>Orta aylıq əlavə gəlir</td><td>200-500 manat</td></tr>
+    <tr><td>Paylanılan metodik kitabça</td><td>490 nüsxə (284 UZ + 206 AZ)</td></tr>
+  </table>
+</div>
 
-  <div class="bento">
-    <div class="card stat-card reveal">
-      <div class="number terracotta">90%</div>
-      <div class="label">Biznes planı hazırlayan<br>(27 nəfər)</div>
-    </div>
-    <div class="card stat-card reveal">
-      <div class="number gold">50%</div>
-      <div class="label">Onlayn satış başladan<br>(15 nəfər)</div>
-    </div>
-    <div class="card stat-card reveal">
-      <div class="number indigo">67%</div>
-      <div class="label">Yeni AZ-UZ dizayn<br>(20 nəfər)</div>
-    </div>
-    <div class="card stat-card reveal">
-      <div class="number teal">200-500</div>
-      <div class="label">Aylıq əlavə gəlir<br>(manat)</div>
-    </div>
-
-    <!-- Media partners -->
-    <div class="card feature-card col-4 reveal">
-      <div class="icon terracotta">📺</div>
-      <h3>Media və yayım</h3>
-      <p style="margin-bottom: 16px;">
-        <strong style="color: var(--text);">Real TV</strong> — 10 dəqiqalıq reportaj (efir + YouTube)<br>
-        <strong style="color: var(--text);">Sia.az</strong> — 3 məqalə (sorğu, təlim, bazar günü)<br>
-        <strong style="color: var(--text);">Hafta.az</strong> — 2 məqalə (yekun nəticələr)<br>
-        <strong style="color: var(--text);">Instagram</strong> — 15+ reels<br>
-        <strong style="color: var(--text);">Telegram</strong> — 30+ paylaşım (şəbəkə qrupu)
-      </p>
-      <p style="font-size: 12px; color: var(--text-faint);">Sia.az məqalələri Azərtac və digər media tərəfdaşlarına ötürülür (free republishing).</p>
-    </div>
-  </div>
-</section>
+<!-- MEDIA -->
+<div class="section">
+  <h2>Media və yayım</h2>
+  <table>
+    <tr><th>Media</th><th>Format</th><th>Məzmun</th></tr>
+    <tr><td>Real TV</td><td>10 dəqiqalıq reportaj (efir)</td><td>Təlim, bazar günü, iştirakçı hekayələri</td></tr>
+    <tr><td>Sia.az</td><td>3 məqalə</td><td>Sorğu nəticələri, təlim açılışı, bazar günü</td></tr>
+    <tr><td>Hafta.az</td><td>2 məqalə</td><td>Yekun nəticələr, iştirakçı hekayələri</td></tr>
+    <tr><td>Instagram</td><td>15+ reels</td><td>Sosial media — telefon ilə</td></tr>
+    <tr><td>Telegram</td><td>30+ paylaşım</td><td>Şəbəkə qrupunda günlük paylaşım</td></tr>
+  </table>
+</div>
 
 <!-- PARTNERS -->
-<section id="partners">
-  <div class="section-header reveal">
-    <div class="eyebrow">Tərəfdaşlar</div>
-    <h2>İcraçılar və maliyyə</h2>
-  </div>
-
-  <div class="bento">
-    <div class="card partner-card reveal">
+<div class="section">
+  <h2>İcraçılar və tərəfdaşlar</h2>
+  <div class="cards">
+    <div class="partner-card">
       <div class="flag">🇦🇿</div>
       <div class="role">İcraçı — Azərbaycan</div>
-      <h3>Gənclərin "Tənhalara Dayaq"<br>İctimai Birliyi</h3>
+      <h3>Gənclərin "Tənhalara Dayaq" İctimai Birliyi</h3>
       <p>"Support for Solidarity People" Public Union. Bakı, 2003-cü ildən. 20+ il NNT təcrübəsi.</p>
       <div class="contact">
         Sədr: Seyidovə Xoşbəxt<br>
-        +994 55 260 46 96<br>
-        s.xoshbaxt2005@gmail.com
+        Tel: +994 55 260 46 96<br>
+        E-poçt: s.xoshbaxt2005@gmail.com
       </div>
     </div>
-
-    <div class="card partner-card reveal">
+    <div class="partner-card">
       <div class="flag">🇺🇿</div>
       <div class="role">Tərəfdaş — Özbəkistan</div>
-      <h3>"DİALOQ" Vətəndaş Cəmiyyəti<br>və İqtisadi Fəallıq Təşkilatı</h3>
+      <h3>"DİALOQ" Vətəndaş Cəmiyyəti və İqtisadi Fəallıq Təşkilatı</h3>
       <p>Daşkənd, 2021-ci ildən. Respublika səviyyəli. Məhəllə qadınları ilə birbaşa əlaqə.</p>
       <div class="contact">
         Sədr: Bekmirzayev Müxtər<br>
-        +998 97 329 64 66<br>
-        ngodialog2021@gmail.com
-      </div>
-    </div>
-
-    <div class="card partner-card col-2 reveal" style="background: linear-gradient(135deg, var(--surface), rgba(232,112,74,0.05)); border-color: rgba(232,112,74,0.2);">
-      <div class="role" style="color: var(--gold);">Maliyyə dəstəyi</div>
-      <h3>QHT Dövlət Dəstəyi Agentliyi</h3>
-      <p>Azərbaycan Respublikasının Qeyri-Hökumət Təşkilatlarına Dövlət Dəstəyi Agentliyi — 2026-cı il qrant müsabiqəsi çərçivəsində maliyyələşdirilir.</p>
-      <div style="display: flex; gap: 24px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
-        <div>
-          <div style="font-family: 'Space Grotesk'; font-size: 28px; font-weight: 700; color: var(--terracotta);">Böyük</div>
-          <div style="font-size: 12px; color: var(--text-dim);">Layihə kategoriyası</div>
-        </div>
-        <div>
-          <div style="font-family: 'Space Grotesk'; font-size: 28px; font-weight: 700; color: var(--indigo);">6 ay</div>
-          <div style="font-size: 12px; color: var(--text-dim);">Müddət</div>
-        </div>
+        Tel: +998 97 329 64 66<br>
+        E-poçt: ngodialog2021@gmail.com
       </div>
     </div>
   </div>
-</section>
 
-<!-- CTA -->
-<section class="cta-section">
-  <h2 class="reveal">
-    İki ölkə, bir mədəniyyət,<br>
-    <span class="accent">bir qəlb</span>
-  </h2>
-  <p class="reveal" style="font-style: italic; color: var(--gold); margin-bottom: 16px;">
-    Two Cultures, One Frame
-  </p>
-  <p class="reveal">
-    2500 illik İpək Yolu irsini qoruyuruq — 30 gənc qadın sənətkardan sahibkara.
-  </p>
-  <div class="cta-group reveal" style="justify-content: center;">
-    <a href="#about" class="btn btn-primary">Yuxarı qayıt ↑</a>
-    <a href="mailto:s.xoshbaxt2005@gmail.com" class="btn btn-ghost">Əlaqə saxla</a>
+  <div class="card" style="margin-top: 20px; border-top-color: var(--gold);">
+    <div class="icon">🏛️</div>
+    <h3>Maliyyə dəstəyi</h3>
+    <p>Azərbaycan Respublikasının Qeyri-Hökumət Təşkilatlarına Dövlət Dəstəyi Agentliyi — 2026-cı il qrant müsabiqəsi çərçivəsində maliyyələşdirilir. Böyük layihə kategoriyası, 6 ay icra müddəti.</p>
   </div>
-</section>
+</div>
+
+</main>
 
 <!-- FOOTER -->
 <footer>
-  <p>© 2026 İpək Yolu İrsi: İki Mədəniyyət, Bir Çərçivə (Two Cultures, One Frame) — Gənclərin "Tənhalara Dayaq" İctimai Birliyi</p>
+  <div class="footer-inner">
+    <div>
+      <h4>İpək Yolu İrsi</h4>
+      <p>İki Mədəniyyət, Bir Çərçivə</p>
+      <p>Two Cultures, One Frame</p>
+      <p>Azərbaycan–Özbəkistan birgə layihə</p>
+    </div>
+    <div>
+      <h4>İcraçılar</h4>
+      <p>Gənclərin "Tənhalara Dayaq" İctimai Birliyi (Azərbaycan)</p>
+      <p>"DİALOQ" Vətəndaş Cəmiyyəti və İqtisadi Fəallıq Təşkilatı (Özbəkistan)</p>
+    </div>
+    <div>
+      <h4>Maliyyə dəstəyi</h4>
+      <p>QHT Dövlət Dəstəyi Agentliyi</p>
+      <p>2026-cı il qrant müsabiqəsi</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 İpək Yolu İrsi: İki Mədəniyyət, Bir Çərçivə (Two Cultures, One Frame). Bütün hüquqlar qorunur.</p>
+  </div>
 </footer>
-
-<!-- SCROLL ANIMATIONS -->
-<script>
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry, i) => {
-    if (entry.isIntersecting) {
-      setTimeout(() => entry.target.classList.add('visible'), i * 50);
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-</script>
 
 </body>
 </html>
