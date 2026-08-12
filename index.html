@@ -610,6 +610,12 @@ footer p {
   .cta-section h2 { font-size: 15px !important; text-align: center !important; margin-left: auto !important; margin-right: auto !important; }
   .cta-section p { font-size: 9px !important; text-align: center !important; margin-left: auto !important; margin-right: auto !important; max-width: 90% !important; }
   .cta-section .cta-subtitle { color: var(--gold) !important; font-size: 9px !important; }
+  .cta-section div[style*="display: flex"] { display: flex !important; gap: 10px !important; margin-top: 16px !important; }
+  .cta-section div[style*="padding: 16px"] { padding: 6px 8px !important; }
+  .cta-section div[style*="font-size: 24px"] { font-size: 11px !important; }
+  .cta-section div[style*="font-size: 11px"] { font-size: 6px !important; }
+  .cta-section div[style*="max-width: 600px"] { max-width: 90% !important; margin-top: 12px !important; font-size: 7px !important; line-height: 1.5 !important; }
+  .cta-section div[style*="max-width: 600px"] p { font-size: 7px !important; margin-bottom: 3px !important; }
   table { font-size: 7px !important; }
   th, td { padding: 4px 3px !important; }
   footer { padding: 10px !important; margin-top: 0 !important; }
@@ -621,7 +627,11 @@ footer p {
   .feature-card .icon.terracotta, .feature-card .icon.gold, .feature-card .icon.indigo, .feature-card .icon.teal { background: rgba(255,255,255,0.08) !important; }
   .craft-card .bg { opacity: 0.08 !important; }
   .hero h1 .accent, .cta-section h2 .accent { -webkit-text-fill-color: var(--terracotta) !important; background: none !important; }
-  .gallery-img { width: 100% !important; height: auto !important; max-height: 200px !important; object-fit: cover !important; border-radius: 8px !important; margin-bottom: 6px !important; }
+  .gallery-img { width: 100% !important; height: auto !important; max-height: 120px !important; object-fit: cover !important; border-radius: 6px !important; margin-bottom: 4px !important; }
+  #gallery .card { padding: 4px 6px !important; margin-bottom: 4px !important; }
+  #gallery .card h3 { font-size: 8px !important; margin-bottom: 2px !important; }
+  #gallery .card p { font-size: 7px !important; line-height: 1.3 !important; }
+  #gallery .card div[style*="padding"] { padding: 4px 6px !important; }
   * { box-shadow: none !important; max-width: 100% !important; }
   html, body { overflow-x: hidden !important; }
   #about, #phases, #crafts, #gallery, #impact, #sitemap, #partners, #contact { page-break-before: always !important; }
@@ -1037,17 +1047,7 @@ footer p {
     <div class="card partner-card col-2 reveal" style="background: linear-gradient(135deg, var(--surface), rgba(232,112,74,0.05)); border-color: rgba(232,112,74,0.2);">
       <div class="role" style="color: var(--gold);">Maliyyə dəstəyi</div>
       <h3>QHT Dövlət Dəstəyi Agentliyi</h3>
-      <p>Azərbaycan Respublikasının Qeyri-Hökumət Təşkilatlarına Dövlət Dəstəyi Agentliyi — 2026-cı il qrant müsabiqəsi çərçivəsində maliyyələşdirilir.</p>
-      <div style="display: flex; gap: 24px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
-        <div>
-          <div style="font-family: 'Space Grotesk'; font-size: 28px; font-weight: 700; color: var(--terracotta);">Böyük</div>
-          <div style="font-size: 12px; color: var(--text-dim);">Layihə kategoriyası</div>
-        </div>
-        <div>
-          <div style="font-family: 'Space Grotesk'; font-size: 28px; font-weight: 700; color: var(--indigo);">6 ay</div>
-          <div style="font-size: 12px; color: var(--text-dim);">Müddət</div>
-        </div>
-      </div>
+      <p>Azərbaycan Respublikasının Qeyri-Hökumət Təşkilatlarına Dövlət Dəstəyi Agentliyi — 2026-cı il qrant müsabiqəsi çərçivəsində maliyyələşdirilir. Böyük layihə kategoriyası, 6 ay icra müddəti.</p>
     </div>
   </div>
 </section>
@@ -1064,6 +1064,31 @@ footer p {
   <p class="reveal cta-text">
     2500 illik İpək Yolu irsini qoruyuruq — 30 gənc qadın sənətkardan sahibkara.
   </p>
+
+  <div class="reveal" style="margin-top: 40px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+    <div style="text-align: center; padding: 16px 20px; border: 1px solid var(--border); border-radius: 12px;">
+      <div style="font-family: 'Space Grotesk'; font-size: 24px; font-weight: 700; color: var(--terracotta);">30</div>
+      <div style="font-size: 11px; color: var(--text-dim);">Qadın sənətkar</div>
+    </div>
+    <div style="text-align: center; padding: 16px 20px; border: 1px solid var(--border); border-radius: 12px;">
+      <div style="font-family: 'Space Grotesk'; font-size: 24px; font-weight: 700; color: var(--gold);">12</div>
+      <div style="font-size: 11px; color: var(--text-dim);">Təlim modulu</div>
+    </div>
+    <div style="text-align: center; padding: 16px 20px; border: 1px solid var(--border); border-radius: 12px;">
+      <div style="font-family: 'Space Grotesk'; font-size: 24px; font-weight: 700; color: var(--indigo);">490</div>
+      <div style="font-size: 11px; color: var(--text-dim);">Metodik kitabça</div>
+    </div>
+    <div style="text-align: center; padding: 16px 20px; border: 1px solid var(--border); border-radius: 12px;">
+      <div style="font-family: 'Space Grotesk'; font-size: 24px; font-weight: 700; color: var(--teal);">3</div>
+      <div style="font-size: 11px; color: var(--text-dim);">Dil (AZ/UZ/EN)</div>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top: 32px; font-size: 13px; color: var(--text-dim); line-height: 1.8; max-width: 600px; margin-left: auto; margin-right: auto;">
+    <p style="margin-bottom: 8px;">İpək Yolu İrsi layihəsi 2026-cı ilin oktyabrında başlayır və 2027-ci ilin martında yekunlaşır.</p>
+    <p style="margin-bottom: 8px;">İcraçı: Gənclərin "Tənhalara Dayaq" İctimai Birliyi</p>
+    <p>Tərəfdaş: "DİALOQ" Vətəndaş Cəmiyyəti və İqtisadi Fəallıq Təşkilatı</p>
+  </div>
 </section>
 
 <!-- CONTACT -->
