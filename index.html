@@ -107,7 +107,35 @@ nav ul a:hover {
 section {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 100px 32px;
+  padding: 80px 24px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+section > * {
+  width: 100%;
+  max-width: 900px;
+}
+
+.section-header,
+.hero .tag,
+.hero h1,
+.hero .subtitle,
+.hero .cta-group,
+.cta-section h2,
+.cta-section p,
+.cta-section .cta-group {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-header h2 {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* === HERO === */
@@ -116,7 +144,9 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   padding-top: 80px;
+  text-align: center;
 }
 .hero .tag {
   display: inline-flex;
@@ -144,12 +174,13 @@ section {
 }
 .hero h1 {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(40px, 7vw, 80px);
+  font-size: clamp(32px, 6vw, 70px);
   font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
   margin-bottom: 24px;
-  max-width: 900px;
+  max-width: 100%;
+  word-wrap: break-word;
 }
 .hero h1 .accent {
   background: linear-gradient(135deg, var(--terracotta), var(--gold));
@@ -529,40 +560,50 @@ footer p {
 /* === PRINT / PDF === */
 @media print {
   .reveal { opacity: 1 !important; transform: none !important; }
-  nav { display: none !important; }
-  .mesh-bg { display: none !important; }
+  nav, .mesh-bg, .hero .tag, .cta-group { display: none !important; }
   body { background: #0a0a0f !important; }
-  main, section { max-width: 100% !important; padding: 20px 8px !important; margin: 0 !important; }
-  .bento { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-  .bento .col-4, .bento .col-2 { grid-column: span 2 !important; }
-  .bento .row-2 { grid-row: span 1 !important; }
-  .card { padding: 16px !important; overflow: hidden !important; }
-  .hero { min-height: auto !important; padding: 30px 16px !important; page-break-after: always; }
-  .hero h1 { font-size: 36px !important; }
-  .hero .subtitle { font-size: 16px !important; }
-  .section-header h2 { font-size: 26px !important; }
-  .section-header { margin-bottom: 24px !important; }
-  .stat-card .number { font-size: 32px !important; }
-  .stat-card { padding: 16px 8px !important; }
-  #about, #phases, #crafts, #impact, #partners { page-break-before: always; }
-  .card, .craft-card, .stat-card, .partner-card, .timeline-card, .budget-card { page-break-inside: avoid !important; }
-  .cta-section { page-break-before: always; padding: 40px 16px !important; }
-  .cta-section h2 { font-size: 32px !important; }
-  footer { padding: 24px 16px !important; }
-  table { font-size: 12px !important; }
-  th, td { padding: 8px 6px !important; }
-  .craft-card { min-height: 140px !important; padding: 16px !important; }
-  .feature-card .icon { width: 36px !important; height: 36px !important; font-size: 16px !important; }
-  .feature-card h3 { font-size: 15px !important; }
+  section { max-width: 100% !important; width: 100% !important; padding: 0 16px !important; margin: 0 !important; min-height: 100vh !important; height: auto !important; text-align: center !important; }
+  .hero { padding: 30px 16px !important; page-break-after: always !important; text-align: center !important; }
+  .hero h1 { font-size: 30px !important; line-height: 1.15 !important; text-align: center !important; }
+  .hero .subtitle { font-size: 14px !important; text-align: center !important; max-width: 90% !important; }
+  .hero .cta-group { display: none !important; }
+  .section-header { margin-bottom: 16px !important; }
+  .section-header h2 { font-size: 22px !important; text-align: center !important; }
+  .section-header p { font-size: 13px !important; text-align: center !important; max-width: 90% !important; margin: 0 auto 16px !important; }
+  .eyebrow { font-size: 10px !important; }
+  .bento { grid-template-columns: 1fr !important; gap: 8px !important; max-width: 90% !important; margin: 0 auto !important; }
+  .bento .col-4, .bento .col-2 { grid-column: span 1 !important; }
+  .card { padding: 12px 14px !important; margin-bottom: 8px !important; page-break-inside: avoid !important; }
+  .stat-card .number { font-size: 24px !important; }
+  .stat-card { padding: 12px 8px !important; }
+  .stat-card .label { font-size: 11px !important; }
+  .feature-card h3 { font-size: 14px !important; }
   .feature-card p { font-size: 12px !important; }
-  .timeline-card { padding: 16px !important; }
-  .timeline-item { padding: 10px 0 !important; }
+  .craft-card { min-height: auto !important; padding: 12px !important; }
+  .craft-card h3 { font-size: 15px !important; }
+  .craft-card p { font-size: 12px !important; }
+  .timeline-card { padding: 12px !important; }
+  .timeline-item { padding: 8px 0 !important; }
   .timeline-item .content h4 { font-size: 13px !important; }
   .timeline-item .content p { font-size: 12px !important; }
-  .partner-card { padding: 16px !important; }
-  .partner-card .flag { font-size: 24px !important; }
-  * { max-width: 100% !important; }
+  .partner-card { padding: 12px !important; }
+  .partner-card h3 { font-size: 14px !important; }
+  .partner-card p { font-size: 12px !important; }
+  .partner-card .contact { font-size: 11px !important; }
+  .cta-section { page-break-before: always !important; padding: 30px 16px !important; text-align: center !important; }
+  .cta-section h2 { font-size: 26px !important; }
+  .cta-section p { font-size: 14px !important; }
+  table { font-size: 11px !important; }
+  th, td { padding: 6px 5px !important; }
+  footer { padding: 16px !important; margin-top: 0 !important; }
+  footer p { font-size: 11px !important; }
+  p, li, td, th { font-size: 13px !important; }
+  .card, .craft-card, .stat-card, .partner-card, .timeline-card { page-break-inside: avoid !important; }
+  .btn { box-shadow: none !important; }
+  .card:hover, .btn:hover, .feature-card:hover { transform: none !important; box-shadow: none !important; }
+  * { box-shadow: none !important; max-width: 100% !important; }
   html, body { overflow-x: hidden !important; }
+  #about, #phases, #crafts, #impact, #sitemap, #partners { page-break-before: always !important; }
 }
 </style>
 </head>
@@ -820,6 +861,53 @@ footer p {
         <strong style="color: var(--text);">Telegram</strong> — 30+ paylaşım (şəbəkə qrupu)
       </p>
       <p style="font-size: 12px; color: var(--text-faint);">Sia.az məqalələri Azərtac və digər media tərəfdaşlarına ötürülür (free republishing).</p>
+    </div>
+  </div>
+</section>
+
+<!-- WEBSITE MAP -->
+<section id="sitemap">
+  <div class="section-header reveal">
+    <div class="eyebrow">Saytın strukturu</div>
+    <h2>Vebsaytın xəritəsi</h2>
+    <p>Layihənin internetdəki daimi məlumat mərkəzi — 8 səhifə, 3 dil, QHT Agentliyinin "Saytın strukturu" tələbinə cavab verir.</p>
+  </div>
+
+  <div class="bento">
+    <div class="card col-4 reveal" style="padding: 32px;">
+      <div class="eyebrow" style="margin-bottom: 20px;">Ana səhifə və 7 bölmə</div>
+      <table class="budget-table" style="font-size: 14px;">
+        <tr><th>Səhifə</th><th>URL</th><th>Məzmun</th></tr>
+        <tr><td><strong>Ana səhifə</strong></td><td>/index.html</td><td>Layihənin missiyası, əsas rəqəmlər və məlumatlar</td></tr>
+        <tr><td><strong>Layihə</strong></td><td>/project.html</td><td>Məqsəd, missiya, problemlər, hədəf qrup, gözlənilən nəticələr</td></tr>
+        <tr><td><strong>Sənətkarlar</strong></td><td>/artisans.html</td><td>İştirakçı sənətkar profilləri, foto və hekayələr</td></tr>
+        <tr><td><strong>Təlim</strong></td><td>/training.html</td><td>12 modul proqramı, təlimçilər, tarixi, metodika</td></tr>
+        <tr><td><strong>Məhsullar</strong></td><td>/products.html</td><td>Kəlağayı, suzani, ikat, xalça nümunələri</td></tr>
+        <tr><td><strong>Şəbəkə</strong></td><td>/network.html</td><td>Qadın Mədəni İrs Şəbəkəsi, onlayn icma</td></tr>
+        <tr><td><strong>Media</strong></td><td>/media.html</td><td>Real TV, Sia.az, Hafta.az reportajları, foto</td></tr>
+        <tr><td><strong>Əlaqə</strong></td><td>/contact.html</td><td>GTDİB və DİALOQ əlaqə məlumatları, xəritə</td></tr>
+      </table>
+    </div>
+
+    <div class="card feature-card reveal">
+      <div class="icon terracotta">🌐</div>
+      <h3>3 dil</h3>
+      <p>Azərbaycan, özbək və ingilis dillərində. Beynəlxalq tərəfdaşlar və turist auditoriyası üçün.</p>
+    </div>
+    <div class="card feature-card reveal">
+      <div class="icon gold">📱</div>
+      <h3>Responsive dizayn</h3>
+      <p>Telefon, planşet və kompüterdə düzgün işləyir. İpək Yolu rəngləri ilə müasir təqdimat.</p>
+    </div>
+    <div class="card feature-card reveal">
+      <div class="icon indigo">📰</div>
+      <h3>Media arxivi</h3>
+      <p>Video, foto, mətbuat materialları — donor və tərəfdaşlar üçün açıq giriş.</p>
+    </div>
+    <div class="card feature-card reveal">
+      <div class="icon teal">⚡</div>
+      <h3>Təlim profili</h3>
+      <p>Hər bir təlim modulunun təsviri, təlimçi və nəticələrin siyahısı.</p>
     </div>
   </div>
 </section>
