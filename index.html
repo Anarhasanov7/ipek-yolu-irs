@@ -501,6 +501,12 @@ section > * {
   text-align: center;
   padding: 120px 32px;
 }
+.cta-section h2,
+.cta-section p {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
 .cta-section h2 {
   font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(32px, 5vw, 56px);
@@ -591,19 +597,20 @@ footer p {
   .partner-card p { font-size: 12px !important; }
   .partner-card .contact { font-size: 11px !important; }
   .cta-section { page-break-before: always !important; padding: 30px 16px !important; text-align: center !important; }
-  .cta-section h2 { font-size: 26px !important; }
-  .cta-section p { font-size: 14px !important; }
+  .cta-section h2 { font-size: 26px !important; text-align: center !important; margin-left: auto !important; margin-right: auto !important; }
+  .cta-section p { font-size: 14px !important; text-align: center !important; margin-left: auto !important; margin-right: auto !important; max-width: 90% !important; }
+  .cta-section .cta-subtitle { color: var(--gold) !important; }
   table { font-size: 11px !important; }
   th, td { padding: 6px 5px !important; }
   footer { padding: 16px !important; margin-top: 0 !important; }
-  footer p { font-size: 11px !important; }
+  footer p { font-size: 11px !important; text-align: center !important; }
   p, li, td, th { font-size: 13px !important; }
   .card, .craft-card, .stat-card, .partner-card, .timeline-card { page-break-inside: avoid !important; }
-  .btn { box-shadow: none !important; }
+  .cta-group, .btn, .btn-primary, .btn-ghost { display: none !important; box-shadow: none !important; }
   .card:hover, .btn:hover, .feature-card:hover { transform: none !important; box-shadow: none !important; }
   * { box-shadow: none !important; max-width: 100% !important; }
   html, body { overflow-x: hidden !important; }
-  #about, #phases, #crafts, #impact, #sitemap, #partners { page-break-before: always !important; }
+  #about, #phases, #crafts, #impact, #sitemap, #partners, #contact { page-break-before: always !important; }
 }
 </style>
 </head>
@@ -964,19 +971,61 @@ footer p {
 
 <!-- CTA -->
 <section class="cta-section">
-  <h2 class="reveal">
+  <h2 class="reveal cta-title">
     İki ölkə, bir mədəniyyət,<br>
     <span class="accent">bir qəlb</span>
   </h2>
-  <p class="reveal" style="font-style: italic; color: var(--gold); margin-bottom: 16px;">
+  <p class="reveal cta-subtitle" style="font-style: italic; color: var(--gold); margin-bottom: 16px;">
     Two Cultures, One Frame
   </p>
-  <p class="reveal">
+  <p class="reveal cta-text">
     2500 illik İpək Yolu irsini qoruyuruq — 30 gənc qadın sənətkardan sahibkara.
   </p>
-  <div class="cta-group reveal" style="justify-content: center;">
-    <a href="#about" class="btn btn-primary">Yuxarı qayıt ↑</a>
-    <a href="mailto:s.xoshbaxt2005@gmail.com" class="btn btn-ghost">Əlaqə saxla</a>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-header reveal">
+    <div class="eyebrow">Əlaqə</div>
+    <h2>Təşkilatlar və əlaqə məlumatları</h2>
+  </div>
+
+  <div class="bento">
+    <div class="card partner-card reveal">
+      <div class="flag">🇦🇿</div>
+      <div class="role">İcraçı — Azərbaycan</div>
+      <h3>Gənclərin "Tənhalara Dayaq" İctimai Birliyi</h3>
+      <p>"Support for Solidarity People" Public Union<br>Azərbaycan, Bakı, Nəsimi rayonu, Moskva küç. 11<br>AZ1102, Bakı</p>
+      <div class="contact">
+        Sədr: Seyidovə Xoşbəxt Mirsucəddin qızı<br>
+        Tel: +994 55 260 46 96<br>
+        E-poçt: s.xoshbaxt2005@gmail.com
+      </div>
+    </div>
+
+    <div class="card partner-card reveal">
+      <div class="flag">🇺🇿</div>
+      <div class="role">Tərəfdaş — Özbəkistan</div>
+      <h3>"DİALOQ" Vətəndaş Cəmiyyəti və İqtisadi Fəallıq Təşkilatı</h3>
+      <p>Özbəkistan, Daşkənd<br>Qeydiyyat: 10 oktyabr 2021, №1011<br>Status: Respublika səviyyəli</p>
+      <div class="contact">
+        Sədr: Bekmirzayev Müxtər<br>
+        Tel: +998 97 329 64 66<br>
+        E-poçt: ngodialog2021@gmail.com
+      </div>
+    </div>
+
+    <div class="card feature-card col-2 reveal">
+      <div class="icon gold">🏛️</div>
+      <h3>Maliyyə dəstəyi</h3>
+      <p>Azərbaycan Respublikasının Qeyri-Hökumət Təşkilatlarına Dövlət Dəstəyi Agentliyi — 2026-cı il qrant müsabiqəsi çərçivəsində maliyyələşdirilir. Böyük layihə kategoriyası, 6 ay icra müddəti.</p>
+    </div>
+
+    <div class="card feature-card col-2 reveal">
+      <div class="icon indigo">📍</div>
+      <h3>Layihə ünvanı</h3>
+      <p>Layihə əsasən Özbəkistanın Səmərqənd şəhərində həyata keçirilir. Səmərqənd 2500 illik tekstil ənənəsinə malikdir və UNESCO Ümumdünya İrsi siyahısına daxil edilib.</p>
+    </div>
   </div>
 </section>
 
