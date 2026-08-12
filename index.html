@@ -541,13 +541,17 @@ section > * {
 }
 
 /* === CRAFT SHOWCASE === */
+#crafts .bento {
+  grid-template-columns: repeat(5, 1fr);
+}
 .craft-card {
   position: relative;
-  min-height: 320px;
+  min-height: 280px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   overflow: hidden;
+  padding: 20px;
 }
 .craft-card .bg {
   position: absolute;
@@ -566,17 +570,18 @@ section > * {
 }
 .craft-card h3 {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 .craft-card .origin {
-  font-size: 12px;
+  font-size: 10px;
   color: var(--text-dim);
   font-weight: 500;
+  margin-bottom: 8px;
 }
 .craft-card p {
-  font-size: 13px;
+  font-size: 11px;
   color: var(--text-dim);
   margin-top: 8px;
 }
@@ -737,6 +742,7 @@ footer p {
   .bento .col-2 { grid-column: span 2; }
   .bento .col-4 { grid-column: span 2; }
   .bento .row-2 { grid-row: span 1; }
+  #crafts .bento { grid-template-columns: repeat(2, 1fr); }
   nav ul { display: none; }
 }
 @media (max-width: 600px) {
