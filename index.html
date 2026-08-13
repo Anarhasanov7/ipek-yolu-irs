@@ -593,6 +593,28 @@ section > * {
   flex: 1;
 }
 
+/* === CRAFT TABLE === */
+.craft-table th {
+  font-size: 11px;
+  padding: 10px 12px;
+}
+.craft-table td {
+  padding: 14px 12px;
+  vertical-align: top;
+  line-height: 1.5;
+}
+.craft-table td:first-child {
+  white-space: nowrap;
+  width: 18%;
+}
+.craft-table td:nth-child(2) {
+  width: 27%;
+  color: var(--text-dim);
+}
+.craft-table td:last-child {
+  color: var(--text-dim);
+}
+
 /* === BUDGET TABLE === */
 .budget-card { padding: 32px; }
 .budget-table {
@@ -1051,47 +1073,39 @@ footer p {
     <p>Azərbaycan və Özbəkistan tekstil ənənələrinin ilk dəfə birgə mübadiləsi — unikal məhsullar yaradır.</p>
   </div>
 
-  <div class="bento">
-    <div class="card craft-card kelaghayi reveal">
-      <div class="bg"></div>
-      <div class="content">
-        <h3>Kəlağayı</h3>
-        <div class="origin">Azərbaycan, Bakı — Basma texnikası</div>
-        <p>İpək parçaya ağac qəliblə naxış. BMT İrsi. Buta, çiçək, quş motivləri.</p>
-      </div>
-    </div>
-    <div class="card craft-card suzani reveal">
-      <div class="bg"></div>
-      <div class="content">
-        <h3>Suzani</h3>
-        <div class="origin">Özbəkistan, Daşkənd — Əl tikmə</div>
-        <p>İpək saplarla əl tikmə sənəti. Toy üçün. Günəş, nar, badam motivləri.</p>
-      </div>
-    </div>
-    <div class="card craft-card carpet reveal">
-      <div class="bg"></div>
-      <div class="content">
-        <h3>Xalça</h3>
-        <div class="origin">Azərbaycan, Bakı — Əl toxuma</div>
-        <p>Yun və ipəklə əl toxuma. BMT İrsi. Quba, Şirvan, Qazax məktəbləri.</p>
-      </div>
-    </div>
-    <div class="card craft-card ikat reveal">
-      <div class="bg"></div>
-      <div class="content">
-        <h3>Ikat / Atlas / Adras</h3>
-        <div class="origin">Özbəkistan, Daşkənd — Abra bandaj</div>
-        <p>Saplar toxunmamışdan boyanır. Atlas ipək, Adras pambıq. Daşkənd mərkəzi.</p>
-      </div>
-    </div>
-    <div class="card craft-card reveal" style="border-color: var(--terracotta);">
-      <div class="bg" style="background: linear-gradient(135deg, var(--terracotta), var(--gold), var(--indigo));"></div>
-      <div class="content">
-        <h3 style="color: var(--terracotta);">Birləşmə</h3>
-        <div class="origin">Azərbaycan + Özbəkistan — Birgə</div>
-        <p>Kəlağayı + Ikat = unikal brend. İki ölkə birgə. 30 qadın sənətkar.</p>
-      </div>
-    </div>
+  <div class="bento reveal" style="display: block;">
+    <table class="budget-table craft-table" style="font-size: 14px;">
+      <tr>
+        <th>Sənət</th>
+        <th>Mənşə</th>
+        <th>Təsvir</th>
+      </tr>
+      <tr>
+        <td><strong style="color: var(--terracotta);">Kəlağayı</strong></td>
+        <td>Azərbaycan, Bakı — Basma texnikası</td>
+        <td>İpək parçaya ağac qəliblə naxış. BMT İrsi. Buta, çiçək, quş motivləri.</td>
+      </tr>
+      <tr>
+        <td><strong style="color: var(--indigo);">Suzani</strong></td>
+        <td>Özbəkistan, Daşkənd — Əl tikmə</td>
+        <td>İpək saplarla əl tikmə sənəti. Toy üçün. Günəş, nar, badam motivləri.</td>
+      </tr>
+      <tr>
+        <td><strong style="color: var(--terracotta);">Xalça</strong></td>
+        <td>Azərbaycan, Bakı — Əl toxuma</td>
+        <td>Yun və ipəklə əl toxuma. BMT İrsi. Quba, Şirvan, Qazax məktəbləri.</td>
+      </tr>
+      <tr>
+        <td><strong style="color: var(--gold);">Ikat / Atlas / Adras</strong></td>
+        <td>Özbəkistan, Daşkənd — Abra bandaj</td>
+        <td>Saplar toxunmamışdan boyanır. Atlas ipək, Adras pambıq. Daşkənd mərkəzi.</td>
+      </tr>
+      <tr>
+        <td><strong style="color: var(--terracotta);">Birləşmə</strong></td>
+        <td>Azərbaycan + Özbəkistan — Birgə</td>
+        <td>Kəlağayı + Ikat = unikal brend. İki ölkə birgə. 30 qadın sənətkar.</td>
+      </tr>
+    </table>
   </div>
 </section>
 
