@@ -554,6 +554,14 @@ section > * {
   flex-direction: column;
   justify-content: flex-end;
   overflow: hidden;
+  align-items: stretch;
+}
+.craft-card .content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 .craft-card .bg {
   position: absolute;
@@ -566,10 +574,6 @@ section > * {
 .craft-card.suzani .bg { background: linear-gradient(135deg, var(--indigo), var(--terracotta)); }
 .craft-card.ikat .bg { background: linear-gradient(135deg, var(--gold), var(--indigo)); }
 .craft-card.carpet .bg { background: linear-gradient(135deg, var(--terracotta), #8b3a1e); }
-.craft-card .content {
-  position: relative;
-  z-index: 1;
-}
 .craft-card h3 {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 20px;
@@ -585,6 +589,7 @@ section > * {
   font-size: 13px;
   color: var(--text-dim);
   margin-top: 8px;
+  flex: 1;
 }
 
 /* === BUDGET TABLE === */
