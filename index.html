@@ -600,13 +600,13 @@ section > * {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-faint);
-  padding: 12px 0;
+  padding: 6px 0;
   border-bottom: 1px solid var(--border);
 }
 .budget-table td {
-  padding: 14px 0;
+  padding: 6px 0;
   border-bottom: 1px solid var(--border);
-  font-size: 14px;
+  font-size: 12px;
 }
 .budget-table td:last-child {
   text-align: right;
@@ -661,8 +661,9 @@ section > * {
 
 /* === CTA SECTION === */
 .cta-section {
+  min-height: auto !important;
   text-align: center;
-  padding: 120px 32px;
+  padding: 30px 32px;
 }
 .cta-section h2,
 .cta-section p {
@@ -795,7 +796,8 @@ footer p {
   .partner-card .contact { font-size: 7px !important; }
   .partner-card .flag { font-size: 16px !important; }
   .partner-card .role { font-size: 7px !important; }
-  .cta-section { page-break-before: always !important; padding: 20px 16px !important; text-align: center !important; }
+  .cta-section {
+  min-height: auto !important; page-break-before: always !important; padding: 20px 16px !important; text-align: center !important; }
   .cta-section h2 { font-size: 15px !important; text-align: center !important; margin-left: auto !important; margin-right: auto !important; }
   .cta-section p { font-size: 9px !important; text-align: center !important; margin-left: auto !important; margin-right: auto !important; max-width: 90% !important; }
   .cta-section .cta-subtitle { color: var(--gold) !important; font-size: 9px !important; }
@@ -940,7 +942,7 @@ footer p {
     <div class="card feature-card col-2 reveal">
       <div class="icon terracotta">🎯</div>
       <h3>Məqsəd</h3>
-      <p>30 gənc qadın sənətkarı iqtisadi cəhətdən sərbəst sahibkarlara çevirmək — Daşkəndin 2500 illik tekstil ənənəsini dayanıqlı biznes modelinə transformasiya etmək.</p>
+      <p>30 gənc qadını sahibkara çevirmək — 2500 illik tekstil ənənəsini biznes modelinə transformasiya etmək.</p>
     </div>
     <div class="card feature-card reveal">
       <div class="icon gold">📍</div>
@@ -954,10 +956,10 @@ footer p {
     </div>
 
     <!-- Problem statement -->
-    <div class="card col-4 reveal" style="padding: 36px;">
-      <div class="eyebrow" style="margin-bottom: 16px;">İlkin vəziyyət</div>
-      <p style="font-size: 18px; line-height: 1.6; color: var(--text);">
-        "Məhəllə qadınları bu sənəti yalnız yerli bazarda ucuz qiymətə satırlar: bir ədəd kəlağayı <span style="color: var(--terracotta); font-weight: 600;">beş-on manat</span>, əsl dəyəri isə <span style="color: var(--gold); font-weight: 600;">əlli-yüz manatdır</span>. Biznes bacarıqlarının, rəqəmsal savadın və bazar əlaqələrinin olmaması səbəbindən əsrlərin irsi iqtisadi gəlirə çevrilmir."
+    <div class="card col-4 reveal" style="padding: 20px;">
+      <div class="eyebrow" style="margin-bottom: 10px;">İlkin vəziyyət</div>
+      <p style="font-size: 15px; line-height: 1.5; color: var(--text);">
+        "Kəlağayı <span style="color: var(--terracotta); font-weight: 600;">beş-on manat</span> satılır, əsl dəyəri <span style="color: var(--gold); font-weight: 600;">əlli-yüz manatdır</span>. Biznes bacarıqlarının olmaması səbəbindən irs gəlirə çevrilmir."
       </p>
     </div>
   </div>
@@ -1090,22 +1092,22 @@ footer p {
   <div class="section-header reveal">
     <div class="eyebrow">Saytın strukturu</div>
     <h2>Vebsaytın xəritəsi</h2>
-    <p>Layihənin internetdəki daimi məlumat mərkəzi — 8 səhifə, 4 dil, Qeyri-Hökumət Təşkilatı Agentliyinin "Saytın strukturu" tələbinə cavab verir.</p>
+    <p>8 səhifə, 4 dil — Qeyri-Hökumət Təşkilatı Agentliyi tələbinə cavab verir.</p>
   </div>
 
   <div class="bento">
-    <div class="card col-4 reveal" style="padding: 32px;">
-      <div class="eyebrow" style="margin-bottom: 20px;">Ana səhifə və 7 bölmə</div>
-      <table class="budget-table" style="font-size: 14px;">
+    <div class="card col-4 reveal" style="padding: 16px;">
+      <div class="eyebrow" style="margin-bottom: 10px;">Ana səhifə və 7 bölmə</div>
+      <table class="budget-table" style="font-size: 12px;">
         <tr><th>Səhifə</th><th>Ünvan</th><th>Məzmun</th></tr>
-        <tr><td><strong>Ana səhifə</strong></td><td>/index.html</td><td>Missiya, rəqəmlər, məlumatlar</td></tr>
-        <tr><td><strong>Layihə</strong></td><td>/project.html</td><td>Məqsəd, missiya, hədəf qrup</td></tr>
-        <tr><td><strong>Sənətkarlar</strong></td><td>/artisans.html</td><td>Sənətkar profilləri, foto</td></tr>
-        <tr><td><strong>Təlim</strong></td><td>/training.html</td><td>12 modul, təlimçilər, metodika</td></tr>
-        <tr><td><strong>Məhsullar</strong></td><td>/products.html</td><td>Kəlağayı, suzani, ikat, xalça</td></tr>
-        <tr><td><strong>Şəbəkə</strong></td><td>/network.html</td><td>Şəbəkə, onlayn icma</td></tr>
-        <tr><td><strong>Media</strong></td><td>/media.html</td><td>Reportajlar, foto</td></tr>
-        <tr><td><strong>Əlaqə</strong></td><td>/contact.html</td><td>Əlaqə məlumatları, xəritə</td></tr>
+        <tr><td><strong>Ana səhifə</strong></td><td>/index.html</td><td>Missiya, rəqəmlər</td></tr>
+        <tr><td><strong>Layihə</strong></td><td>/project.html</td><td>Məqsəd, missiya</td></tr>
+        <tr><td><strong>Sənətkarlar</strong></td><td>/artisans.html</td><td>Sənətkar profilləri</td></tr>
+        <tr><td><strong>Təlim</strong></td><td>/training.html</td><td>12 modul, təlimçilər</td></tr>
+        <tr><td><strong>Məhsullar</strong></td><td>/products.html</td><td>Kəlağayı, suzani, ikat</td></tr>
+        <tr><td><strong>Şəbəkə</strong></td><td>/network.html</td><td>Şəbəkə</td></tr>
+        <tr><td><strong>Media</strong></td><td>/media.html</td><td>Reportajlar</td></tr>
+        <tr><td><strong>Əlaqə</strong></td><td>/contact.html</td><td>Əlaqə, xəritə</td></tr>
       </table>
     </div>
 
@@ -1113,23 +1115,14 @@ footer p {
       <div class="icon terracotta">🌐</div>
       <h3>4 dil</h3>
       <p style="font-size: 24px; margin-bottom: 8px;"><a href="/az/" style="text-decoration: none;" title="Azərbaycanca">🇦🇿</a> <a href="/uz/" style="text-decoration: none;" title="Oʻzbekcha">🇺🇿</a> <a href="/en/" style="text-decoration: none;" title="English">🇬🇧</a> <a href="/ru/" style="text-decoration: none;" title="Русский">🇷🇺</a></p>
-      <p>Azərbaycan, özbək, ingilis və rus dillərində. Beynəlxalq tərəfdaşlar və turist auditoriyası üçün.</p>
+      <p>Azərbaycan, özbək, ingilis və rus dillərində.</p>
     </div>
     <div class="card feature-card reveal">
       <div class="icon gold">📱</div>
       <h3>Responsive dizayn</h3>
-      <p>Telefon, planşet və kompüterdə düzgün işləyir. İpək Yolu rəngləri ilə müasir təqdimat.</p>
+      <p>Telefon, planşet və kompüterdə işləyir.</p>
     </div>
-    <div class="card feature-card reveal">
-      <div class="icon indigo">📰</div>
-      <h3>Media arxivi</h3>
-      <p>Video, foto, mətbuat materialları — donor və tərəfdaşlar üçün açıq giriş.</p>
-    </div>
-    <div class="card feature-card reveal">
-      <div class="icon teal">⚡</div>
-      <h3>Təlim profili</h3>
-      <p>Hər bir təlim modulunun təsviri, təlimçi və nəticələrin siyahısı.</p>
-    </div>
+
   </div>
 </section>
 
@@ -1144,90 +1137,50 @@ footer p {
 
   <div class="bento">
     <div class="card col-4 reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/kelaghayi.jpg" alt="Kəlağayı istehsalı" style="width: 100%; height: 280px; object-fit: cover; border-radius: 12px 12px 0 0;">
+      <img class="gallery-img" src="images/kelaghayi.jpg" alt="Kəlağayı istehsalı" style="width: 100%; height: 100px; object-fit: cover; border-radius: 12px 12px 0 0;">
       <div style="padding: 14px;">
         <h3 style="font-family: 'Space Grotesk'; font-size: 16px; color: var(--text); margin-bottom: 6px;">Kəlağayı istehsalı — Bakı, Azərbaycan</h3>
-        <p style="font-size: 13px; color: var(--text-dim);">Usta Alishahın emalatxanasında kəlağayı hazırlanması prosesi. İpək parçanın basma texnikası ilə naxışlanması.</p>
+        <p style="font-size: 13px; color: var(--text-dim);">Kəlağayı hazırlanması — basma texnikası.</p>
       </div>
     </div>
 
-    <div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/kelaghayi_display.jpg" alt="Kəlağayı nümunələri" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px 12px 0 0;">
-      <div style="padding: 12px;">
-        <h3 style="font-family: 'Space Grotesk'; font-size: 14px; color: var(--text); margin-bottom: 4px;">Kəlağayı nümunələri</h3>
-        <p style="font-size: 12px; color: var(--text-dim);">Müxtəlif rəng və naxışlı ipək örtüklər</p>
-      </div>
-    </div>
-
-    <div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/suzani.jpg" alt="Suzani naxışı" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px 12px 0 0;">
+<div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
+      <img class="gallery-img" src="images/suzani.jpg" alt="Suzani naxışı" style="width: 100%; height: 80px; object-fit: cover; border-radius: 12px 12px 0 0;">
       <div style="padding: 12px;">
         <h3 style="font-family: 'Space Grotesk'; font-size: 14px; color: var(--text); margin-bottom: 4px;">Suzani — Daşkənd</h3>
         <p style="font-size: 12px; color: var(--text-dim);">Əl tikmə, ipək saplar</p>
       </div>
     </div>
 
-    <div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/uzbek_embroidery_detail.jpg" alt="Özbəkistan parandja" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px 12px 0 0;">
-      <div style="padding: 12px;">
-        <h3 style="font-family: 'Space Grotesk'; font-size: 14px; color: var(--text); margin-bottom: 4px;">Özbəkistan parandja</h3>
-        <p style="font-size: 12px; color: var(--text-dim);">Daşkənd Tətbiqi Sənətlər Muzeyi</p>
-      </div>
-    </div>
-
-    <div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/carpet.jpg" alt="Azərbaycan xalçası" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px 12px 0 0;">
+<div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
+      <img class="gallery-img" src="images/carpet.jpg" alt="Azərbaycan xalçası" style="width: 100%; height: 80px; object-fit: cover; border-radius: 12px 12px 0 0;">
       <div style="padding: 12px;">
         <h3 style="font-family: 'Space Grotesk'; font-size: 14px; color: var(--text); margin-bottom: 4px;">Azərbaycan xalçası</h3>
         <p style="font-size: 12px; color: var(--text-dim);">Qarabağ məktəbi, əjdahalı naxış</p>
       </div>
     </div>
 
-    <div class="card col-4 reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/tashkent.jpg" alt="Daşkənd" style="width: 100%; height: 280px; object-fit: cover; border-radius: 12px 12px 0 0;">
-      <div style="padding: 14px;">
-        <h3 style="font-family: 'Space Grotesk'; font-size: 16px; color: var(--text); margin-bottom: 6px;">Daşkənd — Çorsu bazarı</h3>
-        <p style="font-size: 13px; color: var(--text-dim);">Layihənin əsas icra yeri. Özbəkistanın paytaxtı, İpək Yolu mədəni irs mərkəzi.</p>
-      </div>
-    </div>
-
-    <div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/kelaghayi_printing.jpg" alt="Kəlağayı basma" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px 12px 0 0;">
+<div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
+      <img class="gallery-img" src="images/kelaghayi_printing.jpg" alt="Kəlağayı basma" style="width: 100%; height: 80px; object-fit: cover; border-radius: 12px 12px 0 0;">
       <div style="padding: 12px;">
         <h3 style="font-family: 'Space Grotesk'; font-size: 14px; color: var(--text); margin-bottom: 4px;">Kəlağayı basma prosesi</h3>
         <p style="font-size: 12px; color: var(--text-dim);">Ağac qəliblə ipək parçaya naxış vurulması</p>
       </div>
     </div>
 
-    <div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/kelaghayi_drying.jpg" alt="Kəlağayı qurutma" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px 12px 0 0;">
-      <div style="padding: 12px;">
-        <h3 style="font-family: 'Space Grotesk'; font-size: 14px; color: var(--text); margin-bottom: 4px;">Kəlağayı qurutma</h3>
-        <p style="font-size: 12px; color: var(--text-dim);">Boyanmış parçaların açıq havada qurudulması</p>
-      </div>
-    </div>
-
-    <div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/carpet_museum.jpg" alt="Xalça Muzeyi" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px 12px 0 0;">
+<div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
+      <img class="gallery-img" src="images/carpet_museum.jpg" alt="Xalça Muzeyi" style="width: 100%; height: 80px; object-fit: cover; border-radius: 12px 12px 0 0;">
       <div style="padding: 12px;">
         <h3 style="font-family: 'Space Grotesk'; font-size: 14px; color: var(--text); margin-bottom: 4px;">Azərbaycan Xalça Muzeyi</h3>
         <p style="font-size: 12px; color: var(--text-dim);">Bakı — xalça sənətkarlığının qorunması</p>
       </div>
     </div>
 
-    <div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/baku_rugs.jpg" alt="Bakı xalçası" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px 12px 0 0;">
-      <div style="padding: 12px;">
-        <h3 style="font-family: 'Space Grotesk'; font-size: 14px; color: var(--text); margin-bottom: 4px;">Bakı xalçası — XVII əsr</h3>
-        <p style="font-size: 12px; color: var(--text-dim);">Muzey eksponatı, ənənəvi naxış</p>
-      </div>
-    </div>
-
-    <div class="card col-4 reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/samarkand_registan.jpg" alt="Səmərqənd Registan" style="width: 100%; height: 280px; object-fit: cover; border-radius: 12px 12px 0 0;">
+<div class="card col-4 reveal gallery-card" style="padding: 0; overflow: hidden;">
+      <img class="gallery-img" src="images/samarkand_registan.jpg" alt="Səmərqənd Registan" style="width: 100%; height: 100px; object-fit: cover; border-radius: 12px 12px 0 0;">
       <div style="padding: 14px;">
         <h3 style="font-family: 'Space Grotesk'; font-size: 16px; color: var(--text); margin-bottom: 6px;">Səmərqənd — Registan meydanı</h3>
-        <p style="font-size: 13px; color: var(--text-dim);">Video çəkiliş yeri. Birləşmiş Millətlər Təşkilatının Təhsil, Elm və Mədəniyyət Təşkilatının Ümumdünya İrsi №603. İpək Yolu mədəni irs mərkəzi.</p>
+        <p style="font-size: 13px; color: var(--text-dim);">Video çəkiliş yeri. Birləşmiş Millətlər Təşkilatının Təhsil, Elm və Mədəniyyət Təşkilatının İrsi №603.</p>
       </div>
     </div>
   </div>
@@ -1239,7 +1192,7 @@ footer p {
     <div class="eyebrow">Təsir və yayım</div>
     <div class="section-divider"></div>
     <h2>Media və yayım</h2>
-    <p>Layihənin mədəni irs sənədləşməsi və media yayımı.</p>
+    <p>Mədəni irs sənədləşməsi və media yayımı.</p>
   </div>
 
   <div class="bento">
@@ -1274,50 +1227,34 @@ footer p {
     <div class="card feature-card col-2 reveal">
       <div class="icon terracotta">🎬</div>
       <h3>Çəkiliş yeri — Səmərqənd</h3>
-      <p>Səmərqənd Registan meydanı — Birləşmiş Millətlər Təşkilatının Təhsil, Elm və Mədəniyyət Təşkilatının Ümumdünya İrsi №603. İpək Yolu mədəni irs mərkəzi. Burada sənətkarlıq prosesləri, məhəllə həyatı və ənənəvi tekstil istehsalı peşəkar kinematoqrafiya ilə sənədləşdirilir.</p>
+      <p>Səmərqənd Registan — Birləşmiş Millətlər Təşkilatının Təhsil, Elm və Mədəniyyət Təşkilatının İrsi №603. Sənətkarlıq prosesləri sənədləşdirilir.</p>
     </div>
 
     <!-- What we film -->
     <div class="card feature-card reveal">
       <div class="icon gold">🎥</div>
       <h3>Nə çəkirik</h3>
-      <p>Kəlağayı basma prosesi (ağac qəliblər, təbii boyalar), suzani tikmə texnikası, xalça toxuma, ikat parça hazırlanması. Sənətkarların hekayələri, məhəllə qadınlarının gündəlik həyatı, bazar satış mərasimləri.</p>
+      <p>Kəlağayı basma, suzani tikmə, xalça toxuma, ikat hazırlanması. Sənətkar hekayələri və məhəllə həyatı.</p>
     </div>
 
     <!-- AI in filming -->
     <div class="card feature-card reveal">
       <div class="icon indigo">🤖</div>
       <h3>Süni intellektin istifadəsi</h3>
-      <p>Video montajda süni intellekt alətləri: avtomatik alt yazı (4 dil), səs-kəsilmə təmizləmə, rəng korreksiyası, məzmun analizi. Süni intellekt yalnız texniki proseslərdə kömək edir — yaradıcı qərarlar insan tərəfindən qəbul edilir.</p>
+      <p>Montajda süni intellekt: alt yazı (4 dil), səs təmizləmə, rəng korreksiyası. Yaradıcı qərarlar insan tərəfindən.</p>
     </div>
 
     <!-- Safety -->
-    <div class="card feature-card reveal">
-      <div class="icon teal">🛡️</div>
-      <h3>Təhlükəsizlik və etika</h3>
-      <p>Sənətkarların razılığı yazılı formada alınır. Uşaq və şəxsi məlumatlar qorunur. Video materiallar yalnız təsdiqlənmiş platformalarda yayımlanır. Süni intellekt istifadəsi şəffaf şəkildə göstərilir.</p>
-    </div>
+
 
     <!-- Innovation -->
-    <div class="card feature-card col-2 reveal">
-      <div class="icon terracotta">💡</div>
-      <h3>İnnovativ yanaşma</h3>
-      <p>Ənənəvi sənətkarlığı müasir film istehsalı ilə birləşdiririk: dron çəkilişləri (tarixi memarlıq), makro linzalar (naxış detalları), 360 dərəcəli virtual tur (sənətkarlıq emekatəsi). Video materiallar vebsaytda və YouTube-da daimi arxiv kimi saxlanılır.</p>
-    </div>
+
 
     <!-- Distribution -->
-    <div class="card feature-card reveal">
-      <div class="icon gold">📡</div>
-      <h3>Yayım kanalları</h3>
-      <p>Real Televiziya (efir + YouTube), Instagram reels (qısa format), vebsayt media arxivi (tam format). Video materiallar 4 dildə alt yazı ilə təqdim olunur.</p>
-    </div>
+
 
     <!-- Equipment -->
-    <div class="card feature-card reveal">
-      <div class="icon indigo">⚙️</div>
-      <h3>Texniki təchizat</h3>
-      <p>Peşəkar 4K kamera, dron, stabilizator, səs yazı avadanlığı, portativ işıqlandırma. Çəkiliş komandası 2 nəfər — operator və rejissor assistenti.</p>
-    </div>
+
 
     <!-- Heritage preservation -->
     <div class="card feature-card col-2 reveal">
@@ -1374,11 +1311,11 @@ footer p {
     Two Cultures, One Frame
   </p>
   <p class="reveal cta-text">
-    2500 illik İpək Yolu irsini sənədləşdirmək və qorumaq — 30 gənc qadın sənətkardan sahibkara.
+    2500 illik İpək Yolu irsini qorumaq — 30 qadın sənətkardan sahibkara.
   </p>
 
   <div class="cta-info reveal">
-    <p>İpək Yolu İrsi layihəsi 2026-cı ilin oktyabrında başlayır və 2027-ci ilin martında yekunlaşır.</p>
+    <p>Layihə: oktyabr 2026 — mart 2027.</p>
     <p>İcraçı: Gənclərin "Tənhalara Dayaq" İctimai Birliyi</p>
     <p>Tərəfdaş: "DİALOQ" Vətəndaş Cəmiyyəti və İqtisadi Fəallıq Təşkilatı</p>
   </div>
@@ -1420,7 +1357,7 @@ footer p {
     <div class="card feature-card col-2 reveal">
       <div class="icon indigo">📍</div>
       <h3>Layihə ünvanı</h3>
-      <p>Əsas fəaliyyət: Daşkənd. Video çəkiliş: Səmərqənd — Birləşmiş Millətlər Təşkilatının Təhsil, Elm və Mədəniyyət Təşkilatının Ümumdünya İrsi №603.</p>
+      <p>Əsas fəaliyyət: Daşkənd. Video: Səmərqənd — Birləşmiş Millətlər Təşkilatının Təhsil, Elm və Mədəniyyət Təşkilatının İrsi №603.</p>
     </div>
   </div>
 </section>
