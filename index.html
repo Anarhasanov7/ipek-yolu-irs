@@ -397,13 +397,13 @@ section > * {
 .bento {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 12px;
 }
 .bento .card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 28px;
+  padding: 20px;
   transition: var(--transition);
   position: relative;
   overflow: hidden;
@@ -479,13 +479,13 @@ section > * {
 
 /* === FEATURE CARD === */
 .feature-card .icon {
-  width: 44px; height: 44px;
-  border-radius: 12px;
+  width: 36px; height: 36px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  margin-bottom: 16px;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 .feature-card .icon.terracotta { background: var(--terracotta-glow); }
 .feature-card .icon.gold { background: var(--gold-glow); }
@@ -493,53 +493,53 @@ section > * {
 .feature-card .icon.teal { background: rgba(45,212,191,0.15); }
 .feature-card h3 {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 .feature-card p {
-  font-size: 14px;
+  font-size: 12px;
   color: var(--text-dim);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 /* === TIMELINE === */
 .timeline-card {
-  padding: 32px;
+  padding: 20px;
 }
 .timeline-item {
   display: flex;
-  gap: 16px;
-  padding: 16px 0;
+  gap: 12px;
+  padding: 10px 0;
   border-bottom: 1px solid var(--border);
 }
 .timeline-item:last-child { border-bottom: none; }
 .timeline-item .step {
   flex-shrink: 0;
-  width: 32px; height: 32px;
-  border-radius: 10px;
+  width: 26px; height: 26px;
+  border-radius: 8px;
   background: var(--surface);
   border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--terracotta);
 }
 .timeline-item .content h4 {
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 .timeline-item .content .date {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-faint);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 .timeline-item .content p {
-  font-size: 13px;
+  font-size: 11px;
   color: var(--text-dim);
 }
 
