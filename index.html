@@ -594,25 +594,64 @@ section > * {
 }
 
 /* === CRAFT TABLE === */
+.craft-table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 8px 24px;
+  overflow: hidden;
+}
+.craft-table {
+  width: 100%;
+  border-collapse: collapse;
+}
 .craft-table th {
   font-size: 11px;
-  padding: 10px 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  padding: 16px 12px 12px;
+  border-bottom: 2px solid var(--border);
+  text-align: left;
 }
 .craft-table td {
-  padding: 14px 12px;
+  padding: 16px 12px;
   vertical-align: top;
-  line-height: 1.5;
+  line-height: 1.6;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s ease;
+}
+.craft-table tr:last-child td {
+  border-bottom: none;
+}
+.craft-table tr:hover td {
+  background: var(--surface-hover);
 }
 .craft-table td:first-child {
   white-space: nowrap;
-  width: 18%;
+  width: 20%;
+  font-size: 15px;
+}
+.craft-table td:first-child strong {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  display: inline-block;
 }
 .craft-table td:nth-child(2) {
-  width: 27%;
+  width: 28%;
   color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 500;
 }
 .craft-table td:last-child {
   color: var(--text-dim);
+  font-size: 14px;
+}
+.craft-table .flag-icon {
+  font-size: 18px;
+  margin-right: 6px;
 }
 
 /* === BUDGET TABLE === */
@@ -1074,38 +1113,40 @@ footer p {
   </div>
 
   <div class="bento reveal" style="display: block;">
-    <table class="budget-table craft-table" style="font-size: 14px;">
+    <div class="craft-table-wrap">
+    <table class="craft-table">
       <tr>
         <th>Sənət</th>
         <th>Mənşə</th>
         <th>Təsvir</th>
       </tr>
       <tr>
-        <td><strong style="color: var(--terracotta);">Kəlağayı</strong></td>
+        <td><span class="flag-icon">🇦🇿</span><strong style="color: var(--terracotta);">Kəlağayı</strong></td>
         <td>Azərbaycan, Bakı — Basma texnikası</td>
         <td>İpək parçaya ağac qəliblə naxış. BMT İrsi. Buta, çiçək, quş motivləri.</td>
       </tr>
       <tr>
-        <td><strong style="color: var(--indigo);">Suzani</strong></td>
+        <td><span class="flag-icon">🇺🇿</span><strong style="color: var(--indigo);">Suzani</strong></td>
         <td>Özbəkistan, Daşkənd — Əl tikmə</td>
         <td>İpək saplarla əl tikmə sənəti. Toy üçün. Günəş, nar, badam motivləri.</td>
       </tr>
       <tr>
-        <td><strong style="color: var(--terracotta);">Xalça</strong></td>
+        <td><span class="flag-icon">🇦🇿</span><strong style="color: var(--terracotta);">Xalça</strong></td>
         <td>Azərbaycan, Bakı — Əl toxuma</td>
         <td>Yun və ipəklə əl toxuma. BMT İrsi. Quba, Şirvan, Qazax məktəbləri.</td>
       </tr>
       <tr>
-        <td><strong style="color: var(--gold);">Ikat / Atlas / Adras</strong></td>
+        <td><span class="flag-icon">🇺🇿</span><strong style="color: var(--gold);">Ikat / Atlas / Adras</strong></td>
         <td>Özbəkistan, Daşkənd — Abra bandaj</td>
         <td>Saplar toxunmamışdan boyanır. Atlas ipək, Adras pambıq. Daşkənd mərkəzi.</td>
       </tr>
       <tr>
-        <td><strong style="color: var(--terracotta);">Birləşmə</strong></td>
+        <td><span class="flag-icon">🇦🇿🇺🇿</span><strong style="color: var(--terracotta);">Birləşmə</strong></td>
         <td>Azərbaycan + Özbəkistan — Birgə</td>
         <td>Kəlağayı + Ikat = unikal brend. İki ölkə birgə. 30 qadın sənətkar.</td>
       </tr>
     </table>
+    </div>
   </div>
 </section>
 
