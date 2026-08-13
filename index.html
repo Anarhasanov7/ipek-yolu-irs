@@ -397,13 +397,13 @@ section > * {
 .bento {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 16px;
 }
 .bento .card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 20px;
+  padding: 28px;
   transition: var(--transition);
   position: relative;
   overflow: hidden;
@@ -479,13 +479,13 @@ section > * {
 
 /* === FEATURE CARD === */
 .feature-card .icon {
-  width: 36px; height: 36px;
-  border-radius: 10px;
+  width: 44px; height: 44px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 20px;
+  margin-bottom: 16px;
 }
 .feature-card .icon.terracotta { background: var(--terracotta-glow); }
 .feature-card .icon.gold { background: var(--gold-glow); }
@@ -493,53 +493,53 @@ section > * {
 .feature-card .icon.teal { background: rgba(45,212,191,0.15); }
 .feature-card h3 {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 .feature-card p {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-dim);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 /* === TIMELINE === */
 .timeline-card {
-  padding: 20px;
+  padding: 32px;
 }
 .timeline-item {
   display: flex;
-  gap: 12px;
-  padding: 10px 0;
+  gap: 16px;
+  padding: 16px 0;
   border-bottom: 1px solid var(--border);
 }
 .timeline-item:last-child { border-bottom: none; }
 .timeline-item .step {
   flex-shrink: 0;
-  width: 26px; height: 26px;
-  border-radius: 8px;
+  width: 32px; height: 32px;
+  border-radius: 10px;
   background: var(--surface);
   border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--terracotta);
 }
 .timeline-item .content h4 {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 .timeline-item .content .date {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-faint);
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 .timeline-item .content p {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-dim);
 }
 
@@ -549,12 +549,11 @@ section > * {
 }
 .craft-card {
   position: relative;
-  min-height: 280px;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: flex-end;
   overflow: hidden;
-  padding: 20px;
 }
 .craft-card .bg {
   position: absolute;
@@ -573,18 +572,17 @@ section > * {
 }
 .craft-card h3 {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 .craft-card .origin {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-dim);
   font-weight: 500;
-  margin-bottom: 8px;
 }
 .craft-card p {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-dim);
   margin-top: 8px;
 }
@@ -877,7 +875,7 @@ footer p {
     Two Cultures, One Frame
   </p>
   <p class="subtitle reveal">
-    Azərbaycan və Özbəkistan qadın sənətkarlarının 2500 illik tekstil ənənəsini dayanıqlı biznes modelinə transformasiya etmək və peşəkar video sənədləşdirmə ilə gələcək nəsillərə çatdırmaq. 30 gənc qadın — sənətkardan sahibkara.
+    2500 illik tekstil ənənəsini biznes modelinə çevirmək və video sənədləşdirmə ilə gələcək nəsillərə çatdırmaq. 30 gənc qadın — sənətkardan sahibkara.
   </p>
   <div class="cta-group reveal">
     <a href="#about" class="btn btn-primary">Layihəni kəşf et →</a>
@@ -916,7 +914,7 @@ footer p {
     <div class="eyebrow">Layihə haqqında</div>
     <div class="section-divider"></div>
     <h2>2500 illik irsi<br>geleceyə daşıyırıq</h2>
-    <p>Daşkənd — Özbəkistanın paytaxtı. Məhəllə qadınları mədəni sənətkarlığı ucuz qiymətə satırlar. Biznes bacarıqlarının olmaması səbəbindən əsrlərin irsi iqtisadi gəlirə çevrilmir.</p>
+    <p>Daşkənd məhəllə qadınları sənətkarlığı ucuz satırlar — biznes bacarıqlarının olmaması səbəbindən irs gəlirə çevrilmir.</p>
   </div>
 
   <div class="bento">
@@ -980,7 +978,7 @@ footer p {
         <div class="content">
           <div class="date">01.10.2026 – 15.11.2026</div>
           <h4>İştirakçı seçimi və sorğu</h4>
-          <p>200+ müraciətdən 30 qadın seçilir (15 Azərbaycan + 15 Özbəkistan). 200+ məhəllə qadını arasında iqtisadi vəziyyət sorğusu — bazis məlumat yaradılır.</p>
+          <p>200+ müraciətdən 30 qadın seçilir (15 Az + 15 Öz). 200+ məhəllə qadını arasında iqtisadi sorğu.</p>
         </div>
       </div>
       <div class="timeline-item">
@@ -988,7 +986,7 @@ footer p {
         <div class="content">
           <div class="date">18.11.2026 – 20.11.2026</div>
           <h4>3 günlük intensiv təlim — Daşkənd</h4>
-          <p>12 modul: mədəni brend, turist satışı, Instagram/Etsy, qiymət strategiyası, rəqəmsal marketinq, sənətkarlıq mübadiləsi (Azərbaycan kəlağayı ↔ Özbəkistan suzani).</p>
+          <p>12 modul: mədəni brend, turist satışı, Instagram/Etsy, rəqəmsal marketinq, sənətkarlıq mübadiləsi.</p>
         </div>
       </div>
       <div class="timeline-item">
@@ -996,7 +994,7 @@ footer p {
         <div class="content">
           <div class="date">21.11.2026</div>
           <h4>Bazar günü — Daşkənd</h4>
-          <p>50+ alıcı, distribütor və media. Real alıcılarla tanışlıq, satış/niyyət protokolları, uzunmüddətli müqavilələr.</p>
+          <p>50+ alıcı və distribütor. Satış protokolları və uzunmüddətli müqavilələr.</p>
         </div>
       </div>
       <div class="timeline-item">
@@ -1004,7 +1002,7 @@ footer p {
         <div class="content">
           <div class="date">01.12.2026 – 31.03.2027</div>
           <h4>Kitabça + Virtual mentorluq + Şəbəkə</h4>
-          <p>490 nüsxə metodik kitabça məktəblərə. 3 aylıq onlayn mentorluq. Qadın Mədəni İrs Şəbəkəsi Telegram-da fəaliyyətə başlayır.</p>
+          <p>490 nüsxə kitabça məktəblərə. 3 aylıq onlayn mentorluq. Qadın Mədəni İrs Şəbəkəsi Telegram-da.</p>
         </div>
       </div>
     </div>
@@ -1012,25 +1010,25 @@ footer p {
     <div class="card feature-card reveal">
       <div class="icon terracotta">📚</div>
       <h3>12 Təlim Modulu</h3>
-      <p>Brend yaratma, turist satışı, Instagram, Etsy, qiymət, hekayə danışma, rəqəmsal marketinq, brendinq, maliyyə, biznes modeli, sənətkarlıq mübadiləsi, alıcı əlaqələri.</p>
+      <p>Brend, turist satışı, Instagram, Etsy, qiymət, rəqəmsal marketinq, biznes modeli, mübadilə, alıcı əlaqələri.</p>
     </div>
 
     <div class="card feature-card reveal">
       <div class="icon gold">🤝</div>
       <h3>Birgə Mübadilə</h3>
-      <p>Azərbaycan kəlağayı + Özbəkistan ikat birləşməsi — unikal mədəni brend məhsulları. İlk dəfə iki ölkənin sənətkarlıq ənənələri birgə mübadilə olunur.</p>
+      <p>Kəlağayı + ikat birləşməsi — unikal brend. İki ölkənin sənətkarlıq ənənələri ilk dəfə birgə.</p>
     </div>
 
     <div class="card feature-card reveal">
       <div class="icon indigo">📱</div>
       <h3>Onlayn Satış</h3>
-      <p>Etsy (beynəlxalq), Instagram Shop (vizual vitrin), WhatsApp Business (oflayn kataloq). Hədəf: 15 iştirakçı 6 ayda satışa başlayır.</p>
+      <p>Etsy, Instagram Shop, WhatsApp Business. Hədəf: 15 iştirakçı 6 ayda satışa başlayır.</p>
     </div>
 
     <div class="card feature-card reveal">
       <div class="icon teal">🏆</div>
       <h3>Sertifikat + Şəbəkə</h3>
-      <p>30 sertifikatlı iştirakçı. Qadın Mədəni İrs Şəbəkəsi — Telegram, 6 ay davamlı. Mentor-mentee cütləri, həftəlik məsləhət sessiyaları.</p>
+      <p>30 sertifikatlı iştirakçı. Telegram şəbəkəsi, 6 ay davamlı. Mentor-mentee, həftəlik məsləhət.</p>
     </div>
   </div>
 </section>
@@ -1049,7 +1047,7 @@ footer p {
       <div class="content">
         <h3>Kəlağayı</h3>
         <div class="origin">Azərbaycan, Bakı — Basma texnikası, təbii boyalar</div>
-        <p>Ənənəvi ipək örtük sənətkarlığı. İpək parça üzərində əl ilə naxış basma texnikası — ağac qəliblər və təbii boyalar (nar, qoz, indigo). Birləşmiş Millətlər Təşkilatının Təhsil, Elm və Mədəniyyət Təşkilatının Qeyri-Maddi Mədəni İrs siyahısında. Hər kəlağayı unikal naxış daşıyır — buta, çiçək, quş motivləri. Azərbaycanlı qadınlar bu sənəti Özbəkistan qadınlarına öyrədirlər.</p>
+        <p>İpək parça üzərində əl naxış basma — ağac qəliblər, təbii boyalar. Birləşmiş Millətlər Təşkilatının Təhsil, Elm və Mədəniyyət Təşkilatının Qeyri-Maddi Mədəni İrsi. Buta, çiçək, quş motivləri.</p>
       </div>
     </div>
     <div class="card craft-card suzani reveal">
@@ -1057,7 +1055,7 @@ footer p {
       <div class="content">
         <h3>Suzani</h3>
         <div class="origin">Özbəkistan, Daşkənd — Əl tikmə, ipək saplar</div>
-        <p>Pambıq və ipək parça üzərində ipək saplarla əl tikmə sənəti. Toy, bayram və ev dekorasiyası üçün istifadə olunur. Ənənəvi motivlər: günəş çiçəyi, nar, badam, buta. Hər suzani aylarla işlənilir və nəsildən-nəslə ötürülür. Anadan qızına miras qalır. Daşkənd suzanisi özünəməxsus rəng palitrası ilə fərqlənir.</p>
+        <p>İpək saplarla əl tikmə sənəti. Toy və dekorasiya üçün. Motivlər: günəş çiçəyi, nar, badam. Anadan qızına miras qalır.</p>
       </div>
     </div>
     <div class="card craft-card carpet reveal">
@@ -1065,7 +1063,7 @@ footer p {
       <div class="content">
         <h3>Xalça</h3>
         <div class="origin">Azərbaycan, Bakı — Əl toxuma, yun və ipək</div>
-        <p>Ənənəvi Azərbaycan xalça sənətkarlığı — yun və ipək saplarla əl toxuma. Geometrik və bitki motivləri, buta, medalyon naxışları. Birləşmiş Millətlər Təşkilatının Təhsil, Elm və Mədəniyyət Təşkilatının Qeyri-Maddi Mədəni İrsi. Hər regionun özünəməxsus naxış dili var — Quba, Şirvan, Qazax, Qarabağ məktəbləri.</p>
+        <p>Yun və ipəklə əl toxuma. Geometrik və bitki motivləri. Birləşmiş Millətlər Təşkilatının Təhsil, Elm və Mədəniyyət Təşkilatının İrsi. Quba, Şirvan, Qazax, Qarabağ məktəbləri.</p>
       </div>
     </div>
     <div class="card craft-card ikat reveal">
@@ -1073,7 +1071,7 @@ footer p {
       <div class="content">
         <h3>Ikat / Atlas / Adras</h3>
         <div class="origin">Özbəkistan, Daşkənd — Abra bandaj texnikası</div>
-        <p>Abra bandaj texnikası — parça toxunmamışdan əvvəl saplar boyanır. Sapların müəyyən hissələri bağlanır, sonra boyaya batırılır, naxış yaranır. Atlas — təbii ipək, Adras — ipək-pambıq qarışığı. Hər parça unikal. Daşkənd və Fərqanə vadisi bu sənətin mərkəzidir.</p>
+        <p>Abra bandaj: saplar toxunmamışdan əvvəl boyanır. Atlas — ipək, Adras — ipək-pambıq. Daşkənd və Fərqanə mərkəzidir.</p>
       </div>
     </div>
     <div class="card craft-card reveal" style="border-color: var(--terracotta);">
@@ -1081,7 +1079,7 @@ footer p {
       <div class="content">
         <h3 style="color: var(--terracotta);">Birləşmə</h3>
         <div class="origin">Azərbaycan + Özbəkistan — Birgə yaradıcılıq</div>
-        <p>Kəlağayı naxışları (buta, çiçək) + Ikat parçaları (Atlas, Adras) = unikal mədəni brend. İki ölkənin tekstil ənənələri ilk dəfə birgə birləşdirilir. Yalnız bu layihədə — 30 qadın sənətkar tərəfindən yaradılan unikal məhsullar. Hər məhsul hər iki ölkənin irsini daşıyır.</p>
+        <p>Kəlağayı + Ikat = unikal brend. İki ölkənin tekstil ənənələri ilk dəfə birgə. 30 qadın sənətkar tərəfindən yaradılır.</p>
       </div>
     </div>
   </div>
@@ -1100,14 +1098,14 @@ footer p {
       <div class="eyebrow" style="margin-bottom: 20px;">Ana səhifə və 7 bölmə</div>
       <table class="budget-table" style="font-size: 14px;">
         <tr><th>Səhifə</th><th>Ünvan</th><th>Məzmun</th></tr>
-        <tr><td><strong>Ana səhifə</strong></td><td>/index.html</td><td>Layihənin missiyası, əsas rəqəmlər və məlumatlar</td></tr>
-        <tr><td><strong>Layihə</strong></td><td>/project.html</td><td>Məqsəd, missiya, problemlər, hədəf qrup, gözlənilən nəticələr</td></tr>
-        <tr><td><strong>Sənətkarlar</strong></td><td>/artisans.html</td><td>İştirakçı sənətkar profilləri, foto və hekayələr</td></tr>
-        <tr><td><strong>Təlim</strong></td><td>/training.html</td><td>12 modul proqramı, təlimçilər, tarixi, metodika</td></tr>
-        <tr><td><strong>Məhsullar</strong></td><td>/products.html</td><td>Kəlağayı, suzani, ikat, xalça nümunələri</td></tr>
-        <tr><td><strong>Şəbəkə</strong></td><td>/network.html</td><td>Qadın Mədəni İrs Şəbəkəsi, onlayn icma</td></tr>
-        <tr><td><strong>Media</strong></td><td>/media.html</td><td>Real Televiziya, Sia.az, Hafta.az reportajları, foto</td></tr>
-        <tr><td><strong>Əlaqə</strong></td><td>/contact.html</td><td>Gənclərin "Tənhalara Dayaq" İctimai Birliyi və DİALOQ əlaqə məlumatları, xəritə</td></tr>
+        <tr><td><strong>Ana səhifə</strong></td><td>/index.html</td><td>Missiya, rəqəmlər, məlumatlar</td></tr>
+        <tr><td><strong>Layihə</strong></td><td>/project.html</td><td>Məqsəd, missiya, hədəf qrup</td></tr>
+        <tr><td><strong>Sənətkarlar</strong></td><td>/artisans.html</td><td>Sənətkar profilləri, foto</td></tr>
+        <tr><td><strong>Təlim</strong></td><td>/training.html</td><td>12 modul, təlimçilər, metodika</td></tr>
+        <tr><td><strong>Məhsullar</strong></td><td>/products.html</td><td>Kəlağayı, suzani, ikat, xalça</td></tr>
+        <tr><td><strong>Şəbəkə</strong></td><td>/network.html</td><td>Şəbəkə, onlayn icma</td></tr>
+        <tr><td><strong>Media</strong></td><td>/media.html</td><td>Reportajlar, foto</td></tr>
+        <tr><td><strong>Əlaqə</strong></td><td>/contact.html</td><td>Əlaqə məlumatları, xəritə</td></tr>
       </table>
     </div>
 
@@ -1411,7 +1409,7 @@ footer p {
       <div class="flag">🇺🇿</div>
       <div class="role">Tərəfdaş — Özbəkistan</div>
       <h3>"DİALOQ" Vətəndaş Cəmiyyəti və İqtisadi Fəallıq Təşkilatı</h3>
-      <p>Özbəkistan, Daşkənd<br>Qeydiyyat: 10 oktyabr 2021, №1011<br>Status: Respublika səviyyəli</p>
+      <p>Özbəkistan, Daşkənd<br>Qeydiyyat: 2021, №1011</p>
       <div class="contact">
         Sədr: Bekmirzayev Müxtər<br>
         Tel: +998 97 329 64 66<br>
@@ -1422,7 +1420,7 @@ footer p {
     <div class="card feature-card col-2 reveal">
       <div class="icon indigo">📍</div>
       <h3>Layihə ünvanı</h3>
-      <p>Layihənin əsas fəaliyyətləri Özbəkistanın Daşkənd şəhərində həyata keçirilir. Video çəkilişlər və mədəni irs sənədləşməsi Səmərqənddə aparılır — Birləşmiş Millətlər Təşkilatının Təhsil, Elm və Mədəniyyət Təşkilatının Ümumdünya İrsi №603.</p>
+      <p>Əsas fəaliyyət: Daşkənd. Video çəkiliş: Səmərqənd — Birləşmiş Millətlər Təşkilatının Təhsil, Elm və Mədəniyyət Təşkilatının Ümumdünya İrsi №603.</p>
     </div>
   </div>
 </section>
