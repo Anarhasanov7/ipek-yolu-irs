@@ -625,8 +625,19 @@ section > * {
 .craft-table tr:last-child td {
   border-bottom: none;
 }
+.craft-table tr {
+  border-left: 4px solid transparent;
+}
 .craft-table tr:hover td {
   background: var(--surface-hover);
+}
+.craft-table .craft-highlight td {
+  background: linear-gradient(90deg, rgba(232,112,74,0.08), transparent);
+  font-weight: 500;
+}
+.craft-table .craft-highlight td:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 }
 .craft-table td:first-child {
   white-space: nowrap;
@@ -1120,27 +1131,27 @@ footer p {
         <th>Mənşə</th>
         <th>Təsvir</th>
       </tr>
-      <tr>
+      <tr style="border-left: 4px solid var(--terracotta);">
         <td><span class="flag-icon">🇦🇿</span><strong style="color: var(--terracotta);">Kəlağayı</strong></td>
         <td>Azərbaycan, Bakı — Basma texnikası</td>
         <td>İpək parçaya ağac qəliblə naxış. BMT İrsi. Buta, çiçək, quş motivləri.</td>
       </tr>
-      <tr>
+      <tr style="border-left: 4px solid var(--indigo);">
         <td><span class="flag-icon">🇺🇿</span><strong style="color: var(--indigo);">Suzani</strong></td>
         <td>Özbəkistan, Daşkənd — Əl tikmə</td>
         <td>İpək saplarla əl tikmə sənəti. Toy üçün. Günəş, nar, badam motivləri.</td>
       </tr>
-      <tr>
+      <tr style="border-left: 4px solid var(--terracotta);">
         <td><span class="flag-icon">🇦🇿</span><strong style="color: var(--terracotta);">Xalça</strong></td>
         <td>Azərbaycan, Bakı — Əl toxuma</td>
         <td>Yun və ipəklə əl toxuma. BMT İrsi. Quba, Şirvan, Qazax məktəbləri.</td>
       </tr>
-      <tr>
+      <tr style="border-left: 4px solid var(--gold);">
         <td><span class="flag-icon">🇺🇿</span><strong style="color: var(--gold);">Ikat / Atlas / Adras</strong></td>
         <td>Özbəkistan, Daşkənd — Abra bandaj</td>
         <td>Saplar toxunmamışdan boyanır. Atlas ipək, Adras pambıq. Daşkənd mərkəzi.</td>
       </tr>
-      <tr>
+      <tr class="craft-highlight" style="border-left: 4px solid var(--terracotta);">
         <td><span class="flag-icon">🇦🇿🇺🇿</span><strong style="color: var(--terracotta);">Birləşmə</strong></td>
         <td>Azərbaycan + Özbəkistan — Birgə</td>
         <td>Kəlağayı + Ikat = unikal brend. İki ölkə birgə. 30 qadın sənətkar.</td>
