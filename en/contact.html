@@ -144,7 +144,15 @@
     </div>
 
     <div class="card feature-card reveal">
-      <div class="icon indigo">🌐</div>
+      <div class="icon indigo">📞</div>
+      <h3>Phone</h3>
+      <p style="font-size: 15px; line-height: 1.8;">
+        +994 99 385 2077
+      </p>
+    </div>
+
+    <div class="card feature-card reveal">
+      <div class="icon teal">🌐</div>
       <h3>Website</h3>
       <p style="font-size: 15px;">gtdib.org</p>
     </div>
@@ -184,14 +192,21 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="subject">Subject</label>
-        <input type="text" id="subject" name="subject" placeholder="Message subject (optional)">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" placeholder="+994 50 123 45 67">
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" placeholder="Message subject (optional)">
+        </div>
       </div>
 
       <div class="form-group">
         <label for="message">Message *</label>
-        <textarea id="message" name="message" required placeholder="Write your message here..."></textarea>
+        <textarea id="message" name="message" required minlength="20" placeholder="Write your message here... (at least 20 characters or 3 words)"></textarea>
+        <small style="font-size: 12px; color: var(--text-faint);">Please make sure your message is at least 20 characters or 3 words long.</small>
       </div>
 
       <div class="form-status" id="formStatus"></div>
@@ -253,6 +268,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
   const data = {
     name: document.getElementById('name').value.trim(),
     email: document.getElementById('email').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
     subject: document.getElementById('subject').value.trim(),
     message: document.getElementById('message').value.trim()
   };
