@@ -179,6 +179,17 @@ nav ul a:hover, nav ul a.active {
   color: var(--text);
   background: var(--surface);
 }
+nav ul li.lang-switch a {
+  margin-left: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+nav ul li.lang-switch a:hover {
+  border-color: var(--terracotta);
+  color: var(--terracotta);
+}
 
 /* === LAYOUT === */
 section {
