@@ -249,6 +249,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
   btn.textContent = 'Göndərilir...';
   status.className = 'form-status';
   status.style.display = 'none';
+  status.textContent = '';
 
   const data = {
     name: document.getElementById('name').value.trim(),
@@ -269,14 +270,17 @@ document.getElementById('contactForm').addEventListener('submit', async function
     if (response.ok && result.success) {
       status.textContent = 'Mesajınız uğurla göndərildi! Tezliklə sizinlə əlaqə saxlayacağıq.';
       status.className = 'form-status success';
+      status.style.display = 'block';
       form.reset();
     } else {
       status.textContent = result.error || 'Xəta baş verdi. Zəhmət olmasa bir az sonra yenidən cəhd edin.';
       status.className = 'form-status error';
+      status.style.display = 'block';
     }
   } catch (err) {
     status.textContent = 'Şəbəkə xətası. Zəhmət olmasa internet bağlantınızı yoxlayın və yenidən cəhd edin.';
     status.className = 'form-status error';
+    status.style.display = 'block';
   }
 
   btn.disabled = false;

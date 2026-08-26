@@ -249,6 +249,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
   btn.textContent = 'Sending...';
   status.className = 'form-status';
   status.style.display = 'none';
+  status.textContent = '';
 
   const data = {
     name: document.getElementById('name').value.trim(),
@@ -269,14 +270,17 @@ document.getElementById('contactForm').addEventListener('submit', async function
     if (response.ok && result.success) {
       status.textContent = 'Your message has been sent successfully! We will get back to you soon.';
       status.className = 'form-status success';
+      status.style.display = 'block';
       form.reset();
     } else {
       status.textContent = result.error || 'An error occurred. Please try again later.';
       status.className = 'form-status error';
+      status.style.display = 'block';
     }
   } catch (err) {
     status.textContent = 'Network error. Please check your internet connection and try again.';
     status.className = 'form-status error';
+    status.style.display = 'block';
   }
 
   btn.disabled = false;
