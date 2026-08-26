@@ -8,622 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-/* === DESIGN TOKENS === */
-:root {
-  --bg: #0a0a0f;
-  --bg-2: #12121a;
-  --surface: rgba(255,255,255,0.04);
-  --surface-hover: rgba(255,255,255,0.08);
-  --border: rgba(255,255,255,0.08);
-  --border-hover: rgba(255,255,255,0.15);
-  --text: #f0f0f5;
-  --text-dim: #8888a0;
-  --text-faint: #555568;
-  --terracotta: #e8704a;
-  --terracotta-glow: rgba(232,112,74,0.3);
-  --gold: #f0c050;
-  --gold-glow: rgba(240,192,80,0.25);
-  --indigo: #4a6cf7;
-  --indigo-glow: rgba(74,108,247,0.25);
-  --teal: #2dd4bf;
-  --radius: 20px;
-  --radius-sm: 12px;
-  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
-  --gradient-silk: linear-gradient(135deg, var(--terracotta), var(--gold), var(--indigo));
-}
-
-/* === SCROLL PROGRESS BAR === */
-.scroll-progress {
-  position: fixed;
-  top: 0; left: 0;
-  height: 3px;
-  width: 0%;
-  background: var(--gradient-silk);
-  z-index: 200;
-  transition: width 0.1s ease;
-}
-
-/* === ANIMATED COUNTERS === */
-.counter {
-  display: inline-block;
-}
-
-/* === GRADIENT BORDER CARDS === */
-.card-gradient {
-  position: relative;
-}
-.card-gradient::after {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: var(--radius);
-  padding: 1px;
-  background: var(--gradient-silk);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-.card-gradient:hover::after { opacity: 1; }
-
-/* === HERO BACKGROUND === */
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  background: var(--bg);
-}
-.hero-bg img {
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-  object-position: center;
-  opacity: 0.18;
-  filter: blur(2px) saturate(1.2);
-}
-.hero-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--bg);
-  opacity: 0.60;
-}
-
-/* === SECTION DIVIDER === */
-.section-divider {
-  width: 60px;
-  height: 4px;
-  background: var(--gradient-silk);
-  border-radius: 100px;
-  margin: 0 auto 24px;
-}
-
-/* === STAT HOVER EFFECT === */
-.stat-card {
-  cursor: default;
-}
-.stat-card:hover .number {
-  transform: scale(1.1);
-  transition: transform 0.3s ease;
-}
-.stat-card .number {
-  transition: transform 0.3s ease;
-}
-
-/* === GALLERY HOVER ZOOM === */
-.gallery-card {
-  overflow: hidden;
-}
-.gallery-card img {
-  transition: transform 0.5s ease;
-}
-.gallery-card:hover img {
-  transform: scale(1.08);
-}
-
-/* === GLOW PULSE FOR KEY NUMBERS === */
-@keyframes glow-pulse {
-  0%, 100% { text-shadow: 0 0 20px currentColor; }
-  50% { text-shadow: 0 0 40px currentColor; }
-}
-.glow-text {
-  animation: glow-pulse 3s ease-in-out infinite;
-}
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* === GRADIENT MESH BACKGROUND === */
-.mesh-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background:
-    radial-gradient(ellipse 600px 400px at 15% 20%, var(--terracotta-glow), transparent 60%),
-    radial-gradient(ellipse 500px 500px at 85% 60%, var(--indigo-glow), transparent 60%),
-    radial-gradient(ellipse 400px 300px at 50% 90%, var(--gold-glow), transparent 60%);
-  filter: blur(40px);
-  opacity: 0.7;
-}
-
-/* === NAV === */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  padding: 16px 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  backdrop-filter: blur(20px);
-  background: rgba(10,10,15,0.6);
-  border-bottom: 1px solid var(--border);
-}
-nav .logo {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-nav .logo-dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: var(--terracotta);
-  box-shadow: 0 0 12px var(--terracotta-glow);
-}
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 4px;
-}
-nav ul a {
-  color: var(--text-dim);
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 8px 16px;
-  border-radius: 8px;
-  transition: var(--transition);
-}
-nav ul a:hover {
-  color: var(--text);
-  background: var(--surface);
-}
-
-/* === LAYOUT === */
-section {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 80px 24px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-section > * {
-  width: 100%;
-  max-width: 900px;
-}
-
-.section-header,
-.hero .tag,
-.hero h1,
-.hero .subtitle,
-.hero .cta-group,
-.cta-section h2,
-.cta-section p,
-.cta-section .cta-group {
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.section-header h2 {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* === HERO === */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-top: 80px;
-  text-align: center;
-}
-.hero .tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  border-radius: 100px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-dim);
-  margin-bottom: 24px;
-  width: fit-content;
-}
-.hero .tag .pulse {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--teal);
-  animation: pulse 2s infinite;
-}
-@keyframes pulse {
-  0%,100% { opacity: 1; box-shadow: 0 0 0 0 var(--teal); }
-  50% { opacity: 0.6; box-shadow: 0 0 0 6px transparent; }
-}
-.hero h1 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(32px, 6vw, 70px);
-  font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  margin-bottom: 24px;
-  max-width: 100%;
-  word-wrap: break-word;
-}
-.hero h1 .accent {
-  background: linear-gradient(135deg, var(--terracotta), var(--gold));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.hero .subtitle {
-  font-size: clamp(16px, 2vw, 22px);
-  color: var(--text-dim);
-  max-width: 600px;
-  margin-bottom: 40px;
-  line-height: 1.5;
-}
-.hero-stats {
-  display: flex;
-  gap: 24px;
-  justify-content: center;
-  margin-top: 40px;
-  flex-wrap: wrap;
-}
-.hero-stats > div { text-align: center; }
-.hero-stats .number { font-size: 28px; }
-.hero-stats .label { font-size: 12px; }
-.hero-info {
-  margin-top: 32px;
-  font-size: 13px;
-  color: var(--text-dim);
-  line-height: 1.8;
-}
-.hero .cta-group {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 28px;
-  border-radius: 12px;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: var(--transition);
-  cursor: pointer;
-  border: none;
-}
-.btn-primary {
-  background: linear-gradient(135deg, var(--terracotta), #d05a36);
-  color: #fff;
-  box-shadow: 0 4px 20px var(--terracotta-glow);
-}
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px var(--terracotta-glow);
-}
-.btn-ghost {
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn-ghost:hover {
-  background: var(--surface-hover);
-  border-color: var(--border-hover);
-}
-
-/* === BENTO GRID === */
-.bento {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-.bento .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
-  transition: var(--transition);
-  position: relative;
-  overflow: hidden;
-}
-.bento .card:hover {
-  background: var(--surface-hover);
-  border-color: var(--border-hover);
-  transform: translateY(-4px);
-}
-.bento .card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border-hover), transparent);
-  opacity: 0;
-  transition: var(--transition);
-}
-.bento .card:hover::before { opacity: 1; }
-
-/* Bento spans */
-.bento .col-2 { grid-column: span 2; }
-.bento .col-4 { grid-column: span 4; }
-.bento .row-2 { grid-row: span 2; }
-
-/* === STAT CARDS === */
-.stat-card {
-  text-align: center;
-  padding: 32px 20px;
-}
-.stat-card .number {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 48px;
-  font-weight: 700;
-  line-height: 1;
-  margin-bottom: 8px;
-}
-.stat-card .number.terracotta { color: var(--terracotta); }
-.stat-card .number.gold { color: var(--gold); }
-.stat-card .number.indigo { color: var(--indigo); }
-.stat-card .number.teal { color: var(--teal); }
-.stat-card .label {
-  font-size: 13px;
-  color: var(--text-dim);
-  font-weight: 500;
-}
-
-/* === SECTION HEADER === */
-.section-header {
-  margin-bottom: 48px;
-}
-.section-header .eyebrow {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--terracotta);
-  margin-bottom: 12px;
-}
-.section-header h2 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(28px, 4vw, 44px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  margin-bottom: 12px;
-}
-.section-header p {
-  font-size: 16px;
-  color: var(--text-dim);
-  max-width: 600px;
-}
-
-/* === FEATURE CARD === */
-.feature-card .icon {
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  margin-bottom: 16px;
-}
-.feature-card .icon.terracotta { background: var(--terracotta-glow); }
-.feature-card .icon.gold { background: var(--gold-glow); }
-.feature-card .icon.indigo { background: var(--indigo-glow); }
-.feature-card .icon.teal { background: rgba(45,212,191,0.15); }
-.feature-card h3 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-.feature-card p {
-  font-size: 14px;
-  color: var(--text-dim);
-  line-height: 1.6;
-}
-
-/* === TIMELINE === */
-.timeline-card {
-  padding: 32px;
-}
-.timeline-item {
-  display: flex;
-  gap: 16px;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border);
-}
-.timeline-item:last-child { border-bottom: none; }
-.timeline-item .step {
-  flex-shrink: 0;
-  width: 32px; height: 32px;
-  border-radius: 10px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--terracotta);
-}
-.timeline-item .content h4 {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-.timeline-item .content .date {
-  font-size: 12px;
-  color: var(--text-faint);
-  margin-bottom: 4px;
-}
-.timeline-item .content p {
-  font-size: 13px;
-  color: var(--text-dim);
-}
-
-/* === INFO TABLE === */
-.info-table-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 8px 24px;
-  overflow: hidden;
-}
-.info-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.info-table th {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-faint);
-  padding: 16px 12px 12px;
-  border-bottom: 2px solid var(--border);
-  text-align: left;
-}
-.info-table td {
-  padding: 14px 12px;
-  vertical-align: top;
-  line-height: 1.6;
-  border-bottom: 1px solid var(--border);
-  font-size: 14px;
-}
-.info-table tr:last-child td {
-  border-bottom: none;
-}
-.info-table td:first-child {
-  white-space: nowrap;
-  width: 35%;
-  font-weight: 600;
-  color: var(--text);
-}
-.info-table td:last-child {
-  color: var(--text-dim);
-}
-
-/* === CTA SECTION === */
-.cta-section {
-  min-height: auto !important;
-  text-align: center;
-  padding: 30px 32px;
-}
-.cta-section h2,
-.cta-section p {
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-}
-.cta-section h2 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(32px, 5vw, 56px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 20px;
-}
-.cta-section h2 .accent {
-  background: linear-gradient(135deg, var(--terracotta), var(--gold));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.cta-section p {
-  font-size: 18px;
-  color: var(--text-dim);
-  max-width: 500px;
-  margin: 0 auto 40px;
-}
-.cta-info {
-  margin-top: 32px;
-  font-size: 13px;
-  color: var(--text-dim);
-  line-height: 1.8;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.cta-info p { margin-bottom: 8px; }
-
-/* === FOOTER === */
-footer {
-  padding: 48px 32px;
-  border-top: 1px solid var(--border);
-  text-align: center;
-}
-footer p {
-  font-size: 13px;
-  color: var(--text-faint);
-}
-
-/* === SCROLL ANIMATIONS === */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* === RESPONSIVE === */
-@media (max-width: 900px) {
-  .bento { grid-template-columns: repeat(2, 1fr); }
-  .bento .col-2 { grid-column: span 2; }
-  .bento .col-4 { grid-column: span 2; }
-  .bento .row-2 { grid-row: span 1; }
-  nav ul { display: none; }
-}
-@media (max-width: 600px) {
-  .bento { grid-template-columns: 1fr; }
-  .bento .col-2, .bento .col-4 { grid-column: span 1; }
-  section { padding: 60px 20px; }
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -632,16 +17,16 @@ footer p {
 
 <!-- NAV -->
 <nav>
-  <div class="logo">
+  <a href="index.html" class="logo">
     <div class="logo-dot"></div>
     GTDİB
-  </div>
+  </a>
   <ul>
-    <li><a href="#about">Haqqımızda</a></li>
-    <li><a href="#mission">Missiya</a></li>
-    <li><a href="#activities">Fəaliyyət</a></li>
-    <li><a href="#legal">Hüquqi</a></li>
-    <li><a href="#contact">Əlaqə</a></li>
+    <li><a href="index.html" class="active">Ana səhifə</a></li>
+    <li><a href="about.html">Haqqımızda</a></li>
+    <li><a href="project.html">Layihə</a></li>
+    <li><a href="gallery.html">Qalereya</a></li>
+    <li><a href="contact.html">Əlaqə</a></li>
   </ul>
 </nav>
 
@@ -667,8 +52,8 @@ footer p {
     2003-cü ildən gənclərin təhsilinə, inkişafına və mədəni irsin qorunmasına dayaq olan qeyri-hökumət təşkilatı. Bakı, Azərbaycan.
   </p>
   <div class="cta-group reveal">
-    <a href="#about" class="btn btn-primary">Haqqımızda →</a>
-    <a href="#contact" class="btn btn-ghost">Əlaqə</a>
+    <a href="about.html" class="btn btn-primary">Haqqımızda →</a>
+    <a href="contact.html" class="btn btn-ghost">Əlaqə</a>
   </div>
 
   <div class="hero-stats reveal">
@@ -691,239 +76,57 @@ footer p {
   </div>
 </section>
 
-<!-- ABOUT -->
-<section id="about">
+<!-- QUICK OVERVIEW -->
+<section>
   <div class="section-header reveal">
-    <div class="eyebrow">Haqqımızda</div>
+    <div class="eyebrow">Ümumi baxış</div>
     <div class="section-divider"></div>
-    <h2>Gənclərə dayaq,<br>mədəni irsə qayğı</h2>
-    <p>Gənclərin "Tənhalara Dayaq" İctimai Birliyi (GTDİB) — 2003-cü ildə Bakı şəhərində təşkil edilmiş gənclər qeyri-hökumət təşkilatıdır.</p>
+    <h2>Gənclərə dayaq, irsə qayğı</h2>
+    <p>GTDİB — 2003-cü ildə Bakıda qeydiyyata alınmış gənclər qeyri-hökumət təşkilatıdır.</p>
   </div>
 
   <div class="bento">
-    <!-- Stats row -->
     <div class="card stat-card reveal">
       <div class="number terracotta">2003</div>
-      <div class="label">Təşkil edilmiş il<br>30 may</div>
+      <div class="label">Təşkil edilmiş il</div>
     </div>
     <div class="card stat-card reveal">
       <div class="number gold">1103</div>
       <div class="label">Qeydiyyat nömrəsi<br>Q1-1443</div>
     </div>
     <div class="card stat-card reveal">
-      <div class="number indigo">1500</div>
-      <div class="label">VÖEN (Vergi ID)<br>488311</div>
-    </div>
-    <div class="card stat-card reveal">
-      <div class="number teal">EU</div>
+      <div class="number indigo">EU</div>
       <div class="label">Erasmus+/ESC<br>Qeydiyyatlı</div>
     </div>
+    <div class="card stat-card reveal">
+      <div class="number teal">Bakı</div>
+      <div class="label">Azərbaycan<br>AZ1001</div>
+    </div>
 
-    <!-- Feature cards -->
     <div class="card feature-card col-2 reveal">
       <div class="icon terracotta">🤝</div>
       <h3>Gənclərə Dayaq</h3>
-      <p>Gənclərin sosial, iqtisadi və mədəni inkişafına dəstək. Təhsil, peşə hazırlığı və sahibkarlıq bacarıqlarının inkişafı.</p>
+      <p>Gənclərin sosial, iqtisadi və mədəni inkişafına dəstək. Təhsil, peşə hazırlığı və sahibkarlıq bacarıqları.</p>
     </div>
     <div class="card feature-card reveal">
       <div class="icon gold">🏛️</div>
       <h3>Mədəni İrs</h3>
-      <p>Azərbaycan və regionun mədəni irsinin qorunması, sənədləşdirilməsi və gələcək nəsillərə çatdırılması.</p>
+      <p>Azərbaycan mədəni irsinin qorunması və gələcək nəsillərə çatdırılması.</p>
     </div>
     <div class="card feature-card reveal">
       <div class="icon indigo">🌍</div>
       <h3>Beynəlxalq Əməkdaşlıq</h3>
-      <p>Erasmus+ və Avropa Həmrəylik Korpusu proqramlarında iştirak. Beynəlxalq tərəfdaşlıqlar və mübadilə layihələri.</p>
+      <p>Erasmus+ və Avropa Həmrəylik Korpusu proqramlarında iştirak.</p>
     </div>
 
-    <!-- Description -->
     <div class="card col-4 reveal" style="padding: 24px;">
-      <div class="eyebrow" style="margin-bottom: 10px;">Təşkilat haqqında</div>
-      <p style="font-size: 15px; line-height: 1.7; color: var(--text);">
-        Gənclərin "Tənhalara Dayaq" İctimai Birliyi 2003-cü il mayın 30-da Bakı şəhərində qeydiyyata alınmışdır. Təşkilatın əsas məqsədi gənclərin sosial-iqtisadi inkişafına, təhsilə və mədəni irsin qorunmasına dayaq olmaqdır. Biz inanırıq ki, gənclər cəmiyyətin gələcəyidir və onlara lazımi bacarıqları və imkanları təqdim etmək uzunmüddətli dayanıqlığın açarıdır.
-      </p>
-      <p style="font-size: 15px; line-height: 1.7; color: var(--text-dim); margin-top: 12px;">
-        Təşkilat həm yerli, həm də beynəlxalq layihələrdə iştirak edir, o cümlədən Avropa İttifaqının Erasmus+ və Avropa Həmrəylik Korpusu proqramlarında. Biz gənclərin mübadiləsi, təlim və könüllü fəaliyyət vasitəsilə Avropa və region tərəfdaşları ilə əməkdaşlığı inkişaf etdiririk.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- MISSION & VALUES -->
-<section id="mission">
-  <div class="section-header reveal">
-    <div class="eyebrow">Missiya və dəyərlər</div>
-    <div class="section-divider"></div>
-    <h2>Missiyamız və prinsiplərimiz</h2>
-    <p>Gənclərə dayaq olmaq, mədəni irsi qorumaq və beynəlxalq əməkdaşlığı inkişaf etdirmək.</p>
-  </div>
-
-  <div class="bento">
-    <div class="card feature-card col-2 reveal">
-      <div class="icon terracotta">🎯</div>
-      <h3>Missiya</h3>
-      <p>Gənclərin sosial-iqtisadi inkişafına, təhsilə və peşə hazırlığına dayaq olmaq; Azərbaycan və regionun mədəni irsini qorumaq və gələcək nəsillərə çatdırmaq; beynəlxalq əməkdaşlıq vasitəsilə gənclərin dünyagörüşünü genişləndirmək.</p>
-    </div>
-
-    <div class="card feature-card reveal">
-      <div class="icon gold">💡</div>
-      <h3>Görüş</h3>
-      <p>Hər gəncin potensialını reallaşdırmaq üçün bərabər imkanlara malik olduğu cəmiyyət.</p>
-    </div>
-
-    <div class="card feature-card reveal">
-      <div class="icon indigo">⚖️</div>
-      <h3>Bərabərlik</h3>
-      <p>Gender, milliyyət və sosial mənşədən asılı olmayaraq hər kəs üçün bərabər imkanlar.</p>
-    </div>
-
-    <div class="card feature-card reveal">
-      <div class="icon teal">🌱</div>
-      <h3>Dayanıqlıq</h3>
-      <p>Uzunmüddətli təsir və dayanıqlı inkişaf. Qısa müddətli həllər yox, davamlı dəyişiklik.</p>
-    </div>
-
-    <div class="card feature-card reveal">
-      <div class="icon terracotta">🤝</div>
-      <h3>Həmrəylik</h3>
-      <p>Cəmiyyətə xidmət və gənclərə dayaq. Bir-birimizə qarşı məsuliyyət və qarşılıqlı dəstək.</p>
-    </div>
-
-    <div class="card feature-card col-2 reveal">
-      <div class="icon gold">📚</div>
-      <h3>Təhsil və İnkişaf</h3>
-      <p>Ömürboyu təhsil prinsipi. Gənclərə yeni bacarıqlar qazandırmaq, peşə hazırlığı və sahibkarlıq təlimləri təşkil etmək. Rəqəmsal bacarıqlar, biznes modeli və marketinq sahəsində təhsil.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ACTIVITIES -->
-<section id="activities">
-  <div class="section-header reveal">
-    <div class="eyebrow">Fəaliyyət sahələri</div>
-    <div class="section-divider"></div>
-    <h2>Nə ilə məşğuluq</h2>
-    <p>Təhsil, mədəni irs, beynəlxalq əməkdaşlıq və gənclərin inkişafı.</p>
-  </div>
-
-  <div class="bento">
-    <div class="card feature-card col-2 reveal">
-      <div class="icon terracotta">🎓</div>
-      <h3>Gənclərin Təhsili və Hazırlığı</h3>
-      <p>Peşə hazırlığı, sahibkarlıq bacarıqları, rəqəmsal savadlılıq və biznes modeli təlimləri. Gənclərin əmək bazarına inteqrasiyasına dəstək.</p>
-    </div>
-
-    <div class="card feature-card reveal">
-      <div class="icon gold">🏛️</div>
-      <h3>Mədəni İrsin Qorunması</h3>
-      <p>Azərbaycan xalça sənəti, kəlağayı, suzani və digər ənənəvi sənətkarlıqların sənədləşdirilməsi və qorunması.</p>
-    </div>
-
-    <div class="card feature-card reveal">
-      <div class="icon indigo">🌍</div>
-      <h3>Beynəlxalq Layihələr</h3>
-      <p>Erasmus+ və Avropa Həmrəylik Korpusu proqramları. Gənclər mübadiləsi, könüllü fəaliyyət və tərəfdaşlıq layihələri.</p>
-    </div>
-
-    <div class="card feature-card reveal">
-      <div class="icon teal">🤝</div>
-      <h3>Sosial Dayaq</h3>
-      <p>Gənclərin sosial həyata inteqrasiyasına kömək. Həmrəylik və könüllü fəaliyyət.</p>
-    </div>
-
-    <!-- Silk Road Project as example -->
-    <div class="card col-4 reveal" style="padding: 24px;">
-      <div class="eyebrow" style="margin-bottom: 10px; color: var(--gold);">Cari layihə — nümunə</div>
-      <h3 style="font-family: 'Space Grotesk'; font-size: 20px; margin-bottom: 12px;">İpək Yolu İrsi: İki Mədəniyyət, Bir Çərçivə</h3>
+      <div class="eyebrow" style="margin-bottom: 10px; color: var(--gold);">Cari layihə</div>
+      <h3 style="font-family: 'Space Grotesk'; font-size: 20px; margin-bottom: 12px;">
+        <a href="project.html" style="color: var(--text); text-decoration: none;">İpək Yolu İrsi: İki Mədəniyyət, Bir Çərçivə →</a>
+      </h3>
       <p style="font-size: 14px; line-height: 1.7; color: var(--text-dim);">
-        GTDİB-in cari layihələrindən biri — Azərbaycan və Özbəkistan gənc qadın sənətkarlarını birləşdirən mədəni irs və sahibkarlıq layihəsi. 30 gənc qadın 2500 illik tekstil ənənəsini biznes modelinə çevirir. Layihə Erasmus+ çərçivəsində həyata keçirilir.
+        Azərbaycan və Özbəkistan gənc qadın sənətkarlarını birləşdirən mədəni irs və sahibkarlıq layihəsi. 30 gənc qadın 2500 illik tekstil ənənəsini biznes modelinə çevirir.
       </p>
-      <p style="font-size: 12px; color: var(--text-faint); margin-top: 12px;">
-        Tərəfdaş: "DİALOQ" Vətəndaş Cəmiyyəti və İqtisadi Fəallıq Təşkilatı (Özbəkistan) · Müddət: oktyabr 2026 — mart 2027
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- LEGAL INFO -->
-<section id="legal">
-  <div class="section-header reveal">
-    <div class="eyebrow">Hüquqi məlumatlar</div>
-    <div class="section-divider"></div>
-    <h2>Təşkilatın rəsmi məlumatları</h2>
-    <p>GTDİB — qanuni qeydiyyatlı qeyri-hökumət təşkilatıdır.</p>
-  </div>
-
-  <div class="bento">
-    <div class="card col-4 reveal" style="padding: 16px;">
-      <div class="info-table-wrap">
-        <table class="info-table">
-          <tr><td>Təşkilatın adı (AZ)</td><td>Gənclərin "Tənhalara Dayaq" İctimai Birliyi</td></tr>
-          <tr><td>Təşkilatın adı (EN)</td><td>"Support for Solidarity People" Public Union</td></tr>
-          <tr><td>Qısa ad</td><td>GTDİB</td></tr>
-          <tr><td>Növü</td><td>Gənclər Qeyri-Hökumət Təşkilatı (NGO)</td></tr>
-          <tr><td>Qeydiyyat nömrəsi</td><td>1103-Q1-1443</td></tr>
-          <tr><td>Qeydiyyat tarixi</td><td>30 may 2003</td></tr>
-          <tr><td>VÖEN (Vergi ID)</td><td>1500488311</td></tr>
-          <tr><td>Ünvan</td><td>A. Heydarov küçəsi 25, mənzil 5, Bakı, AZ1001, Azərbaycan</td></tr>
-          <tr><td>Sədr (Qanuni nümayəndə)</td><td>Seidova Xoshbakht Mirsujaddin qizi</td></tr>
-          <tr><td>Erasmus+ OID</td><td>E10439176</td></tr>
-          <tr><td>E-poçt</td><td>anar.hasanov@gtdib.org · info@gtdib.org</td></tr>
-          <tr><td>Vebsayt</td><td>gtdib.org</td></tr>
-        </table>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- GALLERY -->
-<section id="gallery">
-  <div class="section-header reveal">
-    <div class="eyebrow">Mədəni irs</div>
-    <div class="section-divider"></div>
-    <h2>Azərbaycan mədəni irsi</h2>
-    <p>Təşkilatımızın qoruduğu və təbliğ etdiyi mədəni dəyərlər</p>
-  </div>
-
-  <div class="bento">
-    <div class="card col-4 reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/kelaghayi.jpg" alt="Kəlağayı" style="width: 100%; height: 120px; object-fit: cover; border-radius: 12px 12px 0 0;">
-      <div style="padding: 14px;">
-        <h3 style="font-family: 'Space Grotesk'; font-size: 16px; color: var(--text); margin-bottom: 6px;">Kəlağayı — Bakı, Azərbaycan</h3>
-        <p style="font-size: 13px; color: var(--text-dim);">Ənənəvi ipək baş örtüyü. YUNESKO Qeyri-Maddi Mədəni İrs siyahısında.</p>
-      </div>
-    </div>
-
-    <div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/carpet.jpg" alt="Azərbaycan xalçası" style="width: 100%; height: 80px; object-fit: cover; border-radius: 12px 12px 0 0;">
-      <div style="padding: 12px;">
-        <h3 style="font-family: 'Space Grotesk'; font-size: 14px; color: var(--text); margin-bottom: 4px;">Azərbaycan xalçası</h3>
-        <p style="font-size: 12px; color: var(--text-dim);">Qarabağ məktəbi</p>
-      </div>
-    </div>
-
-    <div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/carpet_museum.jpg" alt="Xalça Muzeyi" style="width: 100%; height: 80px; object-fit: cover; border-radius: 12px 12px 0 0;">
-      <div style="padding: 12px;">
-        <h3 style="font-family: 'Space Grotesk'; font-size: 14px; color: var(--text); margin-bottom: 4px;">Xalça Muzeyi — Bakı</h3>
-        <p style="font-size: 12px; color: var(--text-dim);">Xalça sənətinin qorunması</p>
-      </div>
-    </div>
-
-    <div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/kelaghayi_printing.jpg" alt="Kəlağayı basma" style="width: 100%; height: 80px; object-fit: cover; border-radius: 12px 12px 0 0;">
-      <div style="padding: 12px;">
-        <h3 style="font-family: 'Space Grotesk'; font-size: 14px; color: var(--text); margin-bottom: 4px;">Kəlağayı basma</h3>
-        <p style="font-size: 12px; color: var(--text-dim);">Ağac qəlib texnikası</p>
-      </div>
-    </div>
-
-    <div class="card reveal gallery-card" style="padding: 0; overflow: hidden;">
-      <img class="gallery-img" src="images/baku_rugs.jpg" alt="Bakı xalçaları" style="width: 100%; height: 80px; object-fit: cover; border-radius: 12px 12px 0 0;">
-      <div style="padding: 12px;">
-        <h3 style="font-family: 'Space Grotesk'; font-size: 14px; color: var(--text); margin-bottom: 4px;">Bakı xalçaları</h3>
-        <p style="font-size: 12px; color: var(--text-dim);">Ənənəvi dizayn</p>
-      </div>
     </div>
   </div>
 </section>
@@ -934,10 +137,7 @@ footer p {
     Gənclərə dayaq,<br>
     <span class="accent">irsə qayğı</span>
   </h2>
-  <p class="reveal">
-    2003-cü ildən gənclərin və mədəni irsin yanında.
-  </p>
-
+  <p class="reveal">2003-cü ildən gənclərin və mədəni irsin yanında.</p>
   <div class="cta-info reveal">
     <p>Gənclərin "Tənhalara Dayaq" İctimai Birliyi</p>
     <p>"Support for Solidarity People" Public Union</p>
@@ -945,93 +145,18 @@ footer p {
   </div>
 </section>
 
-<!-- CONTACT -->
-<section id="contact">
-  <div class="section-header reveal">
-    <div class="eyebrow">Əlaqə</div>
-    <div class="section-divider"></div>
-    <h2>Bizimlə əlaqə</h2>
-    <p>Suallarınız və əməkdaşlıq təklifləri üçün bizə yazın.</p>
-  </div>
-
-  <div class="bento">
-    <div class="card feature-card col-2 reveal">
-      <div class="icon terracotta">📍</div>
-      <h3>Ünvan</h3>
-      <p>A. Heydarov küçəsi 25, mənzil 5<br>Bakı, AZ1001<br>Azərbaycan</p>
-    </div>
-
-    <div class="card feature-card reveal">
-      <div class="icon gold">✉️</div>
-      <h3>E-poçt</h3>
-      <p>anar.hasanov@gtdib.org<br>info@gtdib.org</p>
-    </div>
-
-    <div class="card feature-card reveal">
-      <div class="icon indigo">🌐</div>
-      <h3>Vebsayt</h3>
-      <p>gtdib.org</p>
-    </div>
-
-    <div class="card feature-card col-2 reveal">
-      <div class="icon teal">👤</div>
-      <h3>Qanuni nümayəndə</h3>
-      <p>Seidova Xoshbakht Mirsujaddin qizi — Sədr (Chairperson)<br>Erasmus+ OID: E10439176</p>
-    </div>
-  </div>
-</section>
-
 <!-- FOOTER -->
 <footer>
-  <p>© 2026 Gənclərin "Tənhalara Dayaq" İctimai Birliyi — "Support for Solidarity People" Public Union<br>
-  Bakı, Azərbaycan · gtdib.org</p>
+  <div class="footer-links">
+    <a href="index.html">Ana səhifə</a>
+    <a href="about.html">Haqqımızda</a>
+    <a href="project.html">Layihə</a>
+    <a href="gallery.html">Qalereya</a>
+    <a href="contact.html">Əlaqə</a>
+  </div>
+  <p>© 2026 Gənclərin "Tənhalara Dayaq" İctimai Birliyi — Bakı, Azərbaycan · gtdib.org</p>
 </footer>
 
-<!-- SCROLL ANIMATIONS -->
-<script>
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry, i) => {
-    if (entry.isIntersecting) {
-      setTimeout(() => entry.target.classList.add('visible'), i * 50);
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-// === SCROLL PROGRESS BAR ===
-const scrollProgress = document.getElementById('scrollProgress');
-window.addEventListener('scroll', () => {
-  const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-  scrollProgress.style.width = scrolled + '%';
-});
-
-// === ANIMATED COUNTERS ===
-const counters = document.querySelectorAll('.counter');
-const counterObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const el = entry.target;
-      const target = parseInt(el.dataset.target);
-      const duration = 2000;
-      const start = performance.now();
-      const animate = (now) => {
-        const elapsed = now - start;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        el.textContent = Math.floor(eased * target);
-        if (progress < 1) requestAnimationFrame(animate);
-        else el.textContent = target;
-      };
-      requestAnimationFrame(animate);
-      counterObserver.unobserve(el);
-    }
-  });
-}, { threshold: 0.5 });
-
-counters.forEach(c => counterObserver.observe(c));
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
