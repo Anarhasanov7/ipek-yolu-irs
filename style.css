@@ -365,10 +365,11 @@ section > * { width: 100%; max-width: 900px; }
 .stat-card { text-align: center; padding: 32px 20px; }
 .stat-card .number {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 48px;
+  font-size: 42px;
   font-weight: 700;
   line-height: 1;
   margin-bottom: 8px;
+  white-space: nowrap;
 }
 .stat-card .number.terracotta { color: var(--terracotta); }
 .stat-card .number.gold { color: var(--gold); }
