@@ -1,38 +1,44 @@
 // === THEME TOGGLE ===
 (function() {
-  const saved = localStorage.getItem('gtdib-theme');
-  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  var saved = localStorage.getItem('gtdib-theme');
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
 })();
 
+function getThemeLabels() {
+  var lang = document.documentElement.lang || 'az';
+  if (lang === 'en') {
+    return { dark: 'Dark', light: 'Light' };
+  }
+  return { dark: 'Qaranlıq', light: 'Açıq' };
+}
+
+function updateToggleButton() {
+  var btn = document.querySelector('.theme-toggle');
+  if (!btn) return;
+  var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  var labels = getThemeLabels();
+  var icon = btn.querySelector('.toggle-icon');
+  var label = btn.querySelector('.toggle-label');
+  if (icon) icon.textContent = isLight ? '\u2600' : '\u263E';
+  if (label) label.textContent = isLight ? labels.light : labels.dark;
+}
+
 function toggleTheme() {
-  const html = document.documentElement;
-  const current = html.getAttribute('data-theme');
-  const next = current === 'light' ? 'dark' : 'light';
-  if (next === 'dark') {
+  var html = document.documentElement;
+  var isLight = html.getAttribute('data-theme') === 'light';
+  if (isLight) {
     html.removeAttribute('data-theme');
     localStorage.setItem('gtdib-theme', 'dark');
   } else {
     html.setAttribute('data-theme', 'light');
     localStorage.setItem('gtdib-theme', 'light');
   }
-  // Update toggle button label
-  const btn = document.querySelector('.theme-toggle');
-  if (btn) {
-    const isLight = html.getAttribute('data-theme') === 'light';
-    btn.querySelector('.toggle-icon').textContent = isLight ? '☀' : '☾';
-    btn.querySelector('.toggle-label').textContent = isLight ? 'Light' : 'Dark';
-  }
+  updateToggleButton();
 }
 
-// Initialize toggle label on load
-document.addEventListener('DOMContentLoaded', function() {
-  const btn = document.querySelector('.theme-toggle');
-  if (btn) {
-    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-    btn.querySelector('.toggle-icon').textContent = isLight ? '☀' : '☾';
-    btn.querySelector('.toggle-label').textContent = isLight ? 'Light' : 'Dark';
-  }
-});
+document.addEventListener('DOMContentLoaded', updateToggleButton);
 
 // === SCROLL ANIMATIONS ===
 const observer = new IntersectionObserver((entries) => {

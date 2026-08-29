@@ -712,17 +712,6 @@ footer .footer-social .social-link:hover {
 }
 .testimonial-card figcaption span { font-size: 13px; color: var(--text-dim); }
 
-/* === LANG SWITCHER (3-way) === */
-.lang-switch { display: flex; gap: 4px; align-items: center; }
-.lang-switch .lang-active {
-  font-size: 12px;
-  padding: 6px 8px;
-  white-space: nowrap;
-  color: var(--terracotta);
-  font-weight: 600;
-  border-bottom: 2px solid var(--terracotta);
-}
-
 /* === SCROLL ANIMATIONS === */
 .reveal {
   opacity: 0;

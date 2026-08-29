@@ -7,7 +7,6 @@
     <loc>https://gtdib.org/</loc>
     <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/index.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/index.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -16,7 +15,6 @@
     <loc>https://gtdib.org/about.html</loc>
     <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/about.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/about.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/about.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -25,7 +23,6 @@
     <loc>https://gtdib.org/project.html</loc>
     <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/project.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/project.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/project.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -34,7 +31,6 @@
     <loc>https://gtdib.org/gallery.html</loc>
     <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/gallery.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/gallery.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/gallery.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -43,7 +39,6 @@
     <loc>https://gtdib.org/contact.html</loc>
     <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/contact.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/contact.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/contact.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -54,7 +49,6 @@
     <loc>https://gtdib.org/en/index.html</loc>
     <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/index.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/index.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -63,7 +57,6 @@
     <loc>https://gtdib.org/en/about.html</loc>
     <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/about.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/about.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/about.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -72,7 +65,6 @@
     <loc>https://gtdib.org/en/project.html</loc>
     <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/project.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/project.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/project.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -81,7 +73,6 @@
     <loc>https://gtdib.org/en/gallery.html</loc>
     <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/gallery.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/gallery.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/gallery.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -90,57 +81,8 @@
     <loc>https://gtdib.org/en/contact.html</loc>
     <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/contact.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/contact.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/contact.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-
-  <!-- RU pages -->
-  <url>
-    <loc>https://gtdib.org/ru/index.html</loc>
-    <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/index.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/index.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://gtdib.org/ru/about.html</loc>
-    <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/about.html"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/about.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/about.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://gtdib.org/ru/project.html</loc>
-    <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/project.html"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/project.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/project.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://gtdib.org/ru/gallery.html</loc>
-    <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/gallery.html"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/gallery.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/gallery.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://gtdib.org/ru/contact.html</loc>
-    <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/contact.html"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/contact.html"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/contact.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
 </urlset>
