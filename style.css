@@ -165,7 +165,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
   background: var(--bg-2);
   border-bottom: 1px solid var(--border);
   font-size: 12px;
@@ -177,29 +176,31 @@ body {
   letter-spacing: 0.08em;
 }
 .theme-toggle {
+  position: fixed;
+  top: 40px;
+  right: 24px;
+  z-index: 101;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
-  border-radius: 100px;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text-dim);
-  font-family: 'Inter', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 18px;
+  line-height: 1;
   cursor: pointer;
   transition: var(--transition);
   user-select: none;
+  backdrop-filter: blur(20px);
 }
 .theme-toggle:hover {
   background: var(--surface-hover);
   border-color: var(--border-hover);
   color: var(--text);
-}
-.theme-toggle .toggle-icon {
-  font-size: 13px;
-  line-height: 1;
+  transform: scale(1.1);
 }
 
 /* === NAV === */
