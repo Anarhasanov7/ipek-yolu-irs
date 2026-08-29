@@ -11,6 +11,7 @@
 <link rel="canonical" href="https://gtdib.org/contact.html">
 <link rel="alternate" hreflang="az" href="https://gtdib.org/contact.html">
 <link rel="alternate" hreflang="en" href="https://gtdib.org/en/contact.html">
+<link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/contact.html">
 <link rel="alternate" hreflang="x-default" href="https://gtdib.org/">
 
 <!-- Open Graph -->
@@ -30,7 +31,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=4">
+<link rel="stylesheet" href="style.css?v=9">
 <style>
 .contact-form {
   display: flex;
@@ -120,11 +121,21 @@
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/favicon.svg">
+<script>var t=localStorage.getItem("gtdib-theme");if(t==="light")document.documentElement.setAttribute("data-theme","light");</script>
 </head>
 <body>
 
 <div class="scroll-progress" id="scrollProgress"></div>
 <div class="mesh-bg"></div>
+
+<!-- THEME RIBBON -->
+<div class="theme-ribbon">
+  <span class="ribbon-label">GTDİB</span>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+    <span class="toggle-icon">☾</span>
+    <span class="toggle-label">Dark</span>
+  </button>
+</div>
 
 <!-- NAV -->
 <nav>
@@ -138,7 +149,7 @@
     <li><a href="project.html">Bizim cari layihəmiz</a></li>
     <li><a href="gallery.html">Qalereya</a></li>
     <li><a href="contact.html" class="active">Əlaqə</a></li>
-    <li class="lang-switch"><a href="en/contact.html">🇬🇧 EN</a></li>
+    <li class="lang-switch"><a href="en/contact.html">🇬🇧 EN</a> <a href="ru/contact.html">🇷🇺 RU</a> <span class="lang-active">🇦🇿 AZ</span></li>
   </ul>
 </nav>
 
@@ -185,6 +196,16 @@
         Sədr<br>
         📞 +994 99 385 2077<br>
         Erasmus+ OID: E10439176
+      </p>
+    </div>
+
+    <div class="card feature-card col-2 reveal">
+      <div class="icon indigo">🌐</div>
+      <h3>Sosial şəbəkələr</h3>
+      <p style="font-size: 15px; line-height: 1.8;">
+        <a href="https://www.facebook.com/GTDIB" target="_blank" rel="noopener" style="color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border-hover);">
+          <strong style="color: var(--indigo);">Facebook</strong> — facebook.com/GTDIB →
+        </a>
       </p>
     </div>
   </div>
@@ -266,6 +287,9 @@
     <a href="project.html">Bizim cari layihəmiz</a>
     <a href="gallery.html">Qalereya</a>
     <a href="contact.html">Əlaqə</a>
+  </div>
+  <div class="footer-social">
+    <a href="https://www.facebook.com/GTDIB" target="_blank" rel="noopener" aria-label="Facebook" class="social-link">f</a>
   </div>
   <p>© 2026 Gənclərin "Tənhalara Dayaq" İctimai Birliyi — Bakı, Azərbaycan · gtdib.org</p>
 </footer>

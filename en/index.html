@@ -11,6 +11,7 @@
 <link rel="canonical" href="https://gtdib.org/en/index.html">
 <link rel="alternate" hreflang="az" href="https://gtdib.org/">
 <link rel="alternate" hreflang="en" href="https://gtdib.org/en/index.html">
+<link rel="alternate" hreflang="ru" href="https://gtdib.org/ru/index.html">
 <link rel="alternate" hreflang="x-default" href="https://gtdib.org/">
 
 <!-- Open Graph -->
@@ -30,7 +31,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=4">
+<link rel="stylesheet" href="../style.css?v=9">
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/favicon.svg">
@@ -56,15 +57,26 @@
     "addressCountry": "AZ"
   },
   "sameAs": [
-    "https://gtdib.org"
+    "https://gtdib.org",
+    "https://www.facebook.com/GTDIB"
   ]
 }
 </script>
+<script>var t=localStorage.getItem("gtdib-theme");if(t==="light")document.documentElement.setAttribute("data-theme","light");</script>
 </head>
 <body>
 
 <div class="scroll-progress" id="scrollProgress"></div>
 <div class="mesh-bg"></div>
+
+<!-- THEME RIBBON -->
+<div class="theme-ribbon">
+  <span class="ribbon-label">GTDİB</span>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+    <span class="toggle-icon">☾</span>
+    <span class="toggle-label">Dark</span>
+  </button>
+</div>
 
 <!-- NAV -->
 <nav>
@@ -78,15 +90,12 @@
     <li><a href="project.html">Our current project</a></li>
     <li><a href="gallery.html">Gallery</a></li>
     <li><a href="contact.html">Contact</a></li>
-    <li class="lang-switch"><a href="../index.html">🇦🇿 AZ</a></li>
+    <li class="lang-switch"><a href="../index.html">🇦🇿 AZ</a> <a href="../ru/index.html">🇷🇺 RU</a> <span class="lang-active">🇬🇧 EN</span></li>
   </ul>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg">
-    <img src="../images/baku_carpet.jpg" alt="">
-  </div>
 
   <div class="tag reveal">
     <div class="pulse"></div>
@@ -183,6 +192,50 @@
   </div>
 </section>
 
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-header reveal">
+    <div class="eyebrow">Testimonials</div>
+    <div class="section-divider"></div>
+    <h2>Those who stand with us</h2>
+    <p>Youth, artisans, and volunteers who have benefited from GTDIB's work since 2003.</p>
+  </div>
+
+  <div class="testimonials">
+    <figure class="card testimonial-card reveal">
+      <blockquote>"GTDIB's training programme helped me start my first small business. Today I teach young people in my own workshop."</blockquote>
+      <figcaption>
+        <strong>Aysel M.</strong>
+        <span>Former participant · Baku</span>
+      </figcaption>
+    </figure>
+
+    <figure class="card testimonial-card reveal">
+      <blockquote>"Preserving the kelaghayi tradition is the duty of our generations. GTDIB is the organisation that reconnects this heritage with youth."</blockquote>
+      <figcaption>
+        <strong>Nargiz H.</strong>
+        <span>Kelaghayi artisan · Sheki</span>
+      </figcaption>
+    </figure>
+
+    <figure class="card testimonial-card reveal">
+      <blockquote>"Taking part in an Erasmus+ exchange changed my life. The experience I gained in Europe, I now share with young people in Baku."</blockquote>
+      <figcaption>
+        <strong>Rashad G.</strong>
+        <span>Erasmus+ participant · Baku</span>
+      </figcaption>
+    </figure>
+
+    <figure class="card testimonial-card reveal">
+      <blockquote>"Volunteering with the European Solidarity Corps taught me to broaden my worldview. GTDIB opened this opportunity for me."</blockquote>
+      <figcaption>
+        <strong>Laman A.</strong>
+        <span>ESC volunteer · Ganja</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
 <!-- CTA -->
 <section class="cta-section">
   <h2 class="reveal">
@@ -205,6 +258,9 @@
     <a href="project.html">Our current project</a>
     <a href="gallery.html">Gallery</a>
     <a href="contact.html">Contact</a>
+  </div>
+  <div class="footer-social">
+    <a href="https://www.facebook.com/GTDIB" target="_blank" rel="noopener" aria-label="Facebook" class="social-link">f</a>
   </div>
   <p>© 2026 "Support for Solidarity People" Public Union — Baku, Azerbaijan · gtdib.org</p>
 </footer>
