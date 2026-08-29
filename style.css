@@ -158,10 +158,6 @@ body {
 
 /* === THEME TOGGLE === */
 .theme-toggle {
-  position: fixed;
-  top: 10px;
-  right: 20px;
-  z-index: 102;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -169,14 +165,14 @@ body {
   height: 28px;
   border-radius: 50%;
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: transparent;
   color: var(--text-dim);
   font-size: 14px;
   line-height: 1;
   cursor: pointer;
   transition: var(--transition);
   user-select: none;
-  backdrop-filter: blur(20px);
+  flex-shrink: 0;
 }
 .theme-toggle:hover {
   background: var(--surface-hover);
@@ -194,6 +190,7 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
   backdrop-filter: blur(20px);
   background: var(--nav-bg);
   border-bottom: 1px solid var(--border);
