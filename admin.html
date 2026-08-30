@@ -143,6 +143,11 @@ body { background: var(--bg); }
     <h2 id="formTitle">Yeni xəbər</h2>
     <input type="hidden" id="editId">
 
+    <div class="field" id="dateField" style="display:none;">
+      <label>Yayım tarixi <span class="hint">— tarixi dəyişə bilərsiniz (backdate)</span></label>
+      <input type="datetime-local" id="publishedAt">
+    </div>
+
     <div class="field">
       <label>Başlıq (Azərbaycanca) <span class="hint">*</span></label>
       <input type="text" id="title_az" placeholder="Xəbərin başlığı">
@@ -315,6 +320,8 @@ window.saveNews = async function(publish) {
   };
 
   if (editId) {
+    const dateVal = document.getElementById('publishedAt').value;
+    if (dateVal) payload.published_at = new Date(dateVal).toISOString();
     const { error } = await supabase.from('news').update(payload).eq('id', editId);
     if (error) { toast('Yenilənmədi: ' + error.message, 'err'); }
     else { toast(publish ? 'Xəbər yayımlandı ✓' : 'Qaralama saxlanıldı ✓', 'ok'); resetForm(); loadAdminList(); }
@@ -382,6 +389,16 @@ window.editNews = async function(id) {
   document.getElementById('body_en').value = data.body_en || '';
   document.getElementById('image_alt_az').value = data.image_alt_az || '';
   document.getElementById('image_alt_en').value = data.image_alt_en || '';
+  // Show and populate date field
+  const dateField = document.getElementById('dateField');
+  dateField.style.display = 'block';
+  if (data.published_at) {
+    const d = new Date(data.published_at);
+    const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+    document.getElementById('publishedAt').value = local.toISOString().slice(0, 16);
+  } else {
+    document.getElementById('publishedAt').value = '';
+  }
   existingImagePath = data.image_path;
   pickedFile = null;
   const prev = document.getElementById('imgPreview');
@@ -400,6 +417,8 @@ window.resetForm = function() {
   prev.src=''; prev.classList.add('placeholder'); prev.alt='Şəkil yoxdur';
   pickedFile = null; existingImagePath = null;
   document.getElementById('formTitle').textContent = 'Yeni xəbər';
+  document.getElementById('dateField').style.display = 'none';
+  document.getElementById('publishedAt').value = '';
 };
 
 window.toggleForm = function() {
