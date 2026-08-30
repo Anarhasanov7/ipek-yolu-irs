@@ -807,6 +807,8 @@ footer .footer-social .social-link:hover {
 }
 
 /* === NEWS STRIP (homepage) === */
+#news-strip-section { padding: 40px 24px; }
+#news-strip-section .section-header { margin-bottom: 24px; }
 .news-strip {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -820,7 +822,10 @@ footer .footer-social .social-link:hover {
   font-size: 14px;
   grid-column: 1 / -1;
 }
-.news-strip-cta { text-align: center; margin-top: 32px; }
+.news-strip-cta { text-align: center; margin-top: 20px; }
+
+/* === NEWS LIST (news page) — reduce gap after hero === */
+#news-list { padding: 30px 24px 60px; }
 
 /* === NEWS MODAL === */
 .news-modal {
