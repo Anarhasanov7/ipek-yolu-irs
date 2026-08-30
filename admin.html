@@ -72,6 +72,18 @@ body { background: var(--bg); }
 .toast.ok { border-color:var(--teal); }
 .toast.err { border-color:#ff6b6b; }
 .loading-inline { color:var(--text-faint); font-size:13px; }
+.feed-item { display:flex; gap:14px; background:var(--bg-2); border:1px solid var(--border); border-radius:12px; padding:14px; align-items:flex-start; }
+.feed-item:hover { border-color:var(--border-hover); }
+.feed-source-badge { font-size:10px; padding:3px 8px; border-radius:100px; font-weight:600; white-space:nowrap; flex-shrink:0; }
+.feed-source-badge.az { background:rgba(74,108,247,0.15); color:var(--indigo); }
+.feed-source-badge.eu { background:rgba(45,212,191,0.15); color:var(--teal); }
+.feed-item-body { flex:1; min-width:0; }
+.feed-item-title { font-size:14px; font-weight:600; line-height:1.4; margin-bottom:4px; }
+.feed-item-title a { color:var(--text); text-decoration:none; }
+.feed-item-title a:hover { color:var(--terracotta); }
+.feed-item-meta { font-size:11px; color:var(--text-faint); display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.feed-item-desc { font-size:12px; color:var(--text-dim); margin-top:6px; line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.feed-item-actions { flex-shrink:0; display:flex; flex-direction:column; gap:6px; }
 </style>
 </head>
 <body>
@@ -102,8 +114,27 @@ body { background: var(--bg); }
   <div class="admin-header">
     <h1>Xəbərlər idarə paneli</h1>
     <div class="actions">
+      <button class="admin-btn small" onclick="toggleFeeds()" id="toggleFeedsBtn">📰 Xəbər mənbələri</button>
       <button class="admin-btn small" onclick="toggleForm()" id="toggleFormBtn">+ Yeni xəbər</button>
       <button class="admin-btn small" onclick="doLogout()">Çıxış</button>
+    </div>
+  </div>
+
+  <!-- RSS FEED AGGREGATOR -->
+  <div class="form-card" id="feedCard" style="display:none;">
+    <h2>📰 Xəbər mənbələri — ideya alın</h2>
+    <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px;">
+      Aşağıdakı başlıqlar etibarlı mənbələrdən (RSS) avtomatik gəlir. Bir başlıq seçin,
+      öz məqalənizi yazın və mənbəyə istinad verin. <strong>Köçürmək yox, ilham almaq.</strong>
+    </p>
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+      <button class="admin-btn small" onclick="loadFeeds('all')" id="feedFilterAll">Hamısı</button>
+      <button class="admin-btn small" onclick="loadFeeds('az')" id="feedFilterAz">🇦🇿 Azərbaycan</button>
+      <button class="admin-btn small" onclick="loadFeeds('eu')" id="feedFilterEu">🇪🇺 Erasmus+/EU</button>
+      <button class="admin-btn small" onclick="loadFeeds()" style="margin-left:auto;">🔄 Yenilə</button>
+    </div>
+    <div id="feedList" style="display:flex;flex-direction:column;gap:10px;">
+      <div class="loading-inline">Yüklənir…</div>
     </div>
   </div>
 
@@ -375,6 +406,118 @@ window.toggleForm = function() {
   if (c.style.display === 'none') { c.style.display='block'; resetForm(); c.scrollIntoView({behavior:'smooth'}); }
   else { resetForm(); c.style.display='none'; }
 };
+
+window.toggleFeeds = function() {
+  const c = document.getElementById('feedCard');
+  if (c.style.display === 'none') {
+    c.style.display='block';
+    if (!feedsLoaded) loadFeeds('all');
+    c.scrollIntoView({behavior:'smooth'});
+  } else { c.style.display='none'; }
+};
+
+// ---- RSS Feed Aggregator ----
+const RSS_FEEDS = [
+  // Azerbaijani news (AZ language)
+  { id:'oxu', name:'Oxu.az', lang:'az', url:'https://oxu.az/feed' },
+  { id:'operativmm', name:'Operativmm.az', lang:'az', url:'https://operativmm.az/rss.xml' },
+  // Azerbaijani news (EN)
+  { id:'azernews', name:'AzerNews (EN)', lang:'az', url:'https://www.azernews.az/feed.php' },
+  // EU / Erasmus+ / Youth
+  { id:'eu_schools', name:'EU Erasmus+ Schools', lang:'eu', url:'https://ec.europa.eu/newsroom/eac/feed?topic_id=3208&lang=en&orderby=item_date' },
+  { id:'eu_youth', name:'EU Erasmus+ Youth', lang:'eu', url:'https://ec.europa.eu/newsroom/eac/feed?topic_id=3166&lang=en&orderby=item_date' },
+];
+
+let feedsLoaded = false;
+let allFeedItems = [];
+
+window.loadFeeds = async function(filter = 'all') {
+  const list = document.getElementById('feedList');
+  list.innerHTML = '<div class="loading-inline">Mənbələr yüklənir…</div>';
+  // Update filter button styles
+  document.querySelectorAll('[id^="feedFilter"]').forEach(b => b.style.borderColor='var(--border)');
+  const btnMap = { all:'feedFilterAll', az:'feedFilterAz', eu:'feedFilterEu' };
+  const btn = document.getElementById(btnMap[filter] || 'feedFilterAll');
+  if (btn) btn.style.borderColor = 'var(--terracotta)';
+
+  const items = [];
+  const feedPromises = RSS_FEEDS
+    .filter(f => filter === 'all' || f.lang === filter)
+    .map(async (feed) => {
+      try {
+        const resp = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`);
+        if (!resp.ok) return;
+        const data = await resp.json();
+        if (data.status !== 'ok' || !data.items) return;
+        for (const item of data.items.slice(0, 8)) {
+          items.push({
+            feedId: feed.id,
+            feedName: feed.name,
+            feedLang: feed.lang,
+            title: stripTags(item.title),
+            link: item.link,
+            pubDate: item.pubDate,
+            description: stripTags(item.description || '').slice(0, 300),
+            thumbnail: item.thumbnail || (item.enclosure && item.enclosure.link) || '',
+          });
+        }
+      } catch (e) { /* skip failed feeds */ }
+    });
+
+  await Promise.all(feedPromises);
+  // Sort by date descending
+  items.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+  allFeedItems = items;
+  feedsLoaded = true;
+
+  if (items.length === 0) {
+    list.innerHTML = '<div class="loading-inline">Heç bir xəbər tapılmadı. Yenidən cəhd edin.</div>';
+    return;
+  }
+  list.innerHTML = items.map(item => feedItemHtml(item)).join('');
+};
+
+function feedItemHtml(item) {
+  const date = new Date(item.pubDate).toLocaleDateString('az-AZ', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+  const badge = `<span class="feed-source-badge ${item.feedLang}">${item.feedName}</span>`;
+  const desc = item.description ? `<div class="feed-item-desc">${escapeHtml(item.description)}</div>` : '';
+  return `<div class="feed-item">
+    <div class="feed-item-body">
+      <div class="feed-item-title"><a href="${item.link}" target="_blank" rel="noopener">${escapeHtml(item.title)}</a></div>
+      <div class="feed-item-meta">${badge} · ${date}</div>
+      ${desc}
+    </div>
+    <div class="feed-item-actions">
+      <button class="admin-btn small primary" onclick='useFeedItem(${JSON.stringify(item).replace(/'/g,"&#39;")})'>✍️ Yaz</button>
+    </div>
+  </div>`;
+}
+
+window.useFeedItem = function(item) {
+  // Pre-fill the form with the source headline as inspiration + attribution
+  resetForm();
+  document.getElementById('formCard').style.display = 'block';
+  // Use the original headline as a starting point (admin will rewrite)
+  document.getElementById('title_az').value = item.title;
+  // Pre-fill body with attribution block
+  const attribution = `\n<p><em>Mənbə: <a href="${item.link}" target="_blank" rel="noopener">${item.feedName}</a></em></p>`;
+  document.getElementById('body_az').value = `<p>Bu xəbər haqqında öz şərhinizi yazın…</p>${attribution}`;
+  // Pre-fill EN title if the source is already in English
+  if (item.feedLang === 'eu' || item.feedName.includes('EN')) {
+    document.getElementById('title_en').value = item.title;
+    document.getElementById('body_en').value = `<p>Write your commentary about this news…</p>\n<p><em>Source: <a href="${item.link}" target="_blank" rel="noopener">${item.feedName}</a></em></p>`;
+  }
+  document.getElementById('formTitle').textContent = 'Xəbər mənbədən ilhamla';
+  document.getElementById('formCard').scrollIntoView({ behavior: 'smooth' });
+  toast('Forma dolduruldu — öz mətninizi yazın', 'ok');
+};
+
+function stripTags(html) {
+  if (!html) return '';
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return (tmp.textContent || '').trim();
+}
 
 function escapeHtml(s) {
   if (!s) return '';
