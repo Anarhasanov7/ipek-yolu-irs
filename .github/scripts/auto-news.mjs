@@ -8,25 +8,41 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'GtdibNews2026!Az';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsZml6Y2dheXFlY252dGZpaGd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTAzMDUsImV4cCI6MjEwMzU4NjMwNX0.V9MiUESH7Xu1TG4tadkj9a7_wi-pouLPtv3yYTSEn0I';
 
 const FEEDS = [
-  { name: 'Google News: Erasmus+', lang: 'en', url: 'https://news.google.com/rss/search?q=Erasmus%2B&hl=en&gl=US&ceid=US:en', category: 'erasmus' },
-  { name: 'Google News: EU Grants Education', lang: 'en', url: 'https://news.google.com/rss/search?q=EU+grant+education+youth&hl=en&gl=US&ceid=US:en', category: 'grants' },
-  { name: 'Google News: EU Scholarship', lang: 'en', url: 'https://news.google.com/rss/search?q=EU+scholarship+OR+fellowship+OR+exchange+programme&hl=en&gl=US&ceid=US:en', category: 'grants' },
+  { name: 'Google News: Erasmus+', lang: 'en', url: 'https://news.google.com/rss/search?q=Erasmus%2B+OR+%22Erasmus+Mundus%22+OR+%22European+Solidarity+Corps%22&hl=en&gl=US&ceid=US:en', category: 'erasmus' },
+  { name: 'Google News: EU Neighbourhood', lang: 'en', url: 'https://news.google.com/rss/search?q=%22Erasmus%2B+Neighbourhood%22+OR+%22Eastern+Partnership%22+OR+%22EU+neighbourhood%22+grant&hl=en&gl=US&ceid=US:en', category: 'grants' },
+  { name: 'Google News: International Grants', lang: 'en', url: 'https://news.google.com/rss/search?q=international+grant+OR+funding+OR+call+for+proposals+education+youth+NGO&hl=en&gl=US&ceid=US:en', category: 'grants' },
+  { name: 'Google News: EU Funding', lang: 'en', url: 'https://news.google.com/rss/search?q=%22EU+funding%22+OR+%22Horizon+Europe%22+OR+%22Creative+Europe%22+OR+%22EuropeAid%22+OR+%22EU+cooperation%22&hl=en&gl=US&ceid=US:en', category: 'grants' },
+  { name: 'Google News: Scholarship Exchange', lang: 'en', url: 'https://news.google.com/rss/search?q=scholarship+OR+fellowship+OR+%22exchange+programme%22+OR+%22study+abroad%22+EU+OR+European&hl=en&gl=US&ceid=US:en', category: 'grants' },
   { name: 'The PIE News', lang: 'en', url: 'https://www.thepienews.com/feed/', category: 'edu' },
 ];
 
-// Only pick articles about Erasmus+, international grants, scholarships,
-// exchange programmes, EU funding, youth mobility
 // HIGH-value keywords (must have at least one to be considered)
+// Covers: Erasmus+, EU neighbourhood, international grants, funding calls,
+// scholarships, fellowships, exchange programmes, youth mobility, NGO funding
 const MUST_KEYWORDS = [
-  'erasmus','grant','scholarship','fellowship','eu funding','eu programme',
-  'horizon europe','marie skłodowska','creative europe','europeaid',
-  'erasmus mundus','solidarity corps','youth exchange','capacity building',
-  'twinning','student mobility','youth mobility','strategic partnership',
-  'cooperation partnership','youth worker','non-formal learning',
-  'volunteering','european solidarity','international cooperation',
-  'eu cooperation','exchange programme','training course','joint master',
+  // Erasmus+ family
+  'erasmus','erasmus mundus','solidarity corps','esc ','youth exchange',
+  'capacity building','strategic partnership','cooperation partnership',
+  'youth worker','non-formal learning','joint master',
+  // EU programmes & funding
+  'eu funding','eu programme','horizon europe','marie skłodowska',
+  'creative europe','europeaid','eu cooperation','european cooperation',
+  'twinning','eu grant','eu grants','european grant',
+  // Neighbourhood & partnership
+  'neighbourhood east','eastern partnership','eu neighbourhood',
+  'partner country','third country','association agreement',
+  // International grants & funding
+  'grant','funding','call for proposals','call for applications',
+  'funding opportunity','grant opportunity','open call','deadline',
+  'cost reimbursement','co-funded','co-financing',
+  // Scholarships & mobility
+  'scholarship','fellowship','student mobility','youth mobility',
+  'exchange programme','study abroad','visiting scholarship',
+  'volunteering','volunteer programme','international cooperation',
+  // AZ keywords
   'Erasmus','qrant','təqaüd','mübadilə proqram','Avropa əməkdaşlığı',
-  'beynəlxalq əməkdaşlıq','könüllü proqram','ESC',
+  'beynəlxalq əməkdaşlıq','könüllü proqram','maliyyələşdir','qrant',
+  'fond','proqramı','layihə maliyyə',
 ];
 
 // LOW-value keywords (add bonus points but not required)
