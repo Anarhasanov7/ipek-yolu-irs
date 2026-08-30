@@ -474,10 +474,10 @@ window.loadFeeds = async function(filter = 'all') {
     list.innerHTML = '<div class="loading-inline">Heç bir xəbər tapılmadı. Yenidən cəhd edin.</div>';
     return;
   }
-  list.innerHTML = items.map(item => feedItemHtml(item)).join('');
+  list.innerHTML = items.map((item, idx) => feedItemHtml(item, idx)).join('');
 };
 
-function feedItemHtml(item) {
+function feedItemHtml(item, idx) {
   const date = new Date(item.pubDate).toLocaleDateString('az-AZ', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
   const badge = `<span class="feed-source-badge ${item.feedLang}">${item.feedName}</span>`;
   const desc = item.description ? `<div class="feed-item-desc">${escapeHtml(item.description)}</div>` : '';
@@ -488,12 +488,14 @@ function feedItemHtml(item) {
       ${desc}
     </div>
     <div class="feed-item-actions">
-      <button class="admin-btn small primary" onclick='useFeedItem(${JSON.stringify(item).replace(/'/g,"&#39;")})'>✍️ Yaz</button>
+      <button class="admin-btn small primary" onclick="useFeedItem(${idx})">✍️ Yaz</button>
     </div>
   </div>`;
 }
 
-window.useFeedItem = function(item) {
+window.useFeedItem = function(idx) {
+  const item = allFeedItems[idx];
+  if (!item) return;
   // Pre-fill the form with the source headline as inspiration + attribution
   resetForm();
   document.getElementById('formCard').style.display = 'block';
