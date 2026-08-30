@@ -193,6 +193,14 @@ async function main() {
     return;
   }
 
+  // 2b. Get all existing source URLs to avoid duplicates
+  const urlsRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/news?select=source_url`,
+    { headers: { 'apikey': ANON_KEY, 'Authorization': `Bearer ${token}` } }
+  );
+  const existingUrls = await urlsRes.json();
+  const existingUrlSet = new Set((existingUrls || []).map(n => (n.source_url || '').toLowerCase()));
+
   // 3. Fetch all feeds
   console.log('Fetching RSS feeds...');
   const allItems = [];
@@ -206,6 +214,7 @@ async function main() {
   // 4. Score and pick best
   const scored = allItems
     .filter(item => item.title && item.link)
+    .filter(item => !existingUrlSet.has(item.link.toLowerCase()))
     .map(item => ({ item, score: scoreItem(item) }))
     .filter(s => s.score > 0)
     .sort((a, b) => b.score - a.score);
@@ -245,6 +254,7 @@ async function main() {
       external_image_url: imageUrl || null,
       image_alt_az: imageUrl ? `Foto: ${picked.feedName}` : null,
       image_alt_en: imageUrl ? `Photo: ${picked.feedName}` : null,
+      source_url: picked.link,
       is_published: true,
       published_at: new Date().toISOString(),
     }),
