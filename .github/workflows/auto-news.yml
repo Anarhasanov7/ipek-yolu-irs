@@ -16,8 +16,35 @@ jobs:
           node-version: '20'
 
       - name: Run auto-news
+        id: auto-news
         env:
           SUPABASE_URL: https://glfizcgayqecnvtfihgy.supabase.co
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           NEWS_BUCKET: news-images
-        run: node .github/scripts/auto-news.mjs
+        run: |
+          node .github/scripts/auto-news.mjs 2>&1 | tee /tmp/output.txt
+          echo "result<<EOF" >> $GITHUB_OUTPUT
+          cat /tmp/output.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Send email notification
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.resend.com
+          server_port: 587
+          username: resend
+          password: ${{ secrets.RESEND_API_KEY }}
+          subject: ${{ steps.auto-news.outcome == 'success' && '✅ Auto-News: Article published' || '❌ Auto-News: Error occurred' }}
+          to: hasanov.anar.2023@gmail.com
+          from: GTDİB Auto-News <noreply@europatheducation.eu>
+          body: |
+            ${{ steps.auto-news.outcome == 'success' && 'The auto-news script ran successfully.' || 'The auto-news script encountered an error.' }}
+
+            Log output:
+            ${{ steps.auto-news.outputs.result }}
+
+            ---
+            This is an automated message from the GTDİB auto-news system.
+            View full run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
