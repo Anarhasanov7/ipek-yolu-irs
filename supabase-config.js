@@ -19,8 +19,17 @@ export function publicImageUrl(path) {
 }
 
 // Format an ISO date for display.
+const MONTHS_AZ = ['Yanvar','Fevral','Mart','Aprel','May','İyun','İyul','Avqust','Sentyabr','Oktyabr','Noyabr','Dekabr'];
+const MONTHS_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
 export function formatDate(iso, locale = 'az-AZ') {
   if (!iso) return '';
   const d = new Date(iso);
-  return d.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
+  const day = d.getDate();
+  const month = d.getMonth();
+  const year = d.getFullYear();
+  if (locale === 'en-GB' || locale === 'en') {
+    return `${day} ${MONTHS_EN[month]} ${year}`;
+  }
+  return `${day} ${MONTHS_AZ[month]} ${year}`;
 }

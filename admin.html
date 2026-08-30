@@ -545,7 +545,7 @@ window.loadFeeds = async function(filter = 'all') {
 };
 
 function feedItemHtml(item, idx) {
-  const date = new Date(item.pubDate).toLocaleDateString('az-AZ', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+  const date = new Date(item.pubDate).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
   const badge = `<span class="feed-source-badge ${item.feedLang}">${item.feedName}</span>`;
   const desc = item.description ? `<div class="feed-item-desc">${escapeHtml(item.description)}</div>` : '';
   return `<div class="feed-item">
