@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xəbərlər — GTDİB</title>
+<meta name="description" content="GTDİB xəbərləri — Gənclərin Tənhalara Dayaq İctimai Birliyinin son xəbərləri və layihə yenilikləri.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://gtdib.org/news.html">
+<link rel="alternate" hreflang="az" href="https://gtdib.org/news.html">
+<link rel="alternate" hreflang="en" href="https://gtdib.org/en/news.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=15">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<script>var t=localStorage.getItem("gtdib-theme");if(t==="light")document.documentElement.setAttribute("data-theme","light");</script>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="mesh-bg"></div>
+
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-dot"></div>
+    GTDİB
+  </a>
+  <ul>
+    <li><button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"><span class="toggle-icon">☾</span></button></li>
+    <li><a href="index.html">Ana səhifə</a></li>
+    <li><a href="about.html">Haqqımızda</a></li>
+    <li><a href="project.html">Bizim cari layihəmiz</a></li>
+    <li><a href="news.html" class="active">Xəbərlər</a></li>
+    <li><a href="gallery.html">Qalereya</a></li>
+    <li><a href="contact.html">Əlaqə</a></li>
+    <li class="lang-switch"><a href="en/news.html">🇬🇧 EN</a></li>
+  </ul>
+</nav>
+
+<section class="hero page-hero">
+  <div class="tag reveal">
+    <div class="pulse"></div>
+    Son yeniliklər
+  </div>
+  <h1 class="reveal">Xəbərlər</h1>
+  <p class="subtitle reveal">GTDİB-in fəaliyyəti, layihələri və tədbirləri haqqında ən son xəbərlər.</p>
+</section>
+
+<section id="news-list">
+  <div id="news-grid" class="news-grid">
+    <div class="news-loading reveal">Xəbərlər yüklənir…</div>
+  </div>
+  <div id="news-empty" class="news-empty" style="display:none;">
+    <p>Hazırda yayımlanmış xəbər yoxdur.</p>
+  </div>
+</section>
+
+<!-- NEWS MODAL -->
+<div class="news-modal" id="newsModal" onclick="if(event.target===this)closeNewsModal()">
+  <div class="news-modal-card">
+    <button class="news-modal-close" onclick="closeNewsModal()" aria-label="Bağla">×</button>
+    <img class="news-modal-img" id="modalImg" src="" alt="">
+    <div class="news-modal-date" id="modalDate"></div>
+    <h2 class="news-modal-title" id="modalTitle"></h2>
+    <div class="news-modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Ana səhifə</a>
+    <a href="about.html">Haqqımızda</a>
+    <a href="project.html">Bizim cari layihəmiz</a>
+    <a href="news.html">Xəbərlər</a>
+    <a href="gallery.html">Qalereya</a>
+    <a href="contact.html">Əlaqə</a>
+  </div>
+  <p>© 2026 Gənclərin "Tənhalara Dayaq" İctimai Birliyi — Bakı, Azərbaycan · gtdib.org</p>
+</footer>
+
+<script src="script.js?v=10"></script>
+<script type="module">
+import { supabase, publicImageUrl, formatDate } from './supabase-config.js';
+
+const grid = document.getElementById('news-grid');
+const empty = document.getElementById('news-empty');
+
+async function loadNews() {
+  const { data, error } = await supabase
+    .from('news')
+    .select('id, title_az, body_az, image_path, image_alt_az, published_at')
+    .eq('is_published', true)
+    .order('published_at', { ascending: false });
+
+  if (error) {
+    grid.innerHTML = '<div class="news-loading">Xəbərləri yükləmək mümkün olmadı.</div>';
+    return;
+  }
+  if (!data || data.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  grid.innerHTML = data.map(n => newsCard(n)).join('');
+  if (window.revealInit) window.revealInit();
+}
+
+function newsCard(n) {
+  const img = n.image_path
+    ? `<img src="${publicImageUrl(n.image_path)}" alt="${escapeHtml(n.image_alt_az || n.title_az)}" loading="lazy">`
+    : '';
+  const date = formatDate(n.published_at, 'az-AZ');
+  const preview = stripHtml(n.body_az).slice(0, 180);
+  return `
+    <article class="card news-card reveal" onclick="openNewsModal('${n.id}')">
+      <div class="news-card-img">${img}</div>
+      <div class="news-card-body">
+        <div class="news-card-date">${date}</div>
+        <h3>${escapeHtml(n.title_az)}</h3>
+        <p>${escapeHtml(preview)}${n.body_az && n.body_az.length > 180 ? '…' : ''}</p>
+        <span class="news-card-more">Davamını oxu →</span>
+      </div>
+    </article>`;
+}
+
+window.openNewsModal = async function(id) {
+  const { data } = await supabase
+    .from('news')
+    .select('title_az, body_az, image_path, image_alt_az, published_at')
+    .eq('id', id).single();
+  if (!data) return;
+  document.getElementById('modalImg').src = data.image_path ? publicImageUrl(data.image_path) : '';
+  document.getElementById('modalImg').alt = data.image_alt_az || data.title_az || '';
+  document.getElementById('modalImg').style.display = data.image_path ? 'block' : 'none';
+  document.getElementById('modalDate').textContent = formatDate(data.published_at, 'az-AZ');
+  document.getElementById('modalTitle').textContent = data.title_az;
+  document.getElementById('modalBody').innerHTML = data.body_az;
+  document.getElementById('newsModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+window.closeNewsModal = function() {
+  document.getElementById('newsModal').classList.remove('open');
+  document.body.style.overflow = '';
+};
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function stripHtml(s) {
+  if (!s) return '';
+  const tmp = document.createElement('div');
+  tmp.innerHTML = s;
+  return tmp.textContent || '';
+}
+
+loadNews().then(() => {
+  const m = location.hash.match(/^#open-(.+)$/);
+  if (m) openNewsModal(m[1]);
+});
+</script>
+</body>
+</html>

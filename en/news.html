@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>News — GTDIB</title>
+<meta name="description" content="GTDIB news — latest updates and project developments from the Support for Solidarity People Public Union.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://gtdib.org/en/news.html">
+<link rel="alternate" hreflang="az" href="https://gtdib.org/news.html">
+<link rel="alternate" hreflang="en" href="https://gtdib.org/en/news.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css?v=15">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<script>var t=localStorage.getItem("gtdib-theme");if(t==="light")document.documentElement.setAttribute("data-theme","light");</script>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="mesh-bg"></div>
+
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-dot"></div>
+    GTDIB
+  </a>
+  <ul>
+    <li><button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"><span class="toggle-icon">☾</span></button></li>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="project.html">Our current project</a></li>
+    <li><a href="news.html" class="active">News</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li class="lang-switch"><a href="../news.html">🇦🇿 AZ</a></li>
+  </ul>
+</nav>
+
+<section class="hero page-hero">
+  <div class="tag reveal">
+    <div class="pulse"></div>
+    Latest updates
+  </div>
+  <h1 class="reveal">News</h1>
+  <p class="subtitle reveal">The latest news about GTDIB's activities, projects, and events.</p>
+</section>
+
+<section id="news-list">
+  <div id="news-grid" class="news-grid">
+    <div class="news-loading reveal">Loading news…</div>
+  </div>
+  <div id="news-empty" class="news-empty" style="display:none;">
+    <p>No news published yet.</p>
+  </div>
+</section>
+
+<div class="news-modal" id="newsModal" onclick="if(event.target===this)closeNewsModal()">
+  <div class="news-modal-card">
+    <button class="news-modal-close" onclick="closeNewsModal()" aria-label="Close">×</button>
+    <img class="news-modal-img" id="modalImg" src="" alt="">
+    <div class="news-modal-date" id="modalDate"></div>
+    <h2 class="news-modal-title" id="modalTitle"></h2>
+    <div class="news-modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="project.html">Our current project</a>
+    <a href="news.html">News</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <p>© 2026 "Support for Solidarity People" Public Union — Baku, Azerbaijan · gtdib.org</p>
+</footer>
+
+<script src="../script.js?v=10"></script>
+<script type="module">
+import { supabase, publicImageUrl, formatDate } from '../supabase-config.js';
+
+const grid = document.getElementById('news-grid');
+const empty = document.getElementById('news-empty');
+
+async function loadNews() {
+  const { data, error } = await supabase
+    .from('news')
+    .select('id, title_en, title_az, body_en, body_az, image_path, image_alt_en, image_alt_az, published_at')
+    .eq('is_published', true)
+    .order('published_at', { ascending: false });
+
+  if (error) {
+    grid.innerHTML = '<div class="news-loading">Failed to load news.</div>';
+    return;
+  }
+  if (!data || data.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  grid.innerHTML = data.map(n => newsCard(n)).join('');
+  if (window.revealInit) window.revealInit();
+}
+
+function newsCard(n) {
+  const title = n.title_en || n.title_az || '';
+  const body = n.body_en || n.body_az || '';
+  const alt = n.image_alt_en || n.image_alt_az || title;
+  const img = n.image_path
+    ? `<img src="${publicImageUrl(n.image_path)}" alt="${escapeHtml(alt)}" loading="lazy">`
+    : '';
+  const date = formatDate(n.published_at, 'en-GB');
+  const preview = stripHtml(body).slice(0, 180);
+  const langBadge = !n.title_en ? '<span class="news-lang-badge">AZ</span>' : '';
+  return `
+    <article class="card news-card reveal" onclick="openNewsModal('${n.id}')">
+      <div class="news-card-img">${img}</div>
+      <div class="news-card-body">
+        <div class="news-card-date">${date} ${langBadge}</div>
+        <h3>${escapeHtml(title)}</h3>
+        <p>${escapeHtml(preview)}${body && body.length > 180 ? '…' : ''}</p>
+        <span class="news-card-more">Read more →</span>
+      </div>
+    </article>`;
+}
+
+window.openNewsModal = async function(id) {
+  const { data } = await supabase
+    .from('news')
+    .select('title_en, title_az, body_en, body_az, image_path, image_alt_en, image_alt_az, published_at')
+    .eq('id', id).single();
+  if (!data) return;
+  const title = data.title_en || data.title_az || '';
+  const body = data.body_en || data.body_az || '';
+  const alt = data.image_alt_en || data.image_alt_az || title;
+  document.getElementById('modalImg').src = data.image_path ? publicImageUrl(data.image_path) : '';
+  document.getElementById('modalImg').alt = alt;
+  document.getElementById('modalImg').style.display = data.image_path ? 'block' : 'none';
+  document.getElementById('modalDate').textContent = formatDate(data.published_at, 'en-GB');
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = body;
+  document.getElementById('newsModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+window.closeNewsModal = function() {
+  document.getElementById('newsModal').classList.remove('open');
+  document.body.style.overflow = '';
+};
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function stripHtml(s) {
+  if (!s) return '';
+  const tmp = document.createElement('div');
+  tmp.innerHTML = s;
+  return tmp.textContent || '';
+}
+
+loadNews().then(() => {
+  const m = location.hash.match(/^#open-(.+)$/);
+  if (m) openNewsModal(m[1]);
+});
+</script>
+</body>
+</html>

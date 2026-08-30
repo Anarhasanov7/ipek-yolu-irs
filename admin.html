@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>İdarə paneli — GTDİB Xəbərlər</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=15">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<script>var t=localStorage.getItem("gtdib-theme");if(t==="light")document.documentElement.setAttribute("data-theme","light");</script>
+<style>
+body { background: var(--bg); }
+.admin-wrap { max-width: 900px; margin: 0 auto; padding: 100px 24px 60px; }
+.admin-header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 32px; flex-wrap:wrap; gap:12px; }
+.admin-header h1 { font-family:'Space Grotesk'; font-size: 26px; }
+.admin-header .actions { display:flex; gap:10px; align-items:center; }
+.admin-btn { padding:10px 18px; border-radius:10px; font-family:'Inter'; font-size:13px; font-weight:600; cursor:pointer; border:1px solid var(--border); background:var(--surface); color:var(--text); transition:var(--transition); }
+.admin-btn:hover { background:var(--surface-hover); border-color:var(--border-hover); }
+.admin-btn.primary { background:linear-gradient(135deg,var(--terracotta),#d05a36); color:#fff; border:none; }
+.admin-btn.primary:hover { transform:translateY(-1px); box-shadow:0 4px 16px var(--terracotta-glow); }
+.admin-btn.danger { color:#ff6b6b; border-color:rgba(255,107,107,0.3); }
+.admin-btn.danger:hover { background:rgba(255,107,107,0.1); }
+.admin-btn.small { padding:6px 12px; font-size:12px; }
+
+/* Login */
+.login-card { max-width:420px; margin:120px auto; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:40px; }
+.login-card h1 { font-family:'Space Grotesk'; font-size:24px; text-align:center; margin-bottom:8px; }
+.login-card p.sub { text-align:center; color:var(--text-dim); font-size:14px; margin-bottom:28px; }
+.login-card label { display:block; font-size:13px; color:var(--text-dim); margin-bottom:6px; font-weight:500; }
+.login-card input { width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--border); background:var(--bg-2); color:var(--text); font-family:'Inter'; font-size:14px; margin-bottom:18px; }
+.login-card input:focus { outline:none; border-color:var(--terracotta); }
+.login-error { color:#ff6b6b; font-size:13px; margin-bottom:14px; min-height:18px; }
+
+/* Form */
+.form-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:32px; margin-bottom:32px; }
+.form-card h2 { font-family:'Space Grotesk'; font-size:20px; margin-bottom:20px; }
+.field { margin-bottom:20px; }
+.field label { display:block; font-size:13px; color:var(--text-dim); margin-bottom:6px; font-weight:500; }
+.field label .hint { color:var(--text-faint); font-weight:400; font-size:11px; }
+.field input[type=text], .field textarea { width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--border); background:var(--bg-2); color:var(--text); font-family:'Inter'; font-size:14px; }
+.field input[type=text]:focus, .field textarea:focus { outline:none; border-color:var(--terracotta); }
+.field textarea { min-height:120px; resize:vertical; line-height:1.6; }
+.field-en { border-top:1px solid var(--border); padding-top:20px; margin-top:24px; }
+.field-en legend { font-size:13px; color:var(--gold); font-weight:600; margin-bottom:16px; }
+
+.img-upload { display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap; }
+.img-upload .preview { width:200px; height:113px; border-radius:10px; border:1px solid var(--border); background:var(--bg-2); object-fit:cover; }
+.img-upload .preview.placeholder { display:flex; align-items:center; justify-content:center; color:var(--text-faint); font-size:12px; }
+.img-upload .controls { flex:1; min-width:200px; }
+
+.translate-bar { display:flex; gap:10px; align-items:center; margin:8px 0 20px; }
+.translate-bar .admin-btn { }
+
+.form-actions { display:flex; gap:12px; margin-top:24px; flex-wrap:wrap; }
+
+/* List */
+.news-admin-list { display:flex; flex-direction:column; gap:12px; }
+.news-admin-item { display:flex; gap:16px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px; align-items:center; }
+.news-admin-item img { width:80px; height:45px; border-radius:8px; object-fit:cover; flex-shrink:0; }
+.news-admin-item .ni-body { flex:1; min-width:0; }
+.news-admin-item .ni-title { font-weight:600; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.news-admin-item .ni-meta { font-size:12px; color:var(--text-faint); margin-top:2px; }
+.news-admin-item .ni-actions { display:flex; gap:6px; flex-shrink:0; flex-wrap:wrap; }
+.status-badge { font-size:11px; padding:3px 8px; border-radius:100px; font-weight:600; }
+.status-badge.pub { background:rgba(45,212,191,0.15); color:var(--teal); }
+.status-badge.draft { background:var(--surface-hover); color:var(--text-dim); }
+.toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--bg-2); border:1px solid var(--border); color:var(--text); padding:12px 24px; border-radius:12px; font-size:14px; z-index:300; box-shadow:0 8px 30px rgba(0,0,0,0.3); opacity:0; transition:opacity 0.3s; pointer-events:none; }
+.toast.show { opacity:1; }
+.toast.ok { border-color:var(--teal); }
+.toast.err { border-color:#ff6b6b; }
+.loading-inline { color:var(--text-faint); font-size:13px; }
+</style>
+</head>
+<body>
+
+<div class="mesh-bg"></div>
+<nav>
+  <a href="index.html" class="logo"><div class="logo-dot"></div> GTDİB</a>
+  <ul>
+    <li><button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"><span class="toggle-icon">☾</span></button></li>
+    <li><a href="index.html">Sayta qayıt →</a></li>
+  </ul>
+</nav>
+
+<!-- LOGIN -->
+<div id="loginView" class="login-card">
+  <h1>İdarə paneli</h1>
+  <p class="sub">Xəbərləri yayımlamaq üçün daxil olun</p>
+  <label for="email">E-poçt</label>
+  <input type="text" id="email" autocomplete="username">
+  <label for="password">Şifrə</label>
+  <input type="password" id="password" autocomplete="current-password">
+  <div class="login-error" id="loginError"></div>
+  <button class="admin-btn primary" style="width:100%;" onclick="doLogin()">Daxil ol</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashView" class="admin-wrap" style="display:none;">
+  <div class="admin-header">
+    <h1>Xəbərlər idarə paneli</h1>
+    <div class="actions">
+      <button class="admin-btn small" onclick="toggleForm()" id="toggleFormBtn">+ Yeni xəbər</button>
+      <button class="admin-btn small" onclick="doLogout()">Çıxış</button>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-card" id="formCard">
+    <h2 id="formTitle">Yeni xəbər</h2>
+    <input type="hidden" id="editId">
+
+    <div class="field">
+      <label>Başlıq (Azərbaycanca) <span class="hint">*</span></label>
+      <input type="text" id="title_az" placeholder="Xəbərin başlığı">
+    </div>
+    <div class="field">
+      <label>Mətn (Azərbaycanca) <span class="hint">* — HTML istifadə edə bilərsiniz (&lt;p&gt;, &lt;strong&gt;, &lt;br&gt;)</span></label>
+      <textarea id="body_az" placeholder="Xəbərin tam mətni…"></textarea>
+    </div>
+
+    <div class="field">
+      <label>Şəkil <span class="hint">— 1200×675 px (16:9) tövsiyə olunur, maks 5MB</span></label>
+      <div class="img-upload">
+        <img class="preview placeholder" id="imgPreview" alt="">
+        <div class="controls">
+          <input type="file" id="imgFile" accept="image/jpeg,image/png,image/webp,image/gif" onchange="onImgPick(event)">
+          <div style="margin-top:8px;">
+            <input type="text" id="image_alt_az" placeholder="Şəkil təsviri (az)" style="margin-bottom:8px;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-en">
+      <legend>🇬🇧 İngiliscə versiya</legend>
+      <div class="translate-bar">
+        <button class="admin-btn" onclick="translateAll()" id="translateBtn">🔄 Az→En avto-tərcümə (MyMemory)</button>
+        <span class="loading-inline" id="translateStatus"></span>
+      </div>
+      <div class="field">
+        <label>Başlıq (English)</label>
+        <input type="text" id="title_en" placeholder="News title (English)">
+      </div>
+      <div class="field">
+        <label>Mətn (English)</label>
+        <textarea id="body_en" placeholder="Full news text (English)…"></textarea>
+      </div>
+      <div class="field">
+        <label>Şəkil təsviri (en)</label>
+        <input type="text" id="image_alt_en" placeholder="Image description (en)">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="admin-btn primary" onclick="saveNews(true)" id="publishBtn">✓ Yayımlla</button>
+      <button class="admin-btn" onclick="saveNews(false)">Qaralama kimi saxla</button>
+      <button class="admin-btn" onclick="resetForm()" id="cancelBtn">Ləğv et</button>
+    </div>
+  </div>
+
+  <!-- LIST -->
+  <h2 style="font-family:'Space Grotesk';font-size:18px;margin-bottom:16px;">Mövcud xəbərlər</h2>
+  <div class="news-admin-list" id="adminList">
+    <div class="loading-inline">Yüklənir…</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js?v=10"></script>
+<script type="module">
+import { supabase, publicImageUrl, formatDate, SUPABASE_URL, NEWS_BUCKET } from './supabase-config.js';
+
+const loginView = document.getElementById('loginView');
+const dashView = document.getElementById('dashView');
+let session = null;
+let pickedFile = null;
+let existingImagePath = null;
+
+// ---- Auth ----
+supabase.auth.onAuthStateChange((_e, s) => {
+  session = s;
+  if (s && s.user) showDashboard();
+  else showLogin();
+});
+
+window.doLogin = async function() {
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const errEl = document.getElementById('loginError');
+  errEl.textContent = '';
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) errEl.textContent = 'E-poçt və ya şifrə yanlışdır.';
+};
+window.doLogout = async function() {
+  await supabase.auth.signOut();
+};
+function showLogin() { loginView.style.display='block'; dashView.style.display='none'; }
+function showDashboard() { loginView.style.display='none'; dashView.style.display='block'; loadAdminList(); }
+
+// Enter key login
+document.getElementById('password').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+// ---- Image ----
+window.onImgPick = function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  pickedFile = file;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const prev = document.getElementById('imgPreview');
+    prev.src = ev.target.result;
+    prev.classList.remove('placeholder');
+  };
+  reader.readAsDataURL(file);
+};
+
+// ---- Translate (client-side via MyMemory — uses the browser's fresh IP) ----
+const MM_EMAIL = 'hasanov.anar.2023@gmail.com';
+async function mmTranslate(text, source='az', target='en') {
+  const params = new URLSearchParams({ q: text, langpair: `${source}|${target}`, de: MM_EMAIL });
+  const r = await fetch(`https://api.mymemory.translated.net/get?${params.toString()}`);
+  if (!r.ok) throw new Error('MyMemory ' + r.status);
+  const d = await r.json();
+  const t = d?.responseData?.translatedText;
+  if (!t || (typeof t === 'string' && t.includes('MYMEMORY WARNING'))) {
+    throw new Error('MyMemory limit reached');
+  }
+  return t;
+}
+
+window.translateAll = async function() {
+  const az = document.getElementById('body_az').value.trim();
+  const azTitle = document.getElementById('title_az').value.trim();
+  const azAlt = document.getElementById('image_alt_az').value.trim();
+  if (!az && !azTitle) { toast('Tərcümə üçün azərbaycanca mətn daxil edin', 'err'); return; }
+  const btn = document.getElementById('translateBtn');
+  const status = document.getElementById('translateStatus');
+  btn.disabled = true; status.textContent = 'Tərcümə olunur…';
+  try {
+    if (azTitle) document.getElementById('title_en').value = await mmTranslate(azTitle);
+    if (az) document.getElementById('body_en').value = await mmTranslate(az);
+    if (azAlt) document.getElementById('image_alt_en').value = await mmTranslate(azAlt);
+    status.textContent = 'Tamamlandı ✓';
+    setTimeout(()=>status.textContent='', 3000);
+  } catch(e) {
+    status.textContent = 'Xəta: ' + e.message;
+    toast('Tərcümə xətası — əllə daxil edə bilərsiniz', 'err');
+  }
+  btn.disabled = false;
+};
+
+// ---- Save ----
+window.saveNews = async function(publish) {
+  const title_az = document.getElementById('title_az').value.trim();
+  const body_az = document.getElementById('body_az').value.trim();
+  if (!title_az || !body_az) { toast('Başlıq və mətn (az) tələb olunur', 'err'); return; }
+  const editId = document.getElementById('editId').value;
+  const btn = document.getElementById('publishBtn');
+  btn.disabled = true; btn.textContent = 'Yaddaşda…';
+
+  let imagePath = existingImagePath;
+  if (pickedFile) {
+    const ext = pickedFile.name.split('.').pop();
+    const fname = `${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage.from(NEWS_BUCKET)
+      .upload(fname, pickedFile, { upsert: false });
+    if (upErr) { toast('Şəkil yüklənmədi: ' + upErr.message, 'err'); btn.disabled=false; btn.textContent='✓ Yayımla'; return; }
+    imagePath = fname;
+  }
+
+  const payload = {
+    title_az,
+    body_az,
+    title_en: document.getElementById('title_en').value.trim() || null,
+    body_en: document.getElementById('body_en').value.trim() || null,
+    image_path: imagePath,
+    image_alt_az: document.getElementById('image_alt_az').value.trim() || null,
+    image_alt_en: document.getElementById('image_alt_en').value.trim() || null,
+    is_published: publish,
+  };
+
+  if (editId) {
+    const { error } = await supabase.from('news').update(payload).eq('id', editId);
+    if (error) { toast('Yenilənmədi: ' + error.message, 'err'); }
+    else { toast(publish ? 'Xəbər yayımlandı ✓' : 'Qaralama saxlanıldı ✓', 'ok'); resetForm(); loadAdminList(); }
+  } else {
+    payload.created_by = session.user.id;
+    const { error } = await supabase.from('news').insert(payload);
+    if (error) { toast('Yaradılmadı: ' + error.message, 'err'); }
+    else { toast(publish ? 'Xəbər yayımlandı ✓' : 'Qaralama saxlanıldı ✓', 'ok'); resetForm(); loadAdminList(); }
+  }
+  btn.disabled = false; btn.textContent = '✓ Yayımla';
+};
+
+// ---- List ----
+async function loadAdminList() {
+  const list = document.getElementById('adminList');
+  const { data, error } = await supabase
+    .from('news')
+    .select('id, title_az, title_en, image_path, is_published, published_at, created_at, expires_at')
+    .order('created_at', { ascending: false });
+  if (error) { list.innerHTML = '<div class="loading-inline">Xəta: ' + error.message + '</div>'; return; }
+  if (!data || data.length === 0) { list.innerHTML = '<div class="loading-inline">Hələ xəbər yoxdur. Yuxarıdakı formdan ilk xəbəri əlavə edin.</div>'; return; }
+  list.innerHTML = data.map(n => {
+    const img = n.image_path ? `<img src="${publicImageUrl(n.image_path)}" alt="">` : '';
+    const badge = n.is_published ? '<span class="status-badge pub">Yayımlanıb</span>' : '<span class="status-badge draft">Qaralama</span>';
+    const date = formatDate(n.published_at || n.created_at, 'az-AZ');
+    const pubBtn = n.is_published
+      ? `<button class="admin-btn small" onclick="togglePublish('${n.id}', false)">Gizlət</button>`
+      : `<button class="admin-btn small primary" onclick="togglePublish('${n.id}', true)">Yayımla</button>`;
+    return `<div class="news-admin-item">
+      ${img}
+      <div class="ni-body">
+        <div class="ni-title">${escapeHtml(n.title_az)}</div>
+        <div class="ni-meta">${badge} · ${date} · Bitmə: ${formatDate(n.expires_at,'az-AZ')}</div>
+      </div>
+      <div class="ni-actions">
+        <button class="admin-btn small" onclick="editNews('${n.id}')">Redaktə</button>
+        ${pubBtn}
+        <button class="admin-btn small danger" onclick="deleteNews('${n.id}')">Sil</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.togglePublish = async function(id, publish) {
+  const { error } = await supabase.from('news').update({ is_published: publish }).eq('id', id);
+  if (error) toast('Xəta: ' + error.message, 'err');
+  else { toast(publish ? 'Yayımlandı ✓' : 'Gizlədildi', 'ok'); loadAdminList(); }
+};
+
+window.deleteNews = async function(id) {
+  if (!confirm('Bu xəbəri silmək istədiyinizə əminsiniz?')) return;
+  const { error } = await supabase.from('news').delete().eq('id', id);
+  if (error) toast('Silinmədi: ' + error.message, 'err');
+  else { toast('Silindi', 'ok'); loadAdminList(); }
+};
+
+window.editNews = async function(id) {
+  const { data } = await supabase.from('news').select('*').eq('id', id).single();
+  if (!data) return;
+  document.getElementById('editId').value = data.id;
+  document.getElementById('title_az').value = data.title_az || '';
+  document.getElementById('body_az').value = data.body_az || '';
+  document.getElementById('title_en').value = data.title_en || '';
+  document.getElementById('body_en').value = data.body_en || '';
+  document.getElementById('image_alt_az').value = data.image_alt_az || '';
+  document.getElementById('image_alt_en').value = data.image_alt_en || '';
+  existingImagePath = data.image_path;
+  pickedFile = null;
+  const prev = document.getElementById('imgPreview');
+  if (data.image_path) { prev.src = publicImageUrl(data.image_path); prev.classList.remove('placeholder'); }
+  else { prev.src=''; prev.classList.add('placeholder'); prev.alt='Şəkil yoxdur'; }
+  document.getElementById('imgFile').value = '';
+  document.getElementById('formTitle').textContent = 'Xəbəri redaktə et';
+  document.getElementById('formCard').scrollIntoView({ behavior:'smooth' });
+};
+
+window.resetForm = function() {
+  document.getElementById('editId').value = '';
+  ['title_az','body_az','title_en','body_en','image_alt_az','image_alt_en'].forEach(i => document.getElementById(i).value='');
+  document.getElementById('imgFile').value = '';
+  const prev = document.getElementById('imgPreview');
+  prev.src=''; prev.classList.add('placeholder'); prev.alt='Şəkil yoxdur';
+  pickedFile = null; existingImagePath = null;
+  document.getElementById('formTitle').textContent = 'Yeni xəbər';
+};
+
+window.toggleForm = function() {
+  const c = document.getElementById('formCard');
+  if (c.style.display === 'none') { c.style.display='block'; resetForm(); c.scrollIntoView({behavior:'smooth'}); }
+  else { resetForm(); c.style.display='none'; }
+};
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+let toastTimer;
+function toast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.className='toast', 3000);
+}
+</script>
+</body>
+</html>

@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=14">
+<link rel="stylesheet" href="style.css?v=15">
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -81,6 +81,7 @@
     <li><a href="index.html" class="active">Ana səhifə</a></li>
     <li><a href="about.html">Haqqımızda</a></li>
     <li><a href="project.html">Bizim cari layihəmiz</a></li>
+    <li><a href="news.html">Xəbərlər</a></li>
     <li><a href="gallery.html">Qalereya</a></li>
     <li><a href="contact.html">Əlaqə</a></li>
     <li class="lang-switch"><a href="en/index.html">🇬🇧 EN</a></li>
@@ -185,6 +186,22 @@
   </div>
 </section>
 
+<!-- NEWS STRIP -->
+<section id="news-strip-section">
+  <div class="section-header reveal">
+    <div class="eyebrow">Son xəbərlər</div>
+    <div class="section-divider"></div>
+    <h2>GTDİB xəbərləri</h2>
+    <p>Təşkilatın fəaliyyəti və layihələri haqqında ən son yeniliklər.</p>
+  </div>
+  <div class="news-strip" id="homeNewsStrip">
+    <div class="news-strip-empty">Xəbərlər yüklənir…</div>
+  </div>
+  <div class="news-strip-cta reveal">
+    <a href="news.html" class="btn btn-ghost">Bütün xəbərlər →</a>
+  </div>
+</section>
+
 <!-- TESTIMONIALS -->
 <section id="testimonials">
   <div class="section-header reveal">
@@ -249,6 +266,7 @@
     <a href="index.html">Ana səhifə</a>
     <a href="about.html">Haqqımızda</a>
     <a href="project.html">Bizim cari layihəmiz</a>
+    <a href="news.html">Xəbərlər</a>
     <a href="gallery.html">Qalereya</a>
     <a href="contact.html">Əlaqə</a>
   </div>
@@ -256,5 +274,41 @@
 </footer>
 
 <script src="script.js?v=10"></script>
+<script type="module">
+import { supabase, publicImageUrl, formatDate } from './supabase-config.js';
+
+const strip = document.getElementById('homeNewsStrip');
+const { data } = await supabase
+  .from('news')
+  .select('id, title_az, body_az, image_path, image_alt_az, published_at')
+  .eq('is_published', true)
+  .order('published_at', { ascending: false })
+  .limit(3);
+
+if (!data || data.length === 0) {
+  strip.innerHTML = '<div class="news-strip-empty">Hazırda xəbər yoxdur.</div>';
+} else {
+  strip.innerHTML = data.map(n => {
+    const img = n.image_path
+      ? `<img src="${publicImageUrl(n.image_path)}" alt="${esc(n.image_alt_az||n.title_az)}" loading="lazy">`
+      : '';
+    const date = formatDate(n.published_at, 'az-AZ');
+    const preview = stripHtml(n.body_az).slice(0, 120);
+    return `<article class="card news-card reveal" onclick="location.href='news.html#open-${n.id}'">
+      <div class="news-card-img">${img}</div>
+      <div class="news-card-body">
+        <div class="news-card-date">${date}</div>
+        <h3>${esc(n.title_az)}</h3>
+        <p>${esc(preview)}${n.body_az&&n.body_az.length>120?'…':''}</p>
+        <span class="news-card-more">Davamını oxu →</span>
+      </div>
+    </article>`;
+  }).join('');
+  if (window.revealInit) window.revealInit();
+}
+
+function esc(s){if(!s)return'';return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function stripHtml(s){if(!s)return'';const t=document.createElement('div');t.innerHTML=s;return t.textContent||'';}
+</script>
 </body>
 </html>

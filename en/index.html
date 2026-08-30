@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=14">
+<link rel="stylesheet" href="../style.css?v=15">
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/favicon.svg">
@@ -80,6 +80,7 @@
     <li><a href="index.html" class="active">Home</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="project.html">Our current project</a></li>
+    <li><a href="news.html">News</a></li>
     <li><a href="gallery.html">Gallery</a></li>
     <li><a href="contact.html">Contact</a></li>
     <li class="lang-switch"><a href="../index.html">🇦🇿 AZ</a></li>
@@ -184,6 +185,22 @@
   </div>
 </section>
 
+<!-- NEWS STRIP -->
+<section id="news-strip-section">
+  <div class="section-header reveal">
+    <div class="eyebrow">Latest news</div>
+    <div class="section-divider"></div>
+    <h2>GTDIB news</h2>
+    <p>The latest updates on the organization's activities and projects.</p>
+  </div>
+  <div class="news-strip" id="homeNewsStrip">
+    <div class="news-strip-empty">Loading news…</div>
+  </div>
+  <div class="news-strip-cta reveal">
+    <a href="news.html" class="btn btn-ghost">All news →</a>
+  </div>
+</section>
+
 <!-- TESTIMONIALS -->
 <section id="testimonials">
   <div class="section-header reveal">
@@ -248,6 +265,7 @@
     <a href="index.html">Home</a>
     <a href="about.html">About</a>
     <a href="project.html">Our current project</a>
+    <a href="news.html">News</a>
     <a href="gallery.html">Gallery</a>
     <a href="contact.html">Contact</a>
   </div>
@@ -255,5 +273,45 @@
 </footer>
 
 <script src="../script.js?v=10"></script>
+<script type="module">
+import { supabase, publicImageUrl, formatDate } from '../supabase-config.js';
+
+const strip = document.getElementById('homeNewsStrip');
+const { data } = await supabase
+  .from('news')
+  .select('id, title_en, title_az, body_en, body_az, image_path, image_alt_en, image_alt_az, published_at')
+  .eq('is_published', true)
+  .order('published_at', { ascending: false })
+  .limit(3);
+
+if (!data || data.length === 0) {
+  strip.innerHTML = '<div class="news-strip-empty">No news yet.</div>';
+} else {
+  strip.innerHTML = data.map(n => {
+    const title = n.title_en || n.title_az || '';
+    const body = n.body_en || n.body_az || '';
+    const alt = n.image_alt_en || n.image_alt_az || title;
+    const img = n.image_path
+      ? `<img src="${publicImageUrl(n.image_path)}" alt="${esc(alt)}" loading="lazy">`
+      : '';
+    const date = formatDate(n.published_at, 'en-GB');
+    const preview = stripHtml(body).slice(0, 120);
+    const badge = !n.title_en ? '<span class="news-lang-badge">AZ</span>' : '';
+    return `<article class="card news-card reveal" onclick="location.href='news.html#open-${n.id}'">
+      <div class="news-card-img">${img}</div>
+      <div class="news-card-body">
+        <div class="news-card-date">${date} ${badge}</div>
+        <h3>${esc(title)}</h3>
+        <p>${esc(preview)}${body&&body.length>120?'…':''}</p>
+        <span class="news-card-more">Read more →</span>
+      </div>
+    </article>`;
+  }).join('');
+  if (window.revealInit) window.revealInit();
+}
+
+function esc(s){if(!s)return'';return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function stripHtml(s){if(!s)return'';const t=document.createElement('div');t.innerHTML=s;return t.textContent||'';}
+</script>
 </body>
 </html>
