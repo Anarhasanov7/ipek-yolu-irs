@@ -50,6 +50,12 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
+// Expose globally so dynamically-loaded content (news cards) can be observed
+window.revealInit = function() {
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el => observer.observe(el));
+};
+
+// Observe initial reveal elements
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 // === SCROLL PROGRESS BAR ===
