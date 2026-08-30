@@ -273,14 +273,14 @@
   <p>© 2026 Gənclərin "Tənhalara Dayaq" İctimai Birliyi — Bakı, Azərbaycan · gtdib.org</p>
 </footer>
 
-<script src="script.js?v=11"></script>
+<script src="script.js?v=12"></script>
 <script type="module">
 import { supabase, publicImageUrl, formatDate } from './supabase-config.js';
 
 const strip = document.getElementById('homeNewsStrip');
 const { data } = await supabase
   .from('news')
-  .select('id, title_az, body_az, image_path, image_alt_az, published_at')
+  .select('id, title_az, body_az, image_path, external_image_url, image_alt_az, published_at')
   .eq('is_published', true)
   .order('published_at', { ascending: false })
   .limit(3);
@@ -289,8 +289,9 @@ if (!data || data.length === 0) {
   strip.innerHTML = '<div class="news-strip-empty">Hazırda xəbər yoxdur.</div>';
 } else {
   strip.innerHTML = data.map(n => {
-    const img = n.image_path
-      ? `<img src="${publicImageUrl(n.image_path)}" alt="${esc(n.image_alt_az||n.title_az)}" loading="lazy">`
+    const imgSrc = n.image_path ? publicImageUrl(n.image_path) : (n.external_image_url || '');
+    const img = imgSrc
+      ? `<img src="${imgSrc}" alt="${esc(n.image_alt_az||n.title_az)}" loading="lazy">`
       : '';
     const date = formatDate(n.published_at, 'az-AZ');
     const preview = stripHtml(n.body_az).slice(0, 120);

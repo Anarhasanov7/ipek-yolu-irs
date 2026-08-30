@@ -1,0 +1,23 @@
+name: Auto-News Daily
+on:
+  schedule:
+    # Run daily at 08:00 UTC (12:00 Baku time)
+    - cron: '0 8 * * *'
+  workflow_dispatch: # Allow manual trigger for testing
+
+jobs:
+  publish-news:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run auto-news
+        env:
+          SUPABASE_URL: https://glfizcgayqecnvtfihgy.supabase.co
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          NEWS_BUCKET: news-images
+        run: node .github/scripts/auto-news.mjs

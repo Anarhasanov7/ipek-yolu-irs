@@ -80,7 +80,7 @@
   <p>© 2026 Gənclərin "Tənhalara Dayaq" İctimai Birliyi — Bakı, Azərbaycan · gtdib.org</p>
 </footer>
 
-<script src="script.js?v=11"></script>
+<script src="script.js?v=12"></script>
 <script type="module">
 import { supabase, publicImageUrl, formatDate } from './supabase-config.js';
 
@@ -90,7 +90,7 @@ const empty = document.getElementById('news-empty');
 async function loadNews() {
   const { data, error } = await supabase
     .from('news')
-    .select('id, title_az, body_az, image_path, image_alt_az, published_at')
+    .select('id, title_az, body_az, image_path, external_image_url, image_alt_az, published_at')
     .eq('is_published', true)
     .order('published_at', { ascending: false });
 
@@ -108,8 +108,9 @@ async function loadNews() {
 }
 
 function newsCard(n) {
-  const img = n.image_path
-    ? `<img src="${publicImageUrl(n.image_path)}" alt="${escapeHtml(n.image_alt_az || n.title_az)}" loading="lazy">`
+  const imgSrc = n.image_path ? publicImageUrl(n.image_path) : (n.external_image_url || '');
+  const img = imgSrc
+    ? `<img src="${imgSrc}" alt="${escapeHtml(n.image_alt_az || n.title_az)}" loading="lazy">`
     : '';
   const date = formatDate(n.published_at, 'az-AZ');
   const preview = stripHtml(n.body_az).slice(0, 180);
@@ -128,12 +129,13 @@ function newsCard(n) {
 window.openNewsModal = async function(id) {
   const { data } = await supabase
     .from('news')
-    .select('title_az, body_az, image_path, image_alt_az, published_at')
+    .select('title_az, body_az, image_path, external_image_url, image_alt_az, published_at')
     .eq('id', id).single();
   if (!data) return;
-  document.getElementById('modalImg').src = data.image_path ? publicImageUrl(data.image_path) : '';
+  const modalImgSrc = data.image_path ? publicImageUrl(data.image_path) : (data.external_image_url || '');
+  document.getElementById('modalImg').src = modalImgSrc;
   document.getElementById('modalImg').alt = data.image_alt_az || data.title_az || '';
-  document.getElementById('modalImg').style.display = data.image_path ? 'block' : 'none';
+  document.getElementById('modalImg').style.display = modalImgSrc ? 'block' : 'none';
   document.getElementById('modalDate').textContent = formatDate(data.published_at, 'az-AZ');
   document.getElementById('modalTitle').textContent = data.title_az;
   document.getElementById('modalBody').innerHTML = data.body_az;

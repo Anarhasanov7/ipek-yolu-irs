@@ -79,7 +79,7 @@
   <p>© 2026 "Support for Solidarity People" Public Union — Baku, Azerbaijan · gtdib.org</p>
 </footer>
 
-<script src="../script.js?v=11"></script>
+<script src="../script.js?v=12"></script>
 <script type="module">
 import { supabase, publicImageUrl, formatDate } from '../supabase-config.js';
 
@@ -89,7 +89,7 @@ const empty = document.getElementById('news-empty');
 async function loadNews() {
   const { data, error } = await supabase
     .from('news')
-    .select('id, title_en, title_az, body_en, body_az, image_path, image_alt_en, image_alt_az, published_at')
+    .select('id, title_en, title_az, body_en, body_az, image_path, external_image_url, image_alt_en, image_alt_az, published_at')
     .eq('is_published', true)
     .order('published_at', { ascending: false });
 
@@ -110,8 +110,9 @@ function newsCard(n) {
   const title = n.title_en || n.title_az || '';
   const body = n.body_en || n.body_az || '';
   const alt = n.image_alt_en || n.image_alt_az || title;
-  const img = n.image_path
-    ? `<img src="${publicImageUrl(n.image_path)}" alt="${escapeHtml(alt)}" loading="lazy">`
+  const imgSrc = n.image_path ? publicImageUrl(n.image_path) : (n.external_image_url || '');
+  const img = imgSrc
+    ? `<img src="${imgSrc}" alt="${escapeHtml(alt)}" loading="lazy">`
     : '';
   const date = formatDate(n.published_at, 'en-GB');
   const preview = stripHtml(body).slice(0, 180);
@@ -131,15 +132,16 @@ function newsCard(n) {
 window.openNewsModal = async function(id) {
   const { data } = await supabase
     .from('news')
-    .select('title_en, title_az, body_en, body_az, image_path, image_alt_en, image_alt_az, published_at')
+    .select('title_en, title_az, body_en, body_az, image_path, external_image_url, image_alt_en, image_alt_az, published_at')
     .eq('id', id).single();
   if (!data) return;
   const title = data.title_en || data.title_az || '';
   const body = data.body_en || data.body_az || '';
   const alt = data.image_alt_en || data.image_alt_az || title;
-  document.getElementById('modalImg').src = data.image_path ? publicImageUrl(data.image_path) : '';
+  const modalImgSrc = data.image_path ? publicImageUrl(data.image_path) : (data.external_image_url || '');
+  document.getElementById('modalImg').src = modalImgSrc;
   document.getElementById('modalImg').alt = alt;
-  document.getElementById('modalImg').style.display = data.image_path ? 'block' : 'none';
+  document.getElementById('modalImg').style.display = modalImgSrc ? 'block' : 'none';
   document.getElementById('modalDate').textContent = formatDate(data.published_at, 'en-GB');
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalBody').innerHTML = body;

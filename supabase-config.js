@@ -10,8 +10,11 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 });
 
 // Build the public URL for an object in the news-images bucket.
+// Also supports external URLs (for auto-news articles that reference original images).
 export function publicImageUrl(path) {
   if (!path) return '';
+  // If it's already a full URL (http/https), return as-is
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
   return `${SUPABASE_URL}/storage/v1/object/public/${NEWS_BUCKET}/${path}`;
 }
 
