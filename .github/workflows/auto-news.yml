@@ -36,7 +36,7 @@ jobs:
           password: ${{ secrets.RESEND_API_KEY }}
           subject: Auto-News Notification
           to: hasanov.anar.2023@gmail.com
-          from: noreply@europatheducation.eu
+          from: GTDIB Auto-News <noreply@europatheducation.eu>
           body: |
             The auto-news script has completed.
 
