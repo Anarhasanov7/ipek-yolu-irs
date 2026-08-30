@@ -87,40 +87,75 @@ async function fetchFeed(feed) {
   }
 }
 
-function generateArticle(item) {
+async function translateText(text, fromLang, toLang) {
+  if (!text || fromLang === toLang) return text;
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${fromLang}|${toLang}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.responseStatus === 200 || data.responseData) {
+      return data.responseData.translatedText || text;
+    }
+    return text;
+  } catch (e) {
+    console.log(`Translation error: ${e.message}`);
+    return text;
+  }
+}
+
+async function generateArticle(item) {
   const isEU = item.category === 'eu';
   const isAZ = item.feedLang === 'az';
   const sourceName = item.feedName;
   const sourceLink = item.link;
   const desc = item.description.slice(0, 200);
 
-  let bodyAz, bodyEn, titleAz, titleEn;
+  // Translate the description and title to the other language
+  let descAz, descEn, titleAz, titleEn;
 
-  titleAz = item.title;
-  titleEn = item.title;
+  if (isAZ) {
+    // Source is in Azerbaijani — translate to English
+    descAz = desc;
+    titleAz = item.title;
+    console.log('Translating AZ→EN...');
+    descEn = await translateText(desc, 'az', 'en');
+    titleEn = await translateText(item.title, 'az', 'en');
+  } else {
+    // Source is in English — translate to Azerbaijani
+    descEn = desc;
+    titleEn = item.title;
+    console.log('Translating EN→AZ...');
+    descAz = await translateText(desc, 'en', 'az');
+    titleAz = await translateText(item.title, 'en', 'az');
+  }
+
+  // Small delay to respect rate limits
+  await new Promise(r => setTimeout(r, 500));
+
+  let bodyAz, bodyEn;
 
   if (isEU) {
-    bodyAz = `<p>Azərbaycan gəncləri və təhsil müəssisələri üçün Avropa əməkdaşlığı sahəsində yeni imkanlar yaranıb. ${desc}</p>
+    bodyAz = `<p>Azərbaycan gəncləri və təhsil müəssisələri üçün Avropa əməkdaşlığı sahəsində yeni imkanlar yaranıb. ${descAz}</p>
 <p>GTDİB olaraq biz Azərbaycan gənclərinin beynəlxalq təhsil və mübadilə proqramlarından yararlanmasını dəstəkləyirik. Bu cür imkanlar gənclərimizin bacarıqlarını inkişaf etdirmək və Avropa təcrübəsi əldə etmək üçün mühüm vasitədir.</p>
 <p><em>Mənbə: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
 
-    bodyEn = `<p>New opportunities have emerged for Azerbaijani youth and educational institutions in the field of European cooperation. ${desc}</p>
+    bodyEn = `<p>New opportunities have emerged for Azerbaijani youth and educational institutions in the field of European cooperation. ${descEn}</p>
 <p>At GTDIB, we support Azerbaijani youth in benefiting from international education and exchange programmes. Such opportunities are essential for developing our young people's skills and gaining European experience.</p>
 <p><em>Source: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
   } else if (isAZ) {
-    bodyAz = `<p>${desc}</p>
+    bodyAz = `<p>${descAz}</p>
 <p>GTDİB olaraq biz bu cür nailiyyətləri və inkişafları dəstəkləyirik. Gənclərin təhsilə və peşə təliminə çıxışı cəmiyyətimizin gələcəyi üçün əvəzedilməzdir.</p>
 <p><em>Mənbə: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
 
-    bodyEn = `<p>${desc}</p>
+    bodyEn = `<p>${descEn}</p>
 <p>At GTDIB, we support these kinds of achievements and developments. Access to education and vocational training for young people is irreplaceable for the future of our society.</p>
 <p><em>Source: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
   } else {
-    bodyAz = `<p>${desc}</p>
+    bodyAz = `<p>${descAz}</p>
 <p>GTDİB olaraq biz ölkəmizin mədəni irsinin qorunması və təbliğ edilməsini dəstəkləyirik. Bu cür nailiyyətlər Azərbaycanın beynəlxalq aləmdə tanınmasına xidmət edir.</p>
 <p><em>Mənbə: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
 
-    bodyEn = `<p>${desc}</p>
+    bodyEn = `<p>${descEn}</p>
 <p>At GTDIB, we support the preservation and promotion of our country's cultural heritage. Such achievements contribute to Azerbaijan's recognition in the international arena.</p>
 <p><em>Source: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
   }
@@ -186,7 +221,7 @@ async function main() {
   console.log(`Picked: [${picked.feedName}] ${picked.title} (score: ${scored[0].score})`);
 
   // 5. Generate article
-  const article = generateArticle(picked);
+  const article = await generateArticle(picked);
 
   // 6. Get image URL (external, not downloading)
   const imageUrl = picked.enclosureLink || picked.thumbnail || '';
