@@ -8,35 +8,44 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'GtdibNews2026!Az';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsZml6Y2dheXFlY252dGZpaGd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTAzMDUsImV4cCI6MjEwMzU4NjMwNX0.V9MiUESH7Xu1TG4tadkj9a7_wi-pouLPtv3yYTSEn0I';
 
 const FEEDS = [
-  { name: 'Oxu.az', lang: 'az', url: 'https://oxu.az/feed', category: 'az' },
-  { name: 'Trend.az', lang: 'az', url: 'https://www.trend.az/rss', category: 'az' },
-  { name: 'AzerNews', lang: 'en', url: 'https://www.azernews.az/feed.php', category: 'az' },
+  { name: 'Google News: Erasmus+', lang: 'en', url: 'https://news.google.com/rss/search?q=Erasmus%2B&hl=en&gl=US&ceid=US:en', category: 'erasmus' },
+  { name: 'Google News: EU Grants Education', lang: 'en', url: 'https://news.google.com/rss/search?q=EU+grant+education+youth&hl=en&gl=US&ceid=US:en', category: 'grants' },
+  { name: 'Google News: EU Scholarship', lang: 'en', url: 'https://news.google.com/rss/search?q=EU+scholarship+OR+fellowship+OR+exchange+programme&hl=en&gl=US&ceid=US:en', category: 'grants' },
   { name: 'The PIE News', lang: 'en', url: 'https://www.thepienews.com/feed/', category: 'edu' },
-  { name: 'BBC Europe', lang: 'en', url: 'https://www.bbc.com/news/world/europe/rss.xml', category: 'eu' },
 ];
 
-const KEYWORDS_AZ = [
-  'təhsil','universitet','şagird','tələbə','gənc','gənclər','peşə','təlim',
-  'mədəniyyət','irs','tarix','muzey','qoruq','Avropa','Erasmus','proqram',
-  'layihə','birlik','ictimai','könüll','təcrübə','bacarıq','istiqdam',
-  'qadın','uşaq','region','kənd','məktəb','musiqi','sərgi','festival',
-  'idman','olimpiya','paralimpiada','qız','texnologiya','rəqəmsal',
+// Only pick articles about Erasmus+, international grants, scholarships,
+// exchange programmes, EU funding, youth mobility
+// HIGH-value keywords (must have at least one to be considered)
+const MUST_KEYWORDS = [
+  'erasmus','grant','scholarship','fellowship','eu funding','eu programme',
+  'horizon europe','marie skłodowska','creative europe','europeaid',
+  'erasmus mundus','solidarity corps','youth exchange','capacity building',
+  'twinning','student mobility','youth mobility','strategic partnership',
+  'cooperation partnership','youth worker','non-formal learning',
+  'volunteering','european solidarity','international cooperation',
+  'eu cooperation','exchange programme','training course','joint master',
+  'Erasmus','qrant','təqaüd','mübadilə proqram','Avropa əməkdaşlığı',
+  'beynəlxalq əməkdaşlıq','könüllü proqram','ESC',
 ];
 
-const KEYWORDS_EN = [
-  'education','university','student','youth','young','vocational','training',
-  'culture','heritage','history','museum','reserve','europe','erasmus',
-  'programme','project','ngo','civic','volunteer','skills','employment',
-  'women','child','region','rural','solidarity','school','music','festival',
-  'sport','olympic','paralympic','girl','technology','digital','visa',
-  'scholarship','exchange','partnership','cooperation','azerbaijan',
+// LOW-value keywords (add bonus points but not required)
+const BONUS_KEYWORDS_AZ = [
+  'gənclər','təhsil','təlim','proqram','layihə','beynəlxalq',
+];
+
+const BONUS_KEYWORDS_EN = [
+  'youth','education','training','programme','project','international',
+  'european','partnership','cooperation','skills','mobility',
 ];
 
 const SKIP_WORDS = [
   'football','futbol','premier league','premyer liqa','manchester','barcelona',
   'real madrid','spotify','victoria\'s secret','vin diesel','fast & furious',
   'uno championship','mattel','qarabag','qarabağ','neftçi','zirə','kəpəz',
-  'turan tovuz','idman','sport',
+  'turan tovuz','idman','sport','crash','killed','attack','bombing','war',
+  'missile','drone','airstrike','casualt','earthquake','flood','fire',
+  'murder','arrest','corrupt','scandal','protest','riot','coup',
 ];
 
 function stripHtml(s) {
@@ -47,43 +56,76 @@ function scoreItem(item) {
   const text = (item.title + ' ' + item.description).toLowerCase();
   let score = 0;
 
+  // Skip sports/violence/entertainment
   for (const kw of SKIP_WORDS) {
     if (text.includes(kw)) return -100;
   }
 
-  const keywords = item.feedLang === 'az' ? KEYWORDS_AZ : KEYWORDS_EN;
-  for (const kw of keywords) {
-    if (text.includes(kw)) score += 10;
+  // MUST have at least one high-value keyword (Erasmus, grant, scholarship, etc.)
+  let hasMustKeyword = false;
+  for (const kw of MUST_KEYWORDS) {
+    if (text.includes(kw.toLowerCase())) {
+      hasMustKeyword = true;
+      score += 20;
+    }
   }
 
-  if (item.category === 'eu') score += 5;
+  // If no must-keyword, reject this article
+  if (!hasMustKeyword) return -1;
+
+  // Bonus keywords add extra points
+  const bonusKeywords = item.feedLang === 'az' ? BONUS_KEYWORDS_AZ : BONUS_KEYWORDS_EN;
+  for (const kw of bonusKeywords) {
+    if (text.includes(kw)) score += 5;
+  }
+
   if (item.thumbnail || item.enclosureLink) score += 3;
 
+  // Prefer recent items
   const age = Date.now() - new Date(item.pubDate).getTime();
   if (age < 24 * 60 * 60 * 1000) score += 5;
   else if (age < 48 * 60 * 60 * 1000) score += 2;
+  else if (age > 7 * 24 * 60 * 60 * 1000) score -= 10; // penalize old articles
 
   return score;
 }
 
 async function fetchFeed(feed) {
   try {
-    const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`;
-    const res = await fetch(apiUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-    const data = await res.json();
-    if (data.status !== 'ok') return [];
+    // Fetch RSS XML directly and parse it
+    const res = await fetch(feed.url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; GTDIB-NewsBot/1.0)' },
+    });
+    if (!res.ok) return [];
+    const xml = await res.text();
 
-    return (data.items || []).slice(0, 10).map(item => ({
-      title: stripHtml(item.title || ''),
-      link: item.link || '',
-      description: stripHtml(item.description || '').slice(0, 300),
-      pubDate: item.pubDate || new Date().toISOString(),
-      feedName: feed.name,
-      feedLang: feed.lang,
-      category: feed.category,
-      thumbnail: item.thumbnail || '',
-      enclosureLink: item.enclosure?.link || '',
-    }));
+    // Simple XML parsing for RSS items
+    const items = [];
+    const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
+    let match;
+    while ((match = itemRegex.exec(xml)) !== null && items.length < 10) {
+      const block = match[1];
+      const title = (block.match(/<title>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/title>/i) || [])[1] || '';
+      const link = (block.match(/<link>([\s\S]*?)<\/link>/i) || [])[1] || '';
+      const desc = (block.match(/<description>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/description>/i) || [])[1] || '';
+      const pubDate = (block.match(/<pubDate>([\s\S]*?)<\/pubDate>/i) || [])[1] || new Date().toISOString();
+      const enclosure = (block.match(/<enclosure[^>]*url="([^"]+)"/i) || [])[1] || '';
+      const mediaContent = (block.match(/<media:content[^>]*url="([^"]+)"/i) || [])[1] || '';
+      const mediaThumbnail = (block.match(/<media:thumbnail[^>]*url="([^"]+)"/i) || [])[1] || '';
+
+      items.push({
+        title: stripHtml(title).trim(),
+        link: link.trim(),
+        description: stripHtml(desc).slice(0, 300),
+        pubDate: pubDate.trim(),
+        feedName: feed.name,
+        feedLang: feed.lang,
+        category: feed.category,
+        thumbnail: mediaThumbnail || mediaContent || '',
+        enclosureLink: enclosure || '',
+      });
+    }
+    return items;
   } catch (e) {
     console.log(`Feed error ${feed.name}: ${e.message}`);
     return [];
