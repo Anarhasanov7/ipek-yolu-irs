@@ -1,9 +1,9 @@
-name: Auto-News Daily # GTDIB
+name: Auto-News Daily
 on:
   schedule:
     # Run daily at 08:00 UTC (12:00 Baku time)
     - cron: '0 8 * * *'
-  workflow_dispatch: # Allow manual trigger for testing
+  workflow_dispatch:
 
 jobs:
   publish-news:
@@ -19,8 +19,6 @@ jobs:
         id: auto-news
         env:
           SUPABASE_URL: https://glfizcgayqecnvtfihgy.supabase.co
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          NEWS_BUCKET: news-images
         run: |
           node .github/scripts/auto-news.mjs 2>&1 | tee /tmp/output.txt
           echo "result<<EOF" >> $GITHUB_OUTPUT
@@ -36,15 +34,15 @@ jobs:
           server_port: 587
           username: resend
           password: ${{ secrets.RESEND_API_KEY }}
-          subject: ${{ steps.auto-news.outcome == 'success' && '✅ Auto-News: Article published' || '❌ Auto-News: Error occurred' }}
+          subject: Auto-News Notification
           to: hasanov.anar.2023@gmail.com
-          from: GTDİB Auto-News <noreply@europatheducation.eu>
+          from: noreply@europatheducation.eu
           body: |
-            ${{ steps.auto-news.outcome == 'success' && 'The auto-news script ran successfully.' || 'The auto-news script encountered an error.' }}
+            The auto-news script has completed.
+
+            Status: ${{ steps.auto-news.outcome }}
 
             Log output:
             ${{ steps.auto-news.outputs.result }}
 
-            ---
-            This is an automated message from the GTDİB auto-news system.
             View full run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
