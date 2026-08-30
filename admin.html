@@ -332,12 +332,13 @@ async function loadAdminList() {
   const list = document.getElementById('adminList');
   const { data, error } = await supabase
     .from('news')
-    .select('id, title_az, title_en, image_path, is_published, published_at, created_at, expires_at')
+    .select('id, title_az, title_en, image_path, external_image_url, is_published, published_at, created_at, expires_at')
     .order('created_at', { ascending: false });
   if (error) { list.innerHTML = '<div class="loading-inline">Xəta: ' + error.message + '</div>'; return; }
   if (!data || data.length === 0) { list.innerHTML = '<div class="loading-inline">Hələ xəbər yoxdur. Yuxarıdakı formdan ilk xəbəri əlavə edin.</div>'; return; }
   list.innerHTML = data.map(n => {
-    const img = n.image_path ? `<img src="${publicImageUrl(n.image_path)}" alt="">` : '';
+    const imgSrc = n.image_path ? publicImageUrl(n.image_path) : (n.external_image_url || '');
+    const img = imgSrc ? `<img src="${imgSrc}" alt="">` : '';
     const badge = n.is_published ? '<span class="status-badge pub">Yayımlanıb</span>' : '<span class="status-badge draft">Qaralama</span>';
     const date = formatDate(n.published_at || n.created_at, 'az-AZ');
     const pubBtn = n.is_published
