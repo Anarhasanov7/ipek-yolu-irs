@@ -193,13 +193,35 @@ async function main() {
     return;
   }
 
-  // 2b. Get all existing source URLs to avoid duplicates
-  const urlsRes = await fetch(
-    `${SUPABASE_URL}/rest/v1/news?select=source_url`,
+  // 2b. Get all existing articles to avoid duplicates
+  const existingRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/news?select=title_az,title_en,source_url`,
     { headers: { 'apikey': ANON_KEY, 'Authorization': `Bearer ${token}` } }
   );
-  const existingUrls = await urlsRes.json();
-  const existingUrlSet = new Set((existingUrls || []).map(n => (n.source_url || '').toLowerCase()));
+  const existingArticles = await existingRes.json();
+  const existingUrlSet = new Set((existingArticles || []).map(n => (n.source_url || '').toLowerCase()));
+  const existingTitles = (existingArticles || []).map(n => (n.title_az || n.title_en || '').toLowerCase());
+
+  // Helper: check if a headline is too similar to any existing article
+  function isDuplicate(title) {
+    const t = title.toLowerCase();
+    const titleWords = t.split(/\s+/).filter(w => w.length > 2);
+    for (const existing of existingTitles) {
+      const existingWords = existing.split(/\s+/).filter(w => w.length > 2);
+      if (existingWords.length === 0) continue;
+      let matches = 0;
+      for (const w of titleWords) {
+        // Match if one word contains the other (handles different word forms)
+        if (existingWords.some(ew => ew.includes(w) || w.includes(ew))) matches++;
+      }
+      const similarity = matches / Math.max(titleWords.length, existingWords.length);
+      if (similarity >= 0.5) {
+        console.log(`  [dedup] "${title.slice(0,50)}..." ~${Math.round(similarity*100)}% match with existing article`);
+        return true;
+      }
+    }
+    return false;
+  }
 
   // 3. Fetch all feeds
   console.log('Fetching RSS feeds...');
@@ -211,15 +233,16 @@ async function main() {
   }
   console.log(`Total items: ${allItems.length}`);
 
-  // 4. Score and pick best
+  // 4. Score and pick best — filter out duplicates by URL AND title similarity
   const scored = allItems
     .filter(item => item.title && item.link)
     .filter(item => !existingUrlSet.has(item.link.toLowerCase()))
+    .filter(item => !isDuplicate(item.title))
     .map(item => ({ item, score: scoreItem(item) }))
     .filter(s => s.score > 0)
     .sort((a, b) => b.score - a.score);
 
-  console.log(`Items with score > 0: ${scored.length}`);
+  console.log(`Items with score > 0 (after dedup): ${scored.length}`);
 
   if (scored.length === 0) {
     console.log('No relevant articles found today.');
