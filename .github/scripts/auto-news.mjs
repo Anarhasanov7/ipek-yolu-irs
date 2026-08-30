@@ -9,24 +9,27 @@ const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 
 const FEEDS = [
   { name: 'Oxu.az', lang: 'az', url: 'https://oxu.az/feed', category: 'az' },
-  { name: 'Operativmm.az', lang: 'az', url: 'https://operativmm.az/rss.xml', category: 'az' },
+  { name: 'Trend.az', lang: 'az', url: 'https://www.trend.az/rss', category: 'az' },
   { name: 'AzerNews', lang: 'en', url: 'https://www.azernews.az/feed.php', category: 'az' },
-  { name: 'EU Erasmus+ Schools', lang: 'en', url: 'https://ec.europa.eu/newsroom/eac/feed?topic_id=3208&lang=en&orderby=item_date', category: 'eu' },
-  { name: 'EU Erasmus+ Youth', lang: 'en', url: 'https://ec.europa.eu/newsroom/eac/feed?topic_id=3166&lang=en&orderby=item_date', category: 'eu' },
+  { name: 'The PIE News', lang: 'en', url: 'https://www.thepienews.com/feed/', category: 'edu' },
+  { name: 'BBC Europe', lang: 'en', url: 'https://www.bbc.com/news/world/europe/rss.xml', category: 'eu' },
 ];
 
 const KEYWORDS_AZ = [
   'təhsil','universitet','şagird','tələbə','gənc','gənclər','peşə','təlim',
   'mədəniyyət','irs','tarix','muzey','qoruq','Avropa','Erasmus','proqram',
   'layihə','birlik','ictimai','könüll','təcrübə','bacarıq','istiqdam',
-  'qadın','uşaq','region','kənd','tənha','dayaq',
+  'qadın','uşaq','region','kənd','məktəb','musiqi','sərgi','festival',
+  'idman','olimpiya','paralimpiada','qız','texnologiya','rəqəmsal',
 ];
 
 const KEYWORDS_EN = [
   'education','university','student','youth','young','vocational','training',
   'culture','heritage','history','museum','reserve','europe','erasmus',
   'programme','project','ngo','civic','volunteer','skills','employment',
-  'women','child','region','rural','solidarity',
+  'women','child','region','rural','solidarity','school','music','festival',
+  'sport','olympic','paralympic','girl','technology','digital','visa',
+  'scholarship','exchange','partnership','cooperation','azerbaijan',
 ];
 
 const SKIP_WORDS = [
@@ -133,30 +136,39 @@ async function generateArticle(item) {
   await new Promise(r => setTimeout(r, 500));
 
   let bodyAz, bodyEn;
+  const isEdu = item.category === 'edu';
 
   if (isEU) {
-    bodyAz = `<p>Azərbaycan gəncləri və təhsil müəssisələri üçün Avropa əməkdaşlığı sahəsində yeni imkanlar yaranıb. ${descAz}</p>
-<p>GTDİB olaraq biz Azərbaycan gənclərinin beynəlxalq təhsil və mübadilə proqramlarından yararlanmasını dəstəkləyirik. Bu cür imkanlar gənclərimizin bacarıqlarını inkişaf etdirmək və Avropa təcrübəsi əldə etmək üçün mühüm vasitədir.</p>
+    bodyAz = `<p>${descAz}</p>
+<p>GTDİB olaraq biz Azərbaycan gənclərinin Avropa əməkdaşlığı və beynəlxalq proqramlardan yararlanmasını dəstəkləyirik. Bu cür inkişaflar gənclərimizin bacarıqlarını artırmaq və beynəlxalq təcrübə əldə etmək üçün mühüm imkandır.</p>
 <p><em>Mənbə: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
 
-    bodyEn = `<p>New opportunities have emerged for Azerbaijani youth and educational institutions in the field of European cooperation. ${descEn}</p>
-<p>At GTDIB, we support Azerbaijani youth in benefiting from international education and exchange programmes. Such opportunities are essential for developing our young people's skills and gaining European experience.</p>
+    bodyEn = `<p>${descEn}</p>
+<p>At GTDIB, we support Azerbaijani youth in benefiting from European cooperation and international programmes. Such developments are important opportunities for our young people to develop their skills and gain international experience.</p>
+<p><em>Source: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
+  } else if (isEdu) {
+    bodyAz = `<p>${descAz}</p>
+<p>GTDİB olaraq biz beynəlxalq təhsil əməkdaşlığını və gənclərin mübadilə proqramlarında iştirakını dəstəkləyirik. Təhsil sahəsindəki bu cür yeniliklər gənclərimizin gələcəyi üçün əhəmiyyətlidir.</p>
+<p><em>Mənbə: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
+
+    bodyEn = `<p>${descEn}</p>
+<p>At GTDIB, we support international education cooperation and youth participation in exchange programmes. Such innovations in education are important for the future of our young people.</p>
 <p><em>Source: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
   } else if (isAZ) {
     bodyAz = `<p>${descAz}</p>
-<p>GTDİB olaraq biz bu cür nailiyyətləri və inkişafları dəstəkləyirik. Gənclərin təhsilə və peşə təliminə çıxışı cəmiyyətimizin gələcəyi üçün əvəzedilməzdir.</p>
+<p>GTDİB olaraq biz bu cür inkişafları dəstəkləyirik. Gənclərin təhsilə, mədəniyyətə və cəmiyyət həyatında iştirakına çıxışı cəmiyyətimizin gələcəyi üçün əvəzedilməzdir.</p>
 <p><em>Mənbə: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
 
     bodyEn = `<p>${descEn}</p>
-<p>At GTDIB, we support these kinds of achievements and developments. Access to education and vocational training for young people is irreplaceable for the future of our society.</p>
+<p>At GTDIB, we support these kinds of developments. Access to education, culture, and civic participation for young people is irreplaceable for the future of our society.</p>
 <p><em>Source: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
   } else {
     bodyAz = `<p>${descAz}</p>
-<p>GTDİB olaraq biz ölkəmizin mədəni irsinin qorunması və təbliğ edilməsini dəstəkləyirik. Bu cür nailiyyətlər Azərbaycanın beynəlxalq aləmdə tanınmasına xidmət edir.</p>
+<p>GTDİB olaraq biz ölkəmizin mədəni irsinin qorunması və beynəlxalq əməkdaşlığın inkişafını dəstəkləyirik. Bu cür hadisələr Azərbaycanın beynəlxalq aləmdə tanınmasına xidmət edir.</p>
 <p><em>Mənbə: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
 
     bodyEn = `<p>${descEn}</p>
-<p>At GTDIB, we support the preservation and promotion of our country's cultural heritage. Such achievements contribute to Azerbaijan's recognition in the international arena.</p>
+<p>At GTDIB, we support the preservation of our country's cultural heritage and the development of international cooperation. Such events contribute to Azerbaijan's recognition in the international arena.</p>
 <p><em>Source: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
   }
 
