@@ -116,7 +116,29 @@ body { background: var(--bg); }
     <div class="actions">
       <button class="admin-btn small" onclick="toggleFeeds()" id="toggleFeedsBtn">📰 Xəbər mənbələri</button>
       <button class="admin-btn small" onclick="toggleForm()" id="toggleFormBtn">+ Yeni xəbər</button>
+      <button class="admin-btn small" onclick="showPasswordChange()" id="pwBtn">🔑 Şifrə</button>
       <button class="admin-btn small" onclick="doLogout()">Çıxış</button>
+    </div>
+  </div>
+
+  <!-- PASSWORD CHANGE -->
+  <div class="form-card" id="pwCard" style="display:none;">
+    <h2>🔑 Şifrəni dəyiş</h2>
+    <div class="field">
+      <label>Cari şifrə</label>
+      <input type="password" id="curPw" autocomplete="current-password">
+    </div>
+    <div class="field">
+      <label>Yeni şifrə</label>
+      <input type="password" id="newPw" autocomplete="new-password" placeholder="Minimum 6 simvol">
+    </div>
+    <div class="field">
+      <label>Yeni şifrə (təkrar)</label>
+      <input type="password" id="newPw2" autocomplete="new-password">
+    </div>
+    <div class="form-actions">
+      <button class="admin-btn primary" onclick="changePassword()">Şifrəni dəyiş</button>
+      <button class="admin-btn" onclick="document.getElementById('pwCard').style.display='none'">Ləğv et</button>
     </div>
   </div>
 
@@ -128,9 +150,7 @@ body { background: var(--bg); }
       öz məqalənizi yazın və mənbəyə istinad verin. <strong>Köçürmək yox, ilham almaq.</strong>
     </p>
     <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
-      <button class="admin-btn small" onclick="loadFeeds('all')" id="feedFilterAll">Hamısı</button>
-      <button class="admin-btn small" onclick="loadFeeds('az')" id="feedFilterAz">🇦🇿 Azərbaycan</button>
-      <button class="admin-btn small" onclick="loadFeeds('eu')" id="feedFilterEu">🇪🇺 Erasmus+/EU</button>
+      <button class="admin-btn small" onclick="loadFeeds('all')" id="feedFilterAll" style="border-color:var(--terracotta);">Hamısı</button>
       <button class="admin-btn small" onclick="loadFeeds()" style="margin-left:auto;">🔄 Yenilə</button>
     </div>
     <div id="feedList" style="display:flex;flex-direction:column;gap:10px;">
@@ -215,6 +235,7 @@ const dashView = document.getElementById('dashView');
 let session = null;
 let pickedFile = null;
 let existingImagePath = null;
+let pendingExternalImage = null;
 
 // ---- Auth ----
 supabase.auth.onAuthStateChange((_e, s) => {
@@ -236,6 +257,27 @@ window.doLogout = async function() {
 };
 function showLogin() { loginView.style.display='block'; dashView.style.display='none'; }
 function showDashboard() { loginView.style.display='none'; dashView.style.display='block'; loadAdminList(); }
+
+// ---- Password Change ----
+window.showPasswordChange = function() {
+  document.getElementById('pwCard').style.display = 'block';
+  document.getElementById('pwCard').scrollIntoView({ behavior: 'smooth' });
+  ['curPw','newPw','newPw2'].forEach(i => document.getElementById(i).value = '');
+};
+window.changePassword = async function() {
+  const cur = document.getElementById('curPw').value;
+  const nw = document.getElementById('newPw').value;
+  const nw2 = document.getElementById('newPw2').value;
+  if (!cur || !nw) { toast('Bütün sahələri doldurun', 'err'); return; }
+  if (nw.length < 6) { toast('Yeni şifrə minimum 6 simvol olmalıdır', 'err'); return; }
+  if (nw !== nw2) { toast('Yeni şifrələr uyğun gəlmir', 'err'); return; }
+  const { error } = await supabase.auth.updateUser({ password: nw });
+  if (error) { toast('Şifrə dəyişdirilmədi: ' + error.message, 'err'); }
+  else {
+    toast('Şifrə uğurla dəyişdirildi ✓', 'ok');
+    document.getElementById('pwCard').style.display = 'none';
+  }
+};
 
 // Enter key login
 document.getElementById('password').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
@@ -314,6 +356,7 @@ window.saveNews = async function(publish) {
     title_en: document.getElementById('title_en').value.trim() || null,
     body_en: document.getElementById('body_en').value.trim() || null,
     image_path: imagePath,
+    external_image_url: (!imagePath && pendingExternalImage) ? pendingExternalImage : null,
     image_alt_az: document.getElementById('image_alt_az').value.trim() || null,
     image_alt_en: document.getElementById('image_alt_en').value.trim() || null,
     is_published: publish,
@@ -400,9 +443,11 @@ window.editNews = async function(id) {
     document.getElementById('publishedAt').value = '';
   }
   existingImagePath = data.image_path;
+  pendingExternalImage = data.external_image_url || null;
   pickedFile = null;
   const prev = document.getElementById('imgPreview');
   if (data.image_path) { prev.src = publicImageUrl(data.image_path); prev.classList.remove('placeholder'); }
+  else if (data.external_image_url) { prev.src = data.external_image_url; prev.classList.remove('placeholder'); }
   else { prev.src=''; prev.classList.add('placeholder'); prev.alt='Şəkil yoxdur'; }
   document.getElementById('imgFile').value = '';
   document.getElementById('formTitle').textContent = 'Xəbəri redaktə et';
@@ -415,7 +460,7 @@ window.resetForm = function() {
   document.getElementById('imgFile').value = '';
   const prev = document.getElementById('imgPreview');
   prev.src=''; prev.classList.add('placeholder'); prev.alt='Şəkil yoxdur';
-  pickedFile = null; existingImagePath = null;
+  pickedFile = null; existingImagePath = null; pendingExternalImage = null;
   document.getElementById('formTitle').textContent = 'Yeni xəbər';
   document.getElementById('dateField').style.display = 'none';
   document.getElementById('publishedAt').value = '';
@@ -438,14 +483,10 @@ window.toggleFeeds = function() {
 
 // ---- RSS Feed Aggregator ----
 const RSS_FEEDS = [
-  // Azerbaijani news (AZ language)
-  { id:'oxu', name:'Oxu.az', lang:'az', url:'https://oxu.az/feed' },
-  { id:'operativmm', name:'Operativmm.az', lang:'az', url:'https://operativmm.az/rss.xml' },
-  // Azerbaijani news (EN)
-  { id:'azernews', name:'AzerNews (EN)', lang:'az', url:'https://www.azernews.az/feed.php' },
-  // EU / Erasmus+ / Youth
-  { id:'eu_schools', name:'EU Erasmus+ Schools', lang:'eu', url:'https://ec.europa.eu/newsroom/eac/feed?topic_id=3208&lang=en&orderby=item_date' },
-  { id:'eu_youth', name:'EU Erasmus+ Youth', lang:'eu', url:'https://ec.europa.eu/newsroom/eac/feed?topic_id=3166&lang=en&orderby=item_date' },
+  { id:'gn_erasmus', name:'Google News: Erasmus+', lang:'eu', url:'https://news.google.com/rss/search?q=Erasmus%2B+OR+%22Erasmus+Mundus%22+OR+%22European+Solidarity+Corps%22&hl=en&gl=US&ceid=US:en' },
+  { id:'gn_grants', name:'Google News: EU Grants', lang:'eu', url:'https://news.google.com/rss/search?q=%22EU+grant%22+OR+%22EU+funding%22+OR+%22call+for+proposals%22+education+youth&hl=en&gl=US&ceid=US:en' },
+  { id:'gn_scholar', name:'Google News: Scholarships', lang:'eu', url:'https://news.google.com/rss/search?q=scholarship+OR+fellowship+OR+%22exchange+programme%22+EU+OR+European&hl=en&gl=US&ceid=US:en' },
+  { id:'gn_neighbour', name:'Google News: EU Neighbourhood', lang:'eu', url:'https://news.google.com/rss/search?q=%22Eastern+Partnership%22+OR+%22EU+neighbourhood%22+grant+OR+cooperation&hl=en&gl=US&ceid=US:en' },
 ];
 
 let feedsLoaded = false;
@@ -465,22 +506,28 @@ window.loadFeeds = async function(filter = 'all') {
     .filter(f => filter === 'all' || f.lang === filter)
     .map(async (feed) => {
       try {
-        const resp = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`);
+        const resp = await fetch(feed.url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
         if (!resp.ok) return;
-        const data = await resp.json();
-        if (data.status !== 'ok' || !data.items) return;
-        for (const item of data.items.slice(0, 8)) {
-          items.push({
-            feedId: feed.id,
-            feedName: feed.name,
-            feedLang: feed.lang,
-            title: stripTags(item.title),
-            link: item.link,
-            pubDate: item.pubDate,
-            description: stripTags(item.description || '').slice(0, 300),
-            thumbnail: item.thumbnail || (item.enclosure && item.enclosure.link) || '',
-          });
-        }
+        const xml = await resp.text();
+        const doc = new DOMParser().parseFromString(xml, 'text/xml');
+        const nodes = doc.querySelectorAll('item');
+        let count = 0;
+        nodes.forEach(node => {
+          if (count >= 8) return;
+          const title = stripTags(node.querySelector('title')?.textContent || '');
+          const link = node.querySelector('link')?.textContent?.trim() || '';
+          const pubDate = node.querySelector('pubDate')?.textContent?.trim() || new Date().toISOString();
+          const desc = stripTags(node.querySelector('description')?.textContent || '').slice(0, 300);
+          const enclosure = node.querySelector('enclosure');
+          const thumbnail = enclosure?.getAttribute('url') || '';
+          if (title && link) {
+            items.push({
+              feedId: feed.id, feedName: feed.name, feedLang: feed.lang,
+              title, link, pubDate, description: desc, thumbnail,
+            });
+            count++;
+          }
+        });
       } catch (e) { /* skip failed feeds */ }
     });
 
@@ -529,10 +576,41 @@ window.useFeedItem = function(idx) {
     document.getElementById('title_en').value = item.title;
     document.getElementById('body_en').value = `<p>Write your commentary about this news…</p>\n<p><em>Source: <a href="${item.link}" target="_blank" rel="noopener">${item.feedName}</a></em></p>`;
   }
+  // Auto-fetch image from the original source
+  fetchSourceImage(item).then(imgUrl => {
+    if (imgUrl) {
+      const prev = document.getElementById('imgPreview');
+      prev.src = imgUrl;
+      prev.classList.remove('placeholder');
+      // Store as external image URL (will be saved on publish)
+      pendingExternalImage = imgUrl;
+      document.getElementById('image_alt_az').value = 'Foto: ' + item.feedName;
+      document.getElementById('image_alt_en').value = 'Photo: ' + item.feedName;
+      toast('Şəkil mənbədən alındı ✓', 'ok');
+    }
+  });
   document.getElementById('formTitle').textContent = 'Xəbər mənbədən ilhamla';
   document.getElementById('formCard').scrollIntoView({ behavior: 'smooth' });
   toast('Forma dolduruldu — öz mətninizi yazın', 'ok');
 };
+
+// Fetch og:image from the source article
+async function fetchSourceImage(item) {
+  // First try the RSS thumbnail/enclosure
+  if (item.thumbnail) return item.thumbnail;
+  // Then try fetching og:image from the article page via a CORS proxy
+  try {
+    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(item.link)}`;
+    const resp = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+    if (!resp.ok) return null;
+    const html = await resp.text();
+    const ogMatch = html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]+)"/i);
+    if (ogMatch) return ogMatch[1];
+    const twitterMatch = html.match(/<meta[^>]*name="twitter:image"[^>]*content="([^"]+)"/i);
+    if (twitterMatch) return twitterMatch[1];
+  } catch (e) { /* CORS or timeout — skip */ }
+  return null;
+}
 
 function stripTags(html) {
   if (!html) return '';
