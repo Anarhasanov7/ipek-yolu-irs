@@ -318,5 +318,6 @@ if (!data || data.length === 0) {
 function esc(s){if(!s)return'';return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function stripHtml(s){if(!s)return'';const t=document.createElement('div');t.innerHTML=s;return t.textContent||'';}
 </script>
+<script src="../chatbot.js?v=1"></script>
 </body>
 </html>
