@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xəbər — GTDİB</title>
+<meta name="description" content="GTDİB xəbəri">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://gtdib.org/article.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=17">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<script>var t=localStorage.getItem("gtdib-theme");if(t==="light")document.documentElement.setAttribute("data-theme","light");</script>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="mesh-bg"></div>
+
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-dot"></div>
+    GTDİB
+  </a>
+  <ul>
+    <li><button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"><span class="toggle-icon">☾</span></button></li>
+    <li><a href="index.html">Ana səhifə</a></li>
+    <li><a href="about.html">Haqqımızda</a></li>
+    <li><a href="project.html">Bizim cari layihəmiz</a></li>
+    <li><a href="news.html" class="active">Xəbərlər</a></li>
+    <li><a href="gallery.html">Qalereya</a></li>
+    <li><a href="contact.html">Əlaqə</a></li>
+    <li class="lang-switch"><a href="#" id="langLink">🇬🇧 EN</a></li>
+  </ul>
+</nav>
+
+<section class="hero page-hero">
+  <div class="tag reveal">
+    <div class="pulse"></div>
+    <a href="news.html" style="color:inherit;text-decoration:none;">← Bütün xəbərlər</a>
+  </div>
+</section>
+
+<section id="article-content" style="max-width:800px;margin:0 auto;padding:0 24px 80px;">
+  <div class="news-loading reveal" id="article-loading">Xəbər yüklənir…</div>
+  <div id="article-error" style="display:none;text-align:center;padding:60px;">
+    <h2 style="font-family:'Space Grotesk';margin-bottom:12px;">Xəbər tapılmadı</h2>
+    <p style="color:var(--text-dim);margin-bottom:24px;">Bu xəbər mövcud deyil və ya silinmiş ola bilər.</p>
+    <a href="news.html" class="btn btn-primary">Xəbərlərə qayıt →</a>
+  </div>
+  <article id="article-body" style="display:none;">
+    <div class="news-modal-date" id="artDate"></div>
+    <h1 id="artTitle" style="font-family:'Space Grotesk';font-size:28px;line-height:1.3;margin:8px 0 24px;"></h1>
+    <img id="artImg" src="" alt="" style="width:100%;border-radius:16px;margin-bottom:24px;display:none;">
+    <div id="artText" class="news-modal-body" style="font-size:16px;line-height:1.8;color:var(--text);"></div>
+    <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);">
+      <a href="news.html" style="color:var(--terracotta);text-decoration:none;">← Bütün xəbərlər</a>
+    </div>
+  </article>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Ana səhifə</a>
+    <a href="about.html">Haqqımızda</a>
+    <a href="project.html">Bizim cari layihəmiz</a>
+    <a href="news.html">Xəbərlər</a>
+    <a href="gallery.html">Qalereya</a>
+    <a href="contact.html">Əlaqə</a>
+  </div>
+  <p>© 2026 Gənclərin "Tənhalara Dayaq" İctimai Birliyi — Bakı, Azərbaycan · gtdib.org</p>
+</footer>
+
+<script src="script.js?v=12"></script>
+<script type="module">
+import { supabase, publicImageUrl, formatDate } from './supabase-config.js?v=3';
+
+const params = new URLSearchParams(location.search);
+const articleId = params.get('id');
+
+async function loadArticle() {
+  if (!articleId) {
+    showError();
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from('news')
+    .select('id, title_az, title_en, body_az, body_en, image_path, external_image_url, image_alt_az, image_alt_en, published_at, source_url')
+    .eq('id', articleId)
+    .eq('is_published', true)
+    .single();
+
+  if (error || !data) {
+    showError();
+    return;
+  }
+
+  // Set page metadata for SEO
+  document.title = data.title_az + ' — GTDİB';
+  document.querySelector('meta[name="description"]').setAttribute('content', stripHtml(data.body_az).slice(0, 160));
+  const canonical = `https://gtdib.org/article.html?id=${data.id}`;
+  document.querySelector('link[rel="canonical"]').setAttribute('href', canonical);
+
+  // Open Graph tags
+  setMeta('og:title', data.title_az);
+  setMeta('og:description', stripHtml(data.body_az).slice(0, 160));
+  setMeta('og:url', canonical);
+  setMeta('og:type', 'article');
+  const imgSrc = data.image_path ? publicImageUrl(data.image_path) : (data.external_image_url || '');
+  if (imgSrc) setMeta('og:image', imgSrc);
+
+  // Twitter Card tags
+  setMetaProp('twitter:card', 'summary_large_image');
+  setMetaProp('twitter:title', data.title_az);
+  setMetaProp('twitter:description', stripHtml(data.body_az).slice(0, 160));
+  if (imgSrc) setMetaProp('twitter:image', imgSrc);
+
+  // JSON-LD structured data for Google
+  const jsonld = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "headline": data.title_az,
+    "datePublished": data.published_at,
+    "author": { "@type": "Organization", "name": "GTDİB" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Gənclərin Tənhalara Dayaq İctimai Birliyi",
+      "url": "https://gtdib.org"
+    },
+    "mainEntityOfPage": canonical,
+    "url": canonical
+  };
+  if (imgSrc) jsonld.image = [imgSrc];
+  if (data.image_alt_az) jsonld.description = data.image_alt_az;
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(jsonld);
+  document.head.appendChild(script);
+
+  // Render article
+  document.getElementById('artDate').textContent = formatDate(data.published_at, 'az-AZ');
+  document.getElementById('artTitle').textContent = data.title_az;
+  document.getElementById('artText').innerHTML = data.body_az;
+
+  if (imgSrc) {
+    const img = document.getElementById('artImg');
+    img.src = imgSrc;
+    img.alt = data.image_alt_az || data.title_az || '';
+    img.style.display = 'block';
+  }
+
+  // Update EN lang link
+  document.getElementById('langLink').href = `/en/article.html?id=${data.id}`;
+
+  document.getElementById('article-loading').style.display = 'none';
+  document.getElementById('article-body').style.display = 'block';
+}
+
+function showError() {
+  document.getElementById('article-loading').style.display = 'none';
+  document.getElementById('article-error').style.display = 'block';
+}
+
+function setMeta(name, content) {
+  let tag = document.querySelector(`meta[property="${name}"]`);
+  if (!tag) {
+    tag = document.createElement('meta');
+    tag.setAttribute('property', name);
+    document.head.appendChild(tag);
+  }
+  tag.setAttribute('content', content);
+}
+
+function setMetaProp(name, content) {
+  let tag = document.querySelector(`meta[name="${name}"]`);
+  if (!tag) {
+    tag = document.createElement('meta');
+    tag.setAttribute('name', name);
+    document.head.appendChild(tag);
+  }
+  tag.setAttribute('content', content);
+}
+
+function stripHtml(s) {
+  if (!s) return '';
+  const tmp = document.createElement('div');
+  tmp.innerHTML = s;
+  return tmp.textContent || '';
+}
+
+loadArticle();
+</script>
+</body>
+</html>

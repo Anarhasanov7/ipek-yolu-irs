@@ -115,7 +115,7 @@ function newsCard(n) {
   const date = formatDate(n.published_at, 'az-AZ');
   const preview = stripHtml(n.body_az).slice(0, 180);
   return `
-    <article class="card news-card reveal" onclick="openNewsModal('${n.id}')">
+    <article class="card news-card reveal" onclick="location.href='article.html?id=${n.id}'">
       <div class="news-card-img">${img}</div>
       <div class="news-card-body">
         <div class="news-card-date">${date}</div>

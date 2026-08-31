@@ -118,7 +118,7 @@ function newsCard(n) {
   const preview = stripHtml(body).slice(0, 180);
   const langBadge = !n.title_en ? '<span class="news-lang-badge">AZ</span>' : '';
   return `
-    <article class="card news-card reveal" onclick="openNewsModal('${n.id}')">
+    <article class="card news-card reveal" onclick="location.href='article.html?id=${n.id}'">
       <div class="news-card-img">${img}</div>
       <div class="news-card-body">
         <div class="news-card-date">${date} ${langBadge}</div>
