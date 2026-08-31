@@ -506,8 +506,7 @@ window.toggleFeeds = function() {
 
 // ---- RSS Feed Aggregator ----
 // Note: Google News RSS blocks cross-origin requests from browsers (CORS).
-// We use api.allorigins.win as a CORS proxy to fetch the feeds.
-const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+// We use rss2json.com API to convert RSS to JSON (avoids CORS issues).
 const RSS_FEEDS = [
   { id:'gn_erasmus', name:'Google News: Erasmus+', lang:'eu', url:'https://news.google.com/rss/search?q=Erasmus%2B+OR+%22Erasmus+Mundus%22+OR+%22European+Solidarity+Corps%22&hl=en&gl=US&ceid=US:en' },
   { id:'gn_grants', name:'Google News: EU Grants', lang:'eu', url:'https://news.google.com/rss/search?q=%22EU+grant%22+OR+%22EU+funding%22+OR+%22call+for+proposals%22+education+youth&hl=en&gl=US&ceid=US:en' },
@@ -532,27 +531,23 @@ window.loadFeeds = async function(filter = 'all') {
     .filter(f => filter === 'all' || f.lang === filter)
     .map(async (feed) => {
       try {
-        const proxyUrl = CORS_PROXY + encodeURIComponent(feed.url);
-        const resp = await fetch(proxyUrl);
+        // Use rss2json.com API to avoid CORS issues with Google News
+        const apiUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(feed.url) + '&count=8';
+        const resp = await fetch(apiUrl);
         if (!resp.ok) return;
-        const xml = await resp.text();
-        const doc = new DOMParser().parseFromString(xml, 'text/xml');
-        const nodes = doc.querySelectorAll('item');
-        let count = 0;
-        nodes.forEach(node => {
-          if (count >= 8) return;
-          const title = stripTags(node.querySelector('title')?.textContent || '');
-          const link = node.querySelector('link')?.textContent?.trim() || '';
-          const pubDate = node.querySelector('pubDate')?.textContent?.trim() || new Date().toISOString();
-          const desc = stripTags(node.querySelector('description')?.textContent || '').slice(0, 300);
-          const enclosure = node.querySelector('enclosure');
-          const thumbnail = enclosure?.getAttribute('url') || '';
+        const data = await resp.json();
+        if (!data.items) return;
+        data.items.forEach(item => {
+          const title = stripTags(item.title || '');
+          const link = item.link || '';
+          const pubDate = item.pubDate || new Date().toISOString();
+          const desc = stripTags(item.description || '').slice(0, 300);
+          const thumbnail = item.thumbnail || '';
           if (title && link) {
             items.push({
               feedId: feed.id, feedName: feed.name, feedLang: feed.lang,
               title, link, pubDate, description: desc, thumbnail,
             });
-            count++;
           }
         });
       } catch (e) { /* skip failed feeds */ }
