@@ -6,7 +6,8 @@ export const NEWS_BUCKET = 'news-images';
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: { persistSession: true, autoRefreshToken: true }
+  auth: { persistSession: true, autoRefreshToken: true },
+  db: { convertDate: false }  // Keep dates as ISO strings, not Date objects
 });
 
 // Build the public URL for an object in the news-images bucket.
@@ -21,7 +22,9 @@ export function publicImageUrl(path) {
 // Format an ISO date for display as DD/MM/YYYY
 export function formatDate(iso, locale = 'az-AZ') {
   if (!iso) return '';
-  const d = new Date(iso);
+  // Handle both Date objects and ISO strings
+  const d = iso instanceof Date ? iso : new Date(iso);
+  if (isNaN(d.getTime())) return '';
   const day = String(d.getDate()).padStart(2, '0');
   const month = String(d.getMonth() + 1).padStart(2, '0');
   const year = d.getFullYear();
