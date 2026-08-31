@@ -1,8 +1,8 @@
 name: Auto-News Daily
 on:
   schedule:
-    # Run daily at 08:00 UTC (12:00 Baku time)
-    - cron: '0 8 * * *'
+    # Run daily at 02:00 UTC (04:00 Italian time / 05:00 Baku time)
+    - cron: '0 2 * * *'
   workflow_dispatch:
 
 jobs:
