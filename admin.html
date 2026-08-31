@@ -532,12 +532,14 @@ window.loadFeeds = async function(filter = 'all') {
     .map(async (feed) => {
       try {
         // Use rss2json.com API to avoid CORS issues with Google News
-        const apiUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(feed.url) + '&count=8';
+        const apiUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(feed.url);
         const resp = await fetch(apiUrl);
         if (!resp.ok) return;
         const data = await resp.json();
         if (!data.items) return;
+        let count = 0;
         data.items.forEach(item => {
+          if (count >= 8) return;
           const title = stripTags(item.title || '');
           const link = item.link || '';
           const pubDate = item.pubDate || new Date().toISOString();
@@ -548,6 +550,7 @@ window.loadFeeds = async function(filter = 'all') {
               feedId: feed.id, feedName: feed.name, feedLang: feed.lang,
               title, link, pubDate, description: desc, thumbnail,
             });
+            count++;
           }
         });
       } catch (e) { /* skip failed feeds */ }
@@ -658,3 +661,4 @@ function toast(msg, type='') {
 </html>
 <!-- v4 -->
 <!-- v5 -->
+<!-- v6 -->
