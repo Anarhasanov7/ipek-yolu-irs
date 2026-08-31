@@ -7,21 +7,21 @@
   const isEN = document.documentElement.lang === 'en';
 
   const t = AZ ? {
-    title: 'GTDİB Köməkçi',
-    subtitle: 'Sualınız var? Cavab verim!',
-    placeholder: 'Sualınızı yazın...',
+    title: 'GTDİB',
+    subtitle: 'Sualınız var? Cavablayım!',
+    placeholder: 'Sualınızı buraya yazın...',
     send: 'Göndər',
-    greeting: 'Salam! 👋 Mən GTDİB köməkçisiyəm. Sizə təşkilat, layihələr, tərəfdaşlıq, üzvlük və əlaqə haqqında suallarda kömək edə bilərəm. Nə maraqlandırır?',
-    fallback: 'Bağışlayın, bu suala tam cavab verə bilmirəm. Daha ətraflı məlumat üçün info@gtdib.org ünvanına yazın və ya əlaqə səhifəsini ziyarət edin.',
+    greeting: 'Salam! 👋 GTDİB haqqında suallarınızı cavablandırmağa hazıram. Təşkilatımız, layihələrimiz, tərəfdaşlıq, üzvlük və əlaqə haqqında məlumat verə bilərəm. Hansı mövzu maraqlandırır?',
+    fallback: 'Bu suala tam cavab verə bilmirəm. Ətraflı məlumat üçün info@gtdib.org ünvanına e-poçt göndərin və ya əlaqə səhifəmizə baxın: <a href="contact.html">Əlaqə →</a>',
     quickQs: ['Təşkilat haqqında', 'Tərəfdaş olmaq', 'Üzv olmaq', 'Əlaqə'],
     langLabel: 'AZ',
   } : {
-    title: 'GTDİB Assistant',
-    subtitle: 'Have a question? I can help!',
-    placeholder: 'Type your question...',
+    title: 'GTDİB',
+    subtitle: 'Have a question? Ask me!',
+    placeholder: 'Type your question here...',
     send: 'Send',
-    greeting: 'Hello! 👋 I am the GTDİB assistant. I can help you with questions about our organization, projects, partnership, membership and contact. What interests you?',
-    fallback: 'Sorry, I cannot fully answer that question. For more details, please email info@gtdib.org or visit our contact page.',
+    greeting: 'Hello! 👋 I am here to answer your questions about GTDİB. I can tell you about our organization, projects, partnership, membership and how to contact us. What would you like to know?',
+    fallback: 'I cannot fully answer that question. For more details, please email info@gtdib.org or visit our contact page: <a href="contact.html">Contact →</a>',
     quickQs: ['About the organization', 'Become a partner', 'Become a member', 'Contact'],
     langLabel: 'EN',
   };
@@ -70,8 +70,8 @@
     },
     {
       keywords: ['qeydiyyat', 'qeydiyyat', 'registration', 'oid', 'erasmus+ oid', 'e10439176', 'vergi', 'vergi', 'tax', 'vöen', "voen", '1500488311', 'qanuni', 'qanuni', 'legal', 'status'],
-      az: 'GTDİB Erasmus+/ESC Organisation Registration sistemində qeydiyyatlıdır. OID: E10439176. Azərbaycan qeydiyyatı: 1103-Q1-1443 (30/05/2003). VÖEN: 1500488311.',
-      en: 'GTDIB is registered in the Erasmus+/ESC Organisation Registration system. OID: E10439176. Azerbaijan registration: 1103-Q1-1443 (30/05/2003). Tax ID (VÖEN): 1500488311.',
+      az: 'GTDİB Erasmus+/ESC Organisation Registration sistemində qeydiyyatlıdır. OID: E10439176. VÖEN: 1500488311.',
+      en: 'GTDIB is registered in the Erasmus+/ESC Organisation Registration system. OID: E10439176. Tax ID (VÖEN): 1500488311.',
     },
     {
       keywords: ['təlim', 'telim', 'training', 'workshop', 'seminar', 'seminar', 'kapasitet', 'kapasitet', 'capacity', 'gənclər işi', 'gencler isi', 'youth work', 'non-formal', 'qeyri-rəsmi təhsil'],
@@ -177,8 +177,8 @@
       background: #22c55e; border-radius: 50%; border: 2px solid var(--bg, #0a0a0a);
     }
     #chatbot-window {
-      position: absolute; bottom: 70px; right: 0; width: 360px; max-width: calc(100vw - 40px);
-      height: 480px; max-height: calc(100vh - 120px); display: flex; flex-direction: column;
+      position: absolute; bottom: 70px; right: 0; width: 420px; max-width: calc(100vw - 40px);
+      height: 560px; max-height: calc(100vh - 120px); display: flex; flex-direction: column;
       background: var(--bg, #0a0a0a); border: 1px solid var(--border, #222); border-radius: 16px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.3); overflow: hidden;
     }
@@ -223,7 +223,7 @@
     }
     #chatbot-send:hover { opacity: 0.9; }
     @media (max-width: 480px) {
-      #chatbot-window { width: calc(100vw - 40px); height: calc(100vh - 120px); }
+      #chatbot-window { width: calc(100vw - 32px); height: calc(100vh - 100px); bottom: 60px; right: -8px; }
     }
   `;
   document.head.appendChild(style);
