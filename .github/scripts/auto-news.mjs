@@ -381,8 +381,7 @@ async function main() {
     return;
   }
 
-  // 5. Try each candidate in score order until we find one WITH a real image.
-  //    No image = no publish. We never use stock fallbacks.
+  // 5. Pick the top-scored candidate. Image is optional — we publish with or without.
   let picked = null;
   let imageUrl = null;
   let article = null;
@@ -391,7 +390,7 @@ async function main() {
     const item = candidate.item;
     console.log(`Trying: [${item.feedName}] ${item.title} (score: ${candidate.score})`);
 
-    // Try to get a real image from multiple sources
+    // Try to get a real image from multiple sources (optional)
     let img = item.enclosureLink || item.thumbnail || '';
     if (img && isBadImage(img)) img = '';
     if (!img && item.sourceUrl) {
@@ -403,22 +402,24 @@ async function main() {
       img = await fetchOgImage(item.link);
     }
 
-    if (img) {
-      // Check if this image is already used by an existing article
-      if (existingImages.has(img.toLowerCase())) {
-        console.log(`  ✗ Image already used by another article, skipping`);
-        continue;
-      }
-      picked = item;
-      imageUrl = img;
-      console.log(`  ✓ Image found: ${img.slice(0, 80)}`);
-      break;
+    // Skip if image already used, but only when we have one
+    if (img && existingImages.has(img.toLowerCase())) {
+      console.log(`  ✗ Image already used by another article, trying next`);
+      continue;
     }
-    console.log('  ✗ No real image found, skipping this article');
+
+    picked = item;
+    imageUrl = img || '';
+    if (img) {
+      console.log(`  ✓ Image found: ${img.slice(0, 80)}`);
+    } else {
+      console.log('  ⚠ No image found, publishing without image');
+    }
+    break;
   }
 
   if (!picked) {
-    console.log('No articles with real images found today. Nothing published.');
+    console.log('No suitable articles found today. Nothing published.');
     return;
   }
 
