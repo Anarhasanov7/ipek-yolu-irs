@@ -508,10 +508,10 @@ window.toggleFeeds = function() {
 // Note: Google News RSS blocks cross-origin requests from browsers (CORS).
 // We use rss2json.com API to convert RSS to JSON (avoids CORS issues).
 const RSS_FEEDS = [
-  { id:'gn_erasmus', name:'Google News: Erasmus+', lang:'eu', url:'https://news.google.com/rss/search?q=Erasmus+OR+Erasmus+Mundus+OR+European+Solidarity+Corps&hl=en&gl=US&ceid=US:en' },
-  { id:'gn_grants', name:'Google News: EU Grants', lang:'eu', url:'https://news.google.com/rss/search?q=EU+grant+OR+EU+funding+OR+call+for+proposals+education+youth&hl=en&gl=US&ceid=US:en' },
-  { id:'gn_scholar', name:'Google News: Scholarships', lang:'eu', url:'https://news.google.com/rss/search?q=scholarship+OR+fellowship+OR+exchange+programme+EU+OR+European&hl=en&gl=US&ceid=US:en' },
-  { id:'gn_neighbour', name:'Google News: EU Neighbourhood', lang:'eu', url:'https://news.google.com/rss/search?q=Eastern+Partnership+OR+EU+neighbourhood+grant+OR+cooperation&hl=en&gl=US&ceid=US:en' },
+  { id:'gn_erasmus', name:'Google News: Erasmus+', lang:'eu', url:'https://news.google.com/rss/search?q=Erasmus%2B+OR+%22Erasmus+Mundus%22+OR+%22European+Solidarity+Corps%22&hl=en&gl=US&ceid=US:en' },
+  { id:'gn_grants', name:'Google News: EU Grants', lang:'eu', url:'https://news.google.com/rss/search?q=%22EU+grant%22+OR+%22EU+funding%22+OR+%22call+for+proposals%22+education+youth&hl=en&gl=US&ceid=US:en' },
+  { id:'gn_scholar', name:'Google News: Scholarships', lang:'eu', url:'https://news.google.com/rss/search?q=scholarship+OR+fellowship+OR+%22exchange+programme%22+EU+OR+European&hl=en&gl=US&ceid=US:en' },
+  { id:'gn_neighbour', name:'Google News: EU Neighbourhood', lang:'eu', url:'https://news.google.com/rss/search?q=%22Eastern+Partnership%22+OR+%22EU+neighbourhood%22+grant+OR+cooperation&hl=en&gl=US&ceid=US:en' },
 ];
 
 let feedsLoaded = false;
@@ -657,4 +657,3 @@ function toast(msg, type='') {
 </body>
 </html>
 <!-- v4 -->
-<!-- v5 -->
