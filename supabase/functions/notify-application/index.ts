@@ -15,7 +15,7 @@ const FROM_EMAIL = "noreply@gtdib.org";
 const ADMIN_EMAIL = "info@gtdib.org";
 const SITE_URL = "https://gtdib.org";
 
-const corsHeaders = {
+const corsHeaders = {f40a66d4
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
