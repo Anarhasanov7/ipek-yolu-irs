@@ -100,6 +100,11 @@ function isBadImage(url) {
     'site-featured', 'default-image', 'placeholder',
     'og-image-default', 'og-default', 'default-og',
     'gstatic.com/gnews', // Google News logo
+    'static/uzdaily', 'static/logo', 'banner.jpg',
+    'header.jpg', 'hero.jpg', 'cover.jpg',
+    'yandex.ru/watch', 'mc.yandex', // tracking pixels
+    'pixel', 'tracker', 'analytics',
+    '1x1', 'spacer.gif', 'blank.gif',
   ];
   return bad.some(b => u.includes(b));
 }
@@ -319,14 +324,15 @@ async function main() {
     return;
   }
 
-  // 2b. Get all existing articles to avoid duplicates
+  // 2b. Get all existing articles to avoid duplicates (by URL, title, AND image)
   const existingRes = await fetch(
-    `${SUPABASE_URL}/rest/v1/news?select=title_az,title_en,source_url`,
+    `${SUPABASE_URL}/rest/v1/news?select=title_az,title_en,source_url,external_image_url,image_path`,
     { headers: { 'apikey': ANON_KEY, 'Authorization': `Bearer ${token}` } }
   );
   const existingArticles = await existingRes.json();
   const existingUrlSet = new Set((existingArticles || []).map(n => (n.source_url || '').toLowerCase()));
   const existingTitles = (existingArticles || []).map(n => (n.title_az || n.title_en || '').toLowerCase());
+  const existingImages = new Set((existingArticles || []).map(n => (n.external_image_url || n.image_path || '').toLowerCase()));
 
   // Helper: check if a headline is too similar to any existing article
   function isDuplicate(title) {
@@ -398,6 +404,11 @@ async function main() {
     }
 
     if (img) {
+      // Check if this image is already used by an existing article
+      if (existingImages.has(img.toLowerCase())) {
+        console.log(`  ✗ Image already used by another article, skipping`);
+        continue;
+      }
       picked = item;
       imageUrl = img;
       console.log(`  ✓ Image found: ${img.slice(0, 80)}`);
