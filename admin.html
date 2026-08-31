@@ -218,7 +218,11 @@ body { background: var(--bg); }
   </div>
 
   <!-- LIST -->
-  <h2 style="font-family:'Space Grotesk';font-size:18px;margin-bottom:16px;">Mövcud xəbərlər</h2>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+    <h2 style="font-family:'Space Grotesk';font-size:18px;margin:0;">Mövcud xəbərlər</h2>
+    <div id="newsStats" style="font-size:13px;color:var(--text-faint);"></div>
+    <button class="admin-btn small danger" id="deleteAllBtn" onclick="deleteAllNews()" style="display:none;">Hamısını sil</button>
+  </div>
   <div class="news-admin-list" id="adminList">
     <div class="loading-inline">Yüklənir…</div>
   </div>
@@ -385,7 +389,18 @@ async function loadAdminList() {
     .select('id, title_az, title_en, image_path, external_image_url, is_published, published_at, created_at, expires_at')
     .order('created_at', { ascending: false });
   if (error) { list.innerHTML = '<div class="loading-inline">Xəta: ' + error.message + '</div>'; return; }
-  if (!data || data.length === 0) { list.innerHTML = '<div class="loading-inline">Hələ xəbər yoxdur. Yuxarıdakı formdan ilk xəbəri əlavə edin.</div>'; return; }
+  if (!data || data.length === 0) {
+    list.innerHTML = '<div class="loading-inline">Hələ xəbər yoxdur. Yuxarıdakı formdan ilk xəbəri əlavə edin.</div>';
+    document.getElementById('newsStats').textContent = '';
+    document.getElementById('deleteAllBtn').style.display = 'none';
+    return;
+  }
+  const published = data.filter(n => n.is_published).length;
+  const drafts = data.length - published;
+  const withImage = data.filter(n => n.image_path || n.external_image_url).length;
+  document.getElementById('newsStats').textContent =
+    `Cəmi: ${data.length}  |  Yayımlanıb: ${published}  |  Qaralama: ${drafts}  |  Şəkil: ${withImage}`;
+  document.getElementById('deleteAllBtn').style.display = data.length > 0 ? '' : 'none';
   list.innerHTML = data.map(n => {
     const imgSrc = n.image_path ? publicImageUrl(n.image_path) : (n.external_image_url || '');
     const img = imgSrc ? `<img src="${imgSrc}" alt="">` : '';
@@ -420,6 +435,14 @@ window.deleteNews = async function(id) {
   const { error } = await supabase.from('news').delete().eq('id', id);
   if (error) toast('Silinmədi: ' + error.message, 'err');
   else { toast('Silindi', 'ok'); loadAdminList(); }
+};
+
+window.deleteAllNews = async function() {
+  if (!confirm('BÜTÜN xəbərləri silmək istədiyinizə əminsiniz? Bu geri qaytarıla bilməz!')) return;
+  if (!confirm('Son xəbərdarlıq: Həqiqətən hamısını silim?')) return;
+  const { error } = await supabase.from('news').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+  if (error) toast('Silinmədi: ' + error.message, 'err');
+  else { toast('Bütün xəbərlər silindi', 'ok'); loadAdminList(); }
 };
 
 window.editNews = async function(id) {
