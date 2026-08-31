@@ -57,8 +57,8 @@
     },
     {
       keywords: ['əlaqə', 'elage', 'contact', 'email', 'e-poçt', 'e-poct', 'telefon', 'telefon', 'phone', 'ünvan', 'unvan', 'address', 'harada', 'where', 'location', 'office', 'ofis'],
-      az: 'Bizimlə əlaqə:\n📍 Ünvan: A. Heydarov küçəsi 25, mənzil 5, Bakı, AZ1001, Azərbaycan\n✉️ E-poçt: info@gtdib.org\n📞 Telefon: +994 99 385 2077\n👤 Qanuni nümayəndə: Anar Hasanov (Sədr)\n📄 <a href="contact.html">Əlaqə səhifəsi →</a>',
-      en: 'Contact us:\n📍 Address: A. Heydarov street 25, apt. 5, Baku, AZ1001, Azerbaijan\n✉️ Email: info@gtdib.org\n📞 Phone: +994 99 385 2077\n👤 Legal representative: Anar Hasanov (Chairperson)\n📄 <a href="contact.html">Contact page →</a>',
+      az: 'Bizimlə əlaqə:\n📍 Ünvan: A. Heydarov küçəsi 25, mənzil 5, Bakı, AZ1001, Azərbaycan\n✉️ E-poçt: info@gtdib.org\n📞 Telefon: +994 99 385 2077\n👤 Vitse-prezident: Anar Hasanov\n📄 <a href="contact.html">Əlaqə səhifəsi →</a>',
+      en: 'Contact us:\n📍 Address: A. Heydarov street 25, apt. 5, Baku, AZ1001, Azerbaijan\n✉️ Email: info@gtdib.org\n📞 Phone: +994 99 385 2077\n👤 Vice President: Anar Hasanov\n📄 <a href="contact.html">Contact page →</a>',
     },
     {
       keywords: ['xəbər', 'xeber', 'news', 'blog', 'article', 'məqalə', 'meqele', 'yenilik', 'update'],
