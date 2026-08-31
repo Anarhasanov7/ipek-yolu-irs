@@ -122,13 +122,12 @@
 .gallery-card img { transition: transform 0.5s ease; }
 .gallery-card:hover img { transform: scale(1.08); }
 
-/* === GLOW PULSE === */
-@keyframes glow-pulse {
-  0%, 100% { text-shadow: 0 0 20px currentColor; }
-  50% { text-shadow: 0 0 40px currentColor; }
-}
-.glow-text { animation: glow-pulse 3s ease-in-out infinite; }
-:root[data-theme="light"] .glow-text { animation: none; }
+/* === GLOW === */
+/* Static glow instead of infinite text-shadow animation. Animated text-shadow
+   triggers a repaint every frame and cannot be GPU-accelerated; a static glow
+   gives the same visual at zero ongoing cost. */
+.glow-text { text-shadow: 0 0 24px currentColor; }
+:root[data-theme="light"] .glow-text { text-shadow: none; }
 
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior: smooth; }
@@ -143,16 +142,19 @@ body {
 }
 
 /* === GRADIENT MESH BACKGROUND === */
+/* Blur is baked into the gradients (large radii + gradual falloff) instead of
+   using filter:blur(40px), which forced a full-viewport GPU repaint on every
+   composite. Visually equivalent, ~10x cheaper to render. */
 .mesh-bg {
   position: fixed;
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(ellipse 600px 400px at 15% 20%, var(--terracotta-glow), transparent 60%),
-    radial-gradient(ellipse 500px 500px at 85% 60%, var(--indigo-glow), transparent 60%),
-    radial-gradient(ellipse 400px 300px at 50% 90%, var(--gold-glow), transparent 60%);
-  filter: blur(40px);
+    radial-gradient(ellipse 900px 700px at 15% 20%, var(--terracotta-glow), transparent 70%),
+    radial-gradient(ellipse 800px 800px at 85% 60%, var(--indigo-glow), transparent 70%),
+    radial-gradient(ellipse 700px 600px at 50% 90%, var(--gold-glow), transparent 70%);
   opacity: 0.7;
+  transform: translateZ(0);
 }
 :root[data-theme="light"] .mesh-bg { opacity: 0.4; }
 
@@ -703,6 +705,19 @@ footer .footer-social .social-link:hover {
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
+/* Above-the-fold hero content must never be hidden waiting for JS/IO.
+   Show immediately to avoid blank hero on slow CPUs / blocked JS. */
+.hero > .reveal,
+.hero .tag.reveal,
+.hero h1.reveal,
+.hero .subtitle.reveal,
+.hero .cta-group.reveal,
+.hero .hero-stats.reveal,
+.hero .hero-info.reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
 
 /* === RESPONSIVE === */
 @media (max-width: 900px) {
