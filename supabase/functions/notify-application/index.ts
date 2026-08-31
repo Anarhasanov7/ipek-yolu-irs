@@ -1,3 +1,5 @@
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+
 // notify-application: Sends an email notification to info@gtdib.org when a
 // partner or member application is submitted from the public website.
 // The form data is stored in Supabase by the client (anon INSERT via RLS);
