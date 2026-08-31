@@ -58,7 +58,7 @@ const BONUS_KEYWORDS_EN = [
 const SKIP_WORDS = [
   'football','futbol','premier league','premyer liqa','manchester','barcelona',
   'real madrid','spotify','victoria\'s secret','vin diesel','fast & furious',
-  'uno championship','mattel','qarabag','qarabağ','neftçi','zirə','kəpəz',
+  'uno championship','mattel','qarabag','qarabağ','neftči','zirə','kəpəz',
   'turan tovuz','idman','sport','crash','killed','attack','bombing','war',
   'missile','drone','airstrike','casualt','earthquake','flood','fire',
   'murder','arrest','corrupt','scandal','protest','riot','coup',
@@ -67,6 +67,10 @@ const SKIP_WORDS = [
   'sanctions','tariff','trade war','military','defense','nato',
   'election','parliament','senate','congress','prime minister',
   'fraud','indicted','embezzlement','money laundering',
+  // Humanitarian/conflict/aid (not education)
+  'humanitarian','refugee','displaced','famine','sudan','gaza','ukraine war',
+  'crisis','lifesaving','conflict','rescue committee','red cross',
+  'food security','medical supplies','emergency relief',
 ];
 
 function stripHtml(s) {
@@ -94,6 +98,7 @@ function isBadImage(url) {
     'googleusercontent.com/j6_cofbogx', // Google News placeholder
     'logo', 'icon', 'avatar', 'favicon',
     'site-featured', 'default-image', 'placeholder',
+    'og-image-default', 'og-default', 'default-og',
     'gstatic.com/gnews', // Google News logo
   ];
   return bad.some(b => u.includes(b));
@@ -150,18 +155,6 @@ async function fetchImageFromSource(sourceUrl, title) {
     return null;
   }
 }
-
-// Use a generic Erasmus+/EU image as fallback
-const FALLBACK_IMAGES = [
-  'https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=1200&h=675&fit=crop',
-  'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&h=675&fit=crop',
-  'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&h=675&fit=crop',
-  'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&h=675&fit=crop',
-  'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=1200&h=675&fit=crop',
-  'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=1200&h=675&fit=crop',
-  'https://images.unsplash.com/photo-1606761568499-6d2451b23c66?w=1200&h=675&fit=crop',
-  'https://images.unsplash.com/photo-1568667256549-094345857637?w=1200&h=675&fit=crop',
-];
 
 function scoreItem(item) {
   const text = (item.title + ' ' + item.description).toLowerCase();
@@ -382,28 +375,44 @@ async function main() {
     return;
   }
 
-  const picked = scored[0].item;
-  console.log(`Picked: [${picked.feedName}] ${picked.title} (score: ${scored[0].score})`);
+  // 5. Try each candidate in score order until we find one WITH a real image.
+  //    No image = no publish. We never use stock fallbacks.
+  let picked = null;
+  let imageUrl = null;
+  let article = null;
 
-  // 5. Generate article
-  const article = await generateArticle(picked);
+  for (const candidate of scored) {
+    const item = candidate.item;
+    console.log(`Trying: [${item.feedName}] ${item.title} (score: ${candidate.score})`);
 
-  // 6. Get image URL — try multiple approaches
-  let imageUrl = picked.enclosureLink || picked.thumbnail || '';
-  if (!imageUrl && picked.sourceUrl) {
-    console.log(`Fetching image from source site: ${picked.sourceUrl}...`);
-    imageUrl = await fetchOgImage(picked.sourceUrl);
+    // Try to get a real image from multiple sources
+    let img = item.enclosureLink || item.thumbnail || '';
+    if (img && isBadImage(img)) img = '';
+    if (!img && item.sourceUrl) {
+      console.log(`  Fetching image from source site: ${item.sourceUrl}...`);
+      img = await fetchOgImage(item.sourceUrl);
+    }
+    if (!img && item.link) {
+      console.log('  Fetching og:image from article link...');
+      img = await fetchOgImage(item.link);
+    }
+
+    if (img) {
+      picked = item;
+      imageUrl = img;
+      console.log(`  ✓ Image found: ${img.slice(0, 80)}`);
+      break;
+    }
+    console.log('  ✗ No real image found, skipping this article');
   }
-  if (!imageUrl && picked.link) {
-    console.log('Fetching og:image from article link...');
-    imageUrl = await fetchOgImage(picked.link);
+
+  if (!picked) {
+    console.log('No articles with real images found today. Nothing published.');
+    return;
   }
-  if (!imageUrl) {
-    // Use a fallback image so every article has a picture
-    const idx = Math.floor(Math.random() * FALLBACK_IMAGES.length);
-    imageUrl = FALLBACK_IMAGES[idx];
-    console.log('Using fallback image');
-  }
+
+  // 6. Generate article
+  article = await generateArticle(picked);
 
   // 7. Insert into news table
   console.log('Publishing article...');
