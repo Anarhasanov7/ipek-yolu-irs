@@ -62,10 +62,40 @@ const SKIP_WORDS = [
   'turan tovuz','idman','sport','crash','killed','attack','bombing','war',
   'missile','drone','airstrike','casualt','earthquake','flood','fire',
   'murder','arrest','corrupt','scandal','protest','riot','coup',
+  // Geopolitical/non-education topics
+  'ceuta','melilla','border control','immigration policy','asylum',
+  'sanctions','tariff','trade war','military','defense','nato',
+  'election','parliament','senate','congress','prime minister',
+  'fraud','indicted','embezzlement','money laundering',
 ];
 
 function stripHtml(s) {
-  return s.replace(/<[^>]+>/g, '').trim();
+  if (!s) return '';
+  // First unescape HTML entities
+  let text = s
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ');
+  // Remove all HTML tags
+  text = text.replace(/<[^>]+>/g, ' ');
+  // Clean up whitespace
+  text = text.replace(/\s+/g, ' ').trim();
+  return text;
+}
+
+// Check if an image URL is a generic placeholder/logo (not a real article image)
+function isBadImage(url) {
+  if (!url) return true;
+  const bad = [
+    'googleusercontent.com/J6_coFbogx', // Google News placeholder
+    'logo', 'icon', 'avatar', 'favicon',
+    'site-featured', 'default-image', 'placeholder',
+    'gstatic.com/gnews', // Google News logo
+  ];
+  return bad.some(b => url.toLowerCase().includes(b));
 }
 
 // Fetch og:image from an article page
@@ -80,16 +110,16 @@ async function fetchOgImage(url) {
     const html = await resp.text();
     // Try og:image (property before content)
     let m = html.match(/<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']+)["']/i);
-    if (m) return m[1];
+    if (m && !isBadImage(m[1])) return m[1];
     // Try og:image (content before property)
     m = html.match(/<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:image["']/i);
-    if (m) return m[1];
+    if (m && !isBadImage(m[1])) return m[1];
     // Try twitter:image
     m = html.match(/<meta[^>]*name=["']twitter:image["'][^>]*content=["']([^"']+)["']/i);
-    if (m) return m[1];
+    if (m && !isBadImage(m[1])) return m[1];
     // Try first significant img
     m = html.match(/<img[^>]*src=["'](https?:\/\/[^"']+)["']/i);
-    if (m && !m[1].includes('logo') && !m[1].includes('icon') && !m[1].includes('avatar')) return m[1];
+    if (m && !isBadImage(m[1])) return m[1];
     return null;
   } catch (e) {
     console.log(`  og:image fetch failed: ${e.message}`);
@@ -228,74 +258,39 @@ async function translateText(text, fromLang, toLang) {
 }
 
 async function generateArticle(item) {
-  const isEU = item.category === 'eu';
-  const isAZ = item.feedLang === 'az';
   const sourceName = item.feedName;
   const sourceLink = item.link;
-  const desc = item.description.slice(0, 200);
+  const isAZ = item.feedLang === 'az';
 
-  // Translate the description and title to the other language
-  let descAz, descEn, titleAz, titleEn;
+  // Clean title: remove " - Source Name" suffix
+  const cleanTitle = (item.title || '').replace(/\s*-\s*[^-]+$/,'').trim();
 
+  // Translate title to the other language
+  let titleAz, titleEnFinal;
   if (isAZ) {
-    // Source is in Azerbaijani — translate to English
-    descAz = desc;
-    titleAz = item.title;
+    titleAz = cleanTitle;
     console.log('Translating AZ→EN...');
-    descEn = await translateText(desc, 'az', 'en');
-    titleEn = await translateText(item.title, 'az', 'en');
+    titleEnFinal = await translateText(cleanTitle, 'az', 'en');
   } else {
-    // Source is in English — translate to Azerbaijani
-    descEn = desc;
-    titleEn = item.title;
+    titleEnFinal = cleanTitle;
     console.log('Translating EN→AZ...');
-    descAz = await translateText(desc, 'en', 'az');
-    titleAz = await translateText(item.title, 'en', 'az');
+    titleAz = await translateText(cleanTitle, 'en', 'az');
   }
 
-  // Small delay to respect rate limits
   await new Promise(r => setTimeout(r, 500));
 
-  let bodyAz, bodyEn;
-  const isEdu = item.category === 'edu';
+  // Generate article body from the title (since Google News RSS
+  // descriptions don't contain article text, only links)
+  const bodyEn = `<p>${titleEnFinal} — this development represents an important opportunity for international cooperation in education and youth policy. Programmes like this enable young people to gain new skills, experience different cultures, and build international partnerships.</p>
+<p>At GTDİB, we actively support Azerbaijani youth in accessing such international opportunities. We believe that participation in exchange programmes, scholarships, and cross-border cooperation projects is essential for the personal and professional development of young people in Azerbaijan.</p>
+<p><em>Source: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
 
-  if (isEU) {
-    bodyAz = `<p>${descAz}</p>
-<p>GTDİB olaraq biz Azərbaycan gənclərinin Avropa əməkdaşlığı və beynəlxalq proqramlardan yararlanmasını dəstəkləyirik. Bu cür inkişaflar gənclərimizin bacarıqlarını artırmaq və beynəlxalq təcrübə əldə etmək üçün mühüm imkandır.</p>
+  const bodyAz = `<p>${titleAz} — bu inkişaf təhsil və gənclər siyasəti sahəsində beynəlxalq əməkdaşlıq üçün mühüm imkanı təmsil edir. Bu cür proqramlar gənclərin yeni bacarıqlar qazanmasına, müxtəlif mədəniyyətləri tanımasına və beynəlxalq tərəfdaşlıqlar qurmasına imkan yaradır.</p>
+<p>GTDİB olaraq biz Azərbaycan gənclərinin bu cür beynəlxalq imkanlardan yararlanmasını fəal şəkildə dəstəkləyirik. Mübadilə proqramlarında, təqaüdlərdə və transsərhəd əməkdaşlıq layihələrində iştirakın Azərbaycan gənclərinin şəxsi və peşəkar inkişafı üçün əhəmiyyətli olduğuna inanırıq.</p>
 <p><em>Mənbə: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
 
-    bodyEn = `<p>${descEn}</p>
-<p>At GTDIB, we support Azerbaijani youth in benefiting from European cooperation and international programmes. Such developments are important opportunities for our young people to develop their skills and gain international experience.</p>
-<p><em>Source: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
-  } else if (isEdu) {
-    bodyAz = `<p>${descAz}</p>
-<p>GTDİB olaraq biz beynəlxalq təhsil əməkdaşlığını və gənclərin mübadilə proqramlarında iştirakını dəstəkləyirik. Təhsil sahəsindəki bu cür yeniliklər gənclərimizin gələcəyi üçün əhəmiyyətlidir.</p>
-<p><em>Mənbə: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
-
-    bodyEn = `<p>${descEn}</p>
-<p>At GTDIB, we support international education cooperation and youth participation in exchange programmes. Such innovations in education are important for the future of our young people.</p>
-<p><em>Source: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
-  } else if (isAZ) {
-    bodyAz = `<p>${descAz}</p>
-<p>GTDİB olaraq biz bu cür inkişafları dəstəkləyirik. Gənclərin təhsilə, mədəniyyətə və cəmiyyət həyatında iştirakına çıxışı cəmiyyətimizin gələcəyi üçün əvəzedilməzdir.</p>
-<p><em>Mənbə: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
-
-    bodyEn = `<p>${descEn}</p>
-<p>At GTDIB, we support these kinds of developments. Access to education, culture, and civic participation for young people is irreplaceable for the future of our society.</p>
-<p><em>Source: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
-  } else {
-    bodyAz = `<p>${descAz}</p>
-<p>GTDİB olaraq biz ölkəmizin mədəni irsinin qorunması və beynəlxalq əməkdaşlığın inkişafını dəstəkləyirik. Bu cür hadisələr Azərbaycanın beynəlxalq aləmdə tanınmasına xidmət edir.</p>
-<p><em>Mənbə: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
-
-    bodyEn = `<p>${descEn}</p>
-<p>At GTDIB, we support the preservation of our country's cultural heritage and the development of international cooperation. Such events contribute to Azerbaijan's recognition in the international arena.</p>
-<p><em>Source: <a href="${sourceLink}" target="_blank" rel="noopener">${sourceName}</a></em></p>`;
-  }
-
-  return { titleAz, titleEn, bodyAz, bodyEn };
+  return { titleAz, titleEn: titleEnFinal, bodyAz, bodyEn };
 }
-
 async function main() {
   console.log('=== Auto-News Starting ===');
 
