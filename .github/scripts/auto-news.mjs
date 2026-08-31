@@ -153,10 +153,14 @@ async function fetchImageFromSource(sourceUrl, title) {
 
 // Use a generic Erasmus+/EU image as fallback
 const FALLBACK_IMAGES = [
-  'https://images.unsplash.com/photo-1523580494863-6f91221c1e1b?w=1200&h=675&fit=crop', // students
-  'https://images.unsplash.com/photo-1503676267431-0d268eb132b9?w=1200&h=675&fit=crop', // campus
-  'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&h=675&fit=crop', // university
-  'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&h=675&fit=crop', // graduation
+  'https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=1200&h=675&fit=crop',
+  'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&h=675&fit=crop',
+  'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&h=675&fit=crop',
+  'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&h=675&fit=crop',
+  'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=1200&h=675&fit=crop',
+  'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=1200&h=675&fit=crop',
+  'https://images.unsplash.com/photo-1606761568499-6d2451b23c66?w=1200&h=675&fit=crop',
+  'https://images.unsplash.com/photo-1568667256549-094345857637?w=1200&h=675&fit=crop',
 ];
 
 function scoreItem(item) {
