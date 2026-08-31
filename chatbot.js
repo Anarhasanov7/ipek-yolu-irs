@@ -7,20 +7,22 @@
   const isEN = document.documentElement.lang === 'en';
 
   const t = AZ ? {
-    title: 'GTDİB',
+    name: 'Elçin',
+    title: 'Elçin · GTDİB',
     subtitle: 'Sualınız var? Cavablayım!',
     placeholder: 'Sualınızı buraya yazın...',
     send: 'Göndər',
-    greeting: 'Salam! 👋 GTDİB haqqında suallarınızı cavablandırmağa hazıram. Təşkilatımız, layihələrimiz, tərəfdaşlıq, üzvlük və əlaqə haqqında məlumat verə bilərəm. Hansı mövzu maraqlandırır?',
+    greeting: 'Salam! 👋 Mən Elçinəm, GTDİB köməkçisiyəm. Təşkilatımız, layihələrimiz, tərəfdaşlıq, üzvlük və əlaqə haqqında məlumat verə bilərəm. Hansı mövzu maraqlandırır?',
     fallback: 'Bu suala tam cavab verə bilmirəm. Ətraflı məlumat üçün info@gtdib.org ünvanına e-poçt göndərin və ya əlaqə səhifəmizə baxın: <a href="contact.html">Əlaqə →</a>',
     quickQs: ['Təşkilat haqqında', 'Tərəfdaş olmaq', 'Üzv olmaq', 'Əlaqə'],
     langLabel: 'AZ',
   } : {
-    title: 'GTDİB',
+    name: 'Elchin',
+    title: 'Elchin · GTDİB',
     subtitle: 'Have a question? Ask me!',
     placeholder: 'Type your question here...',
     send: 'Send',
-    greeting: 'Hello! 👋 I am here to answer your questions about GTDİB. I can tell you about our organization, projects, partnership, membership and how to contact us. What would you like to know?',
+    greeting: 'Hello! 👋 I am Elchin, the GTDİB assistant. I can tell you about our organization, projects, partnership, membership and how to contact us. What would you like to know?',
     fallback: 'I cannot fully answer that question. For more details, please email info@gtdib.org or visit our contact page: <a href="contact.html">Contact →</a>',
     quickQs: ['About the organization', 'Become a partner', 'Become a member', 'Contact'],
     langLabel: 'EN',
@@ -135,19 +137,20 @@
   }
 
   // Build UI
+  const avatarPath = AZ ? 'images/chatbot-avatar.jpg' : '../images/chatbot-avatar.jpg';
   const widget = document.createElement('div');
   widget.id = 'chatbot-widget';
   widget.innerHTML = `
-    <button id="chatbot-toggle" aria-label="Chat">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-      </svg>
+    <button id="chatbot-toggle" aria-label="Chat with ${t.name}">
+      <img src="${avatarPath}" alt="${t.name}" />
+      <span class="chatbot-online"></span>
     </button>
     <div id="chatbot-window" style="display:none;">
       <div id="chatbot-header">
-        <div>
-          <strong>${t.title}</strong>
-          <div style="font-size:11px;opacity:0.8;">${t.subtitle}</div>
+        <img src="${avatarPath}" alt="${t.name}" class="chatbot-avatar" />
+        <div class="chatbot-header-info">
+          <strong>${t.name}</strong>
+          <div class="chatbot-status"><span class="chatbot-dot"></span> ${t.subtitle}</div>
         </div>
         <button id="chatbot-close" aria-label="Close">✕</button>
       </div>
@@ -166,16 +169,19 @@
   style.textContent = `
     #chatbot-widget { position: fixed; bottom: 20px; right: 20px; z-index: 99999; font-family: Inter, Arial, sans-serif; }
     #chatbot-toggle {
-      width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer;
-      background: linear-gradient(135deg, #c2410c, #ea580c); color: #fff;
+      width: 56px; height: 56px; border-radius: 50%; border: 3px solid #c2410c; cursor: pointer;
+      background: #1a1a1a; padding: 0; overflow: hidden;
       box-shadow: 0 4px 16px rgba(194,65,12,0.4); display: flex; align-items: center; justify-content: center;
       transition: transform 0.2s; position: relative;
     }
+    [data-theme="light"] #chatbot-toggle { background: #f4f4f5; }
     #chatbot-toggle:hover { transform: scale(1.08); }
-    #chatbot-toggle::after {
-      content: ''; position: absolute; top: -2px; right: -2px; width: 12px; height: 12px;
+    #chatbot-toggle img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .chatbot-online {
+      position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px;
       background: #22c55e; border-radius: 50%; border: 2px solid var(--bg, #0a0a0a);
     }
+    [data-theme="light"] .chatbot-online { border-color: #f4f4f5; }
     #chatbot-window {
       position: absolute; bottom: 70px; right: 0; width: 420px; max-width: calc(100vw - 40px);
       height: 560px; max-height: calc(100vh - 120px); display: flex; flex-direction: column;
@@ -184,11 +190,15 @@
     }
     [data-theme="light"] #chatbot-window { background: #fff; border-color: #e5e5e5; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
     #chatbot-header {
-      padding: 14px 16px; background: linear-gradient(135deg, #c2410c, #ea580c); color: #fff;
-      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 16px; background: linear-gradient(135deg, #c2410c, #ea580c); color: #fff;
+      display: flex; align-items: center; gap: 10px;
     }
-    #chatbot-header strong { font-size: 15px; }
-    #chatbot-close { background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; opacity: 0.8; padding: 4px; }
+    .chatbot-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.3); flex-shrink: 0; }
+    .chatbot-header-info { flex: 1; }
+    .chatbot-header-info strong { font-size: 15px; display: block; }
+    .chatbot-status { font-size: 11px; opacity: 0.9; display: flex; align-items: center; gap: 5px; }
+    .chatbot-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; display: inline-block; }
+    #chatbot-close { background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; opacity: 0.8; padding: 4px; flex-shrink: 0; }
     #chatbot-close:hover { opacity: 1; }
     #chatbot-messages {
       flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px;
