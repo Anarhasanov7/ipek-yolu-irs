@@ -68,6 +68,66 @@ function stripHtml(s) {
   return s.replace(/<[^>]+>/g, '').trim();
 }
 
+// Fetch og:image from an article page
+async function fetchOgImage(url) {
+  try {
+    const resp = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; GTDIB-NewsBot/1.0)' },
+      signal: AbortSignal.timeout(10000),
+      redirect: 'follow',
+    });
+    if (!resp.ok) return null;
+    const html = await resp.text();
+    // Try og:image (property before content)
+    let m = html.match(/<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']+)["']/i);
+    if (m) return m[1];
+    // Try og:image (content before property)
+    m = html.match(/<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:image["']/i);
+    if (m) return m[1];
+    // Try twitter:image
+    m = html.match(/<meta[^>]*name=["']twitter:image["'][^>]*content=["']([^"']+)["']/i);
+    if (m) return m[1];
+    // Try first significant img
+    m = html.match(/<img[^>]*src=["'](https?:\/\/[^"']+)["']/i);
+    if (m && !m[1].includes('logo') && !m[1].includes('icon') && !m[1].includes('avatar')) return m[1];
+    return null;
+  } catch (e) {
+    console.log(`  og:image fetch failed: ${e.message}`);
+    return null;
+  }
+}
+
+// Fetch image from source website by searching for the article title
+async function fetchImageFromSource(sourceUrl, title) {
+  if (!sourceUrl) return null;
+  try {
+    // Try fetching the source site homepage to find a relevant image
+    const resp = await fetch(sourceUrl, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; GTDIB-NewsBot/1.0)' },
+      signal: AbortSignal.timeout(10000),
+      redirect: 'follow',
+    });
+    if (!resp.ok) return null;
+    const html = await resp.text();
+    // Try og:image
+    let m = html.match(/<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']+)["']/i);
+    if (m && !m[1].includes('logo') && !m[1].includes('icon')) return m[1];
+    m = html.match(/<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:image["']/i);
+    if (m && !m[1].includes('logo') && !m[1].includes('icon')) return m[1];
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
+
+// Use a generic Erasmus+/EU image as fallback
+const FALLBACK_IMAGES = [
+  'https://images.unsplash.com/photo-1523580494863-6f91221c1e1b?w=1200&h=675&fit=crop', // students
+  'https://images.unsplash.com/photo-1503676267431-0d268eb132b9?w=1200&h=675&fit=crop', // campus
+  'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&h=675&fit=crop', // university
+  'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&h=675&fit=crop', // graduation
+];
+
 function scoreItem(item) {
   const text = (item.title + ' ' + item.description).toLowerCase();
   let score = 0;
@@ -128,17 +188,20 @@ async function fetchFeed(feed) {
       const enclosure = (block.match(/<enclosure[^>]*url="([^"]+)"/i) || [])[1] || '';
       const mediaContent = (block.match(/<media:content[^>]*url="([^"]+)"/i) || [])[1] || '';
       const mediaThumbnail = (block.match(/<media:thumbnail[^>]*url="([^"]+)"/i) || [])[1] || '';
+      const sourceUrl = (block.match(/<source[^>]*url="([^"]+)"/i) || [])[1] || '';
+      const sourceName = (block.match(/<source[^>]*>(.*?)<\/source>/i) || [])[1] || '';
 
       items.push({
         title: stripHtml(title).trim(),
         link: link.trim(),
         description: stripHtml(desc).slice(0, 300),
         pubDate: pubDate.trim(),
-        feedName: feed.name,
+        feedName: sourceName || feed.name,
         feedLang: feed.lang,
         category: feed.category,
         thumbnail: mediaThumbnail || mediaContent || '',
         enclosureLink: enclosure || '',
+        sourceUrl: sourceUrl || '',
       });
     }
     return items;
@@ -325,8 +388,22 @@ async function main() {
   // 5. Generate article
   const article = await generateArticle(picked);
 
-  // 6. Get image URL (external, not downloading)
-  const imageUrl = picked.enclosureLink || picked.thumbnail || '';
+  // 6. Get image URL — try multiple approaches
+  let imageUrl = picked.enclosureLink || picked.thumbnail || '';
+  if (!imageUrl && picked.sourceUrl) {
+    console.log(`Fetching image from source site: ${picked.sourceUrl}...`);
+    imageUrl = await fetchOgImage(picked.sourceUrl);
+  }
+  if (!imageUrl && picked.link) {
+    console.log('Fetching og:image from article link...');
+    imageUrl = await fetchOgImage(picked.link);
+  }
+  if (!imageUrl) {
+    // Use a fallback image so every article has a picture
+    const idx = Math.floor(Math.random() * FALLBACK_IMAGES.length);
+    imageUrl = FALLBACK_IMAGES[idx];
+    console.log('Using fallback image');
+  }
 
   // 7. Insert into news table
   console.log('Publishing article...');
