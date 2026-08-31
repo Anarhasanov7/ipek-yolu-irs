@@ -486,6 +486,7 @@ section > * { width: 100%; }
   min-height: 58px;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .feature-card p { font-size: 14px; color: var(--text-dim); line-height: 1.6; }
 
