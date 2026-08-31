@@ -505,6 +505,9 @@ window.toggleFeeds = function() {
 };
 
 // ---- RSS Feed Aggregator ----
+// Note: Google News RSS blocks cross-origin requests from browsers (CORS).
+// We use api.allorigins.win as a CORS proxy to fetch the feeds.
+const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
 const RSS_FEEDS = [
   { id:'gn_erasmus', name:'Google News: Erasmus+', lang:'eu', url:'https://news.google.com/rss/search?q=Erasmus%2B+OR+%22Erasmus+Mundus%22+OR+%22European+Solidarity+Corps%22&hl=en&gl=US&ceid=US:en' },
   { id:'gn_grants', name:'Google News: EU Grants', lang:'eu', url:'https://news.google.com/rss/search?q=%22EU+grant%22+OR+%22EU+funding%22+OR+%22call+for+proposals%22+education+youth&hl=en&gl=US&ceid=US:en' },
@@ -529,7 +532,8 @@ window.loadFeeds = async function(filter = 'all') {
     .filter(f => filter === 'all' || f.lang === filter)
     .map(async (feed) => {
       try {
-        const resp = await fetch(feed.url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+        const proxyUrl = CORS_PROXY + encodeURIComponent(feed.url);
+        const resp = await fetch(proxyUrl);
         if (!resp.ok) return;
         const xml = await resp.text();
         const doc = new DOMParser().parseFromString(xml, 'text/xml');
