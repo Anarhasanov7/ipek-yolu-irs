@@ -114,6 +114,7 @@ body { background: var(--bg); }
   <div class="admin-header">
     <h1>Xəbərlər idarə paneli</h1>
     <div class="actions">
+      <button class="admin-btn small" onclick="toggleApplications()" id="toggleAppsBtn">📋 Müraciətlər</button>
       <button class="admin-btn small" onclick="toggleFeeds()" id="toggleFeedsBtn">📰 Xəbər mənbələri</button>
       <button class="admin-btn small" onclick="toggleForm()" id="toggleFormBtn">+ Yeni xəbər</button>
       <button class="admin-btn small" onclick="showPasswordChange()" id="pwBtn">🔑 Şifrə</button>
@@ -228,6 +229,43 @@ body { background: var(--bg); }
   </div>
 </div>
 
+<!-- APPLICATIONS (partner + member) -->
+<div id="appsView" class="admin-wrap" style="display:none;">
+  <div class="admin-header">
+    <h1>Müraciətlər</h1>
+    <div class="actions">
+      <button class="admin-btn small" onclick="loadApplications('partner')" id="appFilterPartner">🤝 Tərəfdaşlar</button>
+      <button class="admin-btn small" onclick="loadApplications('member')" id="appFilterMember">👤 Üzvlər</button>
+      <button class="admin-btn small" onclick="loadApplications('all')" id="appFilterAll" style="border-color:var(--terracotta);">Hamısı</button>
+      <button class="admin-btn small" onclick="toggleApplications()">← Xəbərlərə qayıt</button>
+    </div>
+    <div id="appsStats" style="font-size:13px;color:var(--text-faint);width:100%;"></div>
+  </div>
+  <div class="news-admin-list" id="appsList">
+    <div class="loading-inline">Yüklənir…</div>
+  </div>
+</div>
+
+<!-- APPLICATION DETAIL MODAL -->
+<div class="news-modal" id="appModal" onclick="if(event.target===this)closeAppModal()">
+  <div class="news-modal-card" style="max-width:640px;">
+    <button class="news-modal-close" onclick="closeAppModal()" aria-label="Bağla">×</button>
+    <div id="appModalBadge" style="padding:24px 32px 0;"></div>
+    <h2 class="news-modal-title" id="appModalTitle"></h2>
+    <div class="news-modal-body" id="appModalBody" style="padding-top:8px;"></div>
+    <div style="padding:0 32px 32px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <select id="appStatusSelect" class="admin-btn" style="padding:10px 14px;">
+        <option value="new">Yeni</option>
+        <option value="reviewed">Nəzərdən keçirilib</option>
+        <option value="accepted">Qəbul edilib</option>
+        <option value="rejected">Rədd edilib</option>
+      </select>
+      <button class="admin-btn primary" onclick="saveAppStatus()">Statusu saxla</button>
+      <button class="admin-btn danger" onclick="deleteApp()">Sil</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="script.js?v=12"></script>
@@ -259,8 +297,8 @@ window.doLogin = async function() {
 window.doLogout = async function() {
   await supabase.auth.signOut();
 };
-function showLogin() { loginView.style.display='block'; dashView.style.display='none'; }
-function showDashboard() { loginView.style.display='none'; dashView.style.display='block'; loadAdminList(); }
+function showLogin() { loginView.style.display='block'; dashView.style.display='none'; document.getElementById('appsView').style.display='none'; }
+function showDashboard() { loginView.style.display='none'; dashView.style.display='block'; document.getElementById('appsView').style.display='none'; loadAdminList(); }
 
 // ---- Password Change ----
 window.showPasswordChange = function() {
@@ -648,6 +686,162 @@ function escapeHtml(s) {
   if (!s) return '';
   return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+
+// ---- Applications (partner + member) ----
+let appsCurrentFilter = 'all';
+let appsCache = [];
+let currentApp = null; // { type, id, ...row }
+
+window.toggleApplications = function() {
+  const v = document.getElementById('appsView');
+  const dash = document.getElementById('dashView');
+  if (v.style.display === 'none') {
+    v.style.display = 'block';
+    dash.style.display = 'none';
+    loadApplications(appsCurrentFilter);
+    v.scrollIntoView({ behavior: 'smooth' });
+  } else {
+    v.style.display = 'none';
+    dash.style.display = 'block';
+    loadAdminList();
+  }
+};
+
+window.loadApplications = async function(filter = 'all') {
+  appsCurrentFilter = filter;
+  ['Partner','Member','All'].forEach(k => {
+    const b = document.getElementById('appFilter' + k);
+    if (b) b.style.borderColor = 'var(--border)';
+  });
+  const active = { partner: 'appFilterPartner', member: 'appFilterMember', all: 'appFilterAll' }[filter];
+  if (active) document.getElementById(active).style.borderColor = 'var(--terracotta)';
+
+  const list = document.getElementById('appsList');
+  list.innerHTML = '<div class="loading-inline">Yüklənir…</div>';
+
+  const queries = [];
+  if (filter === 'all' || filter === 'partner') {
+    queries.push(supabase.from('partner_applications').select('*').order('created_at', { ascending: false })
+      .then(({ data, error }) => ({ type: 'partner', data, error })));
+  }
+  if (filter === 'all' || filter === 'member') {
+    queries.push(supabase.from('member_applications').select('*').order('created_at', { ascending: false })
+      .then(({ data, error }) => ({ type: 'member', data, error })));
+  }
+
+  const results = await Promise.all(queries);
+  let all = [];
+  for (const r of results) {
+    if (r.error) { list.innerHTML = '<div class="loading-inline">Xəta: ' + escapeHtml(r.error.message) + '</div>'; return; }
+    (r.data || []).forEach(row => all.push({ ...row, _type: r.type }));
+  }
+  all.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  appsCache = all;
+
+  const partners = all.filter(a => a._type === 'partner').length;
+  const members = all.filter(a => a._type === 'member').length;
+  const newCount = all.filter(a => (a.status || 'new') === 'new').length;
+  document.getElementById('appsStats').textContent =
+    `Cəmi: ${all.length}  |  Tərəfdaş: ${partners}  |  Üzv: ${members}  |  Yeni: ${newCount}`;
+
+  if (all.length === 0) {
+    list.innerHTML = '<div class="loading-inline">Hələ müraciət yoxdur.</div>';
+    return;
+  }
+
+  list.innerHTML = all.map(a => appItemHtml(a)).join('');
+};
+
+function appItemHtml(a) {
+  const typeBadge = a._type === 'partner'
+    ? '<span class="feed-source-badge eu">🤝 Tərəfdaş</span>'
+    : '<span class="feed-source-badge az">👤 Üzv</span>';
+  const statusColors = { new: 'draft', reviewed: 'az', accepted: 'pub', rejected: 'eu' };
+  const statusLabels = { new: 'Yeni', reviewed: 'Nəzərdə', accepted: 'Qəbul', rejected: 'Rədd' };
+  const stBadge = `<span class="status-badge ${statusColors[a.status] || 'draft'}">${statusLabels[a.status] || a.status}</span>`;
+  const title = a._type === 'partner' ? (a.org_name || '—') : (a.full_name || '—');
+  const sub = a._type === 'partner' ? `${a.contact_name || ''} · ${a.country || ''}` : `${a.email || ''} · ${a.city || ''}`;
+  const date = formatDate(a.created_at, 'az-AZ');
+  return `<div class="news-admin-item" style="align-items:flex-start;">
+    <div class="ni-body">
+      <div class="ni-title">${escapeHtml(title)}</div>
+      <div class="ni-meta">${typeBadge} ${stBadge} · ${escapeHtml(sub)} · ${date}</div>
+    </div>
+    <div class="ni-actions">
+      <button class="admin-btn small primary" onclick="viewApp('${a._type}','${a.id}')">Bax</button>
+    </div>
+  </div>`;
+}
+
+window.viewApp = async function(type, id) {
+  const row = appsCache.find(a => a._type === type && a.id === id);
+  if (!row) return;
+  currentApp = row;
+  const badge = type === 'partner'
+    ? '<span class="feed-source-badge eu">🤝 Tərəfdaş müraciəti</span>'
+    : '<span class="feed-source-badge az">👤 Üzvlük müraciəti</span>';
+  document.getElementById('appModalBadge').innerHTML = badge + ' <span style="font-size:12px;color:var(--text-faint);">' + formatDate(row.created_at, 'az-AZ') + '</span>';
+  document.getElementById('appModalTitle').textContent = type === 'partner' ? (row.org_name || '—') : (row.full_name || '—');
+
+  const fields = type === 'partner'
+    ? [
+        ['Təşkilat', row.org_name],
+        ['Ölkə', row.country],
+        ['Əlaqə şəxsi', row.contact_name],
+        ['E-poçt', row.email],
+        ['Telefon', row.phone],
+        ['Vebsayt', row.website],
+        ['Missiya / Fəaliyyət', row.mission],
+        ['Əməkdaşlıq marağı', row.collaboration_interest],
+      ]
+    : [
+        ['Ad Soyad', row.full_name],
+        ['E-poçt', row.email],
+        ['Telefon', row.phone],
+        ['Şəhər', row.city],
+        ['Doğum ili', row.birth_year],
+        ['Maraq sahələri', row.areas_of_interest],
+        ['Motivasiya', row.motivation],
+      ];
+
+  const rowsHtml = fields
+    .filter(([_, v]) => v !== null && v !== undefined && v !== '')
+    .map(([k, v]) => `<tr><td style="padding:10px 16px 10px 0;color:var(--text-faint);font-weight:600;vertical-align:top;border-bottom:1px solid var(--border);white-space:nowrap;">${escapeHtml(k)}</td><td style="padding:10px 0;vertical-align:top;border-bottom:1px solid var(--border);">${escapeHtml(v)}</td></tr>`)
+    .join('');
+  document.getElementById('appModalBody').innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:14px;">${rowsHtml}</table>`;
+
+  document.getElementById('appStatusSelect').value = row.status || 'new';
+  document.getElementById('appModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+window.closeAppModal = function() {
+  document.getElementById('appModal').classList.remove('open');
+  document.body.style.overflow = '';
+  currentApp = null;
+};
+
+window.saveAppStatus = async function() {
+  if (!currentApp) return;
+  const newStatus = document.getElementById('appStatusSelect').value;
+  const table = currentApp._type === 'partner' ? 'partner_applications' : 'member_applications';
+  const { error } = await supabase.from(table).update({ status: newStatus }).eq('id', currentApp.id);
+  if (error) { toast('Status yenilənmədi: ' + error.message, 'err'); return; }
+  toast('Status saxlanıldı ✓', 'ok');
+  closeAppModal();
+  loadApplications(appsCurrentFilter);
+};
+
+window.deleteApp = async function() {
+  if (!currentApp) return;
+  if (!confirm('Bu müraciəti silmək istədiyinizə əminsiniz?')) return;
+  const table = currentApp._type === 'partner' ? 'partner_applications' : 'member_applications';
+  const { error } = await supabase.from(table).delete().eq('id', currentApp.id);
+  if (error) { toast('Silinmədi: ' + error.message, 'err'); return; }
+  toast('Müraciət silindi', 'ok');
+  closeAppModal();
+  loadApplications(appsCurrentFilter);
+};
 
 let toastTimer;
 function toast(msg, type='') {

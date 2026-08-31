@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tərəfdaş olun — GTDİB</title>
+<meta name="description" content="GTDİB ilə tərəfdaşlıq üçün müraciət edin. QHT və təşkilatlarla əməkdaşlıq: Erasmus+, gənclər, təhsil, mədəni irs.">
+<meta name="keywords" content="GTDİB tərəfdaş, QHT əməkdaşlıq, Erasmus+ tərəfdaş, Azərbaycan QHT əməkdaşlıq, gənclər layihəsi">
+<meta name="robots" content="index, follow">
+<meta name="author" content="GTDİB">
+<link rel="canonical" href="https://gtdib.org/partner.html">
+<link rel="alternate" hreflang="az" href="https://gtdib.org/partner.html">
+<link rel="alternate" hreflang="en" href="https://gtdib.org/en/partner.html">
+<link rel="alternate" hreflang="x-default" href="https://gtdib.org/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tərəfdaş olun — GTDİB">
+<meta property="og:description" content="GTDİB ilə tərəfdaşlıq üçün müraciət edin. QHT və təşkilatlarla əməkdaşlıq.">
+<meta property="og:url" content="https://gtdib.org/partner.html">
+<meta property="og:image" content="https://gtdib.org/images/baku_carpet.jpg">
+<meta property="og:site_name" content="GTDİB">
+<meta property="og:locale" content="az_AZ">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=18">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<script>var t=localStorage.getItem("gtdib-theme");if(t==="light")document.documentElement.setAttribute("data-theme","light");</script>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="mesh-bg"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-dot"></div>
+    GTDİB
+  </a>
+  <ul>
+    <li><button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"><span class="toggle-icon">☾</span></button></li>
+    <li><a href="index.html">Ana səhifə</a></li>
+    <li><a href="about.html">Haqqımızda</a></li>
+    <li><a href="project.html">Bizim cari layihəmiz</a></li>
+    <li><a href="news.html">Xəbərlər</a></li>
+    <li><a href="gallery.html">Qalereya</a></li>
+    <li><a href="contact.html">Əlaqə</a></li>
+    <li class="lang-switch"><a href="en/partner.html">🇬🇧 EN</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero page-hero">
+  <div class="tag reveal">
+    <div class="pulse"></div>
+    Tərəfdaşlıq
+  </div>
+  <h1 class="reveal">Tərəfdaş <span class="accent">olun</span></h1>
+  <p class="subtitle reveal">Təşkilatınız GTDİB ilə birgə layihələr həyata keçirmək istəyirsə? Əməkdaşlıq üçün müraciət formunu doldurun.</p>
+</section>
+
+<!-- FORM -->
+<section>
+  <div id="formWrap">
+    <form class="app-form reveal" id="partnerForm" onsubmit="return false;" autocomplete="on">
+      <div class="app-error" id="formError" style="display:none;"></div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label>Təşkilatın adı <span class="req">*</span></label>
+          <input type="text" id="org_name" required placeholder="Məsələn: Gənclərin İnkişaf Mərkəzi">
+        </div>
+        <div class="field">
+          <label>Ölkə <span class="req">*</span></label>
+          <input type="text" id="country" required placeholder="Məsələn: Azərbaycan">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label>Əlaqə şəxsi (ad soyad) <span class="req">*</span></label>
+          <input type="text" id="contact_name" required placeholder="Ad Soyad">
+        </div>
+        <div class="field">
+          <label>E-poçt <span class="req">*</span></label>
+          <input type="email" id="email" required placeholder="info@teskilat.org">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label>Telefon</label>
+          <input type="tel" id="phone" placeholder="+994 ...">
+        </div>
+        <div class="field">
+          <label>Vebsayt</label>
+          <input type="url" id="website" placeholder="https://...">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Missiya və fəaliyyət sahələri <span class="hint">— təşkilatınız nə ilə məşğuldur?</span></label>
+        <textarea id="mission" placeholder="Təşkilatınızın missiyası, əsas fəaliyyət istiqamətləri və təcrübəsi haqqında qısqa məlumat."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Əməkdaşlıq marağı <span class="hint">— hansı sahədə əməkdaşlıq etmək istəyirsiniz?</span></label>
+        <textarea id="collaboration_interest" placeholder="Məsələn: Erasmus+ gənclər mübadiləsi, könüllü layihələr, mədəni irs, təhsil sahəsində birgə layihələr..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submitBtn" onclick="submitPartner()">Müraciəti göndər →</button>
+        <a href="member.html" class="btn btn-ghost">Fərdi üzv olun</a>
+      </div>
+
+      <p class="form-note">
+        Müraciətiniz qeydə alınacaq və bizimlə əlaqə saxlayacağıq. Məlumatlarınız üçüncü tərəflərlə paylaşılmır.
+        Həmçinin <a href="contact.html">əlaqə səhifəsindən</a> bizə yazmaq olar.
+      </p>
+    </form>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="app-success reveal" id="successView" style="display:none;">
+    <div class="check">✓</div>
+    <h2>Müraciətiniz qəbul olundu!</h2>
+    <p>Təşəkkür edirik. Tərəfdaşlıq müraciətiniz qeydə alındı. Komandamız qısa müddət ərzində sizinlə əlaqə saxlayacaq.</p>
+    <div class="cta-group">
+      <a href="index.html" class="btn btn-primary">Ana səhifə →</a>
+      <a href="member.html" class="btn btn-ghost">Üzv olun</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Ana səhifə</a>
+    <a href="about.html">Haqqımızda</a>
+    <a href="project.html">Bizim cari layihəmiz</a>
+    <a href="news.html">Xəbərlər</a>
+    <a href="gallery.html">Qalereya</a>
+    <a href="contact.html">Əlaqə</a>
+  </div>
+  <p>© 2026 Gənclərin "Tənhalara Dayaq" İctimai Birliyi — Bakı, Azərbaycan · gtdib.org</p>
+</footer>
+
+<script src="script.js?v=12"></script>
+<script type="module">
+import { supabase, SUPABASE_URL } from './supabase-config.js?v=3';
+
+const FN_URL = `${SUPABASE_URL}/functions/v1/notify-application`;
+
+window.submitPartner = async function() {
+  const get = (id) => document.getElementById(id).value.trim();
+  const errEl = document.getElementById('formError');
+  const btn = document.getElementById('submitBtn');
+  errEl.style.display = 'none';
+
+  const data = {
+    type: 'partner',
+    org_name: get('org_name'),
+    country: get('country'),
+    contact_name: get('contact_name'),
+    email: get('email'),
+    phone: get('phone'),
+    website: get('website'),
+    mission: get('mission'),
+    collaboration_interest: get('collaboration_interest'),
+  };
+
+  if (!data.org_name || !data.country || !data.contact_name || !data.email) {
+    errEl.textContent = 'Zəhmət olmasa bütün tələb olunan sahələri doldurun (*).';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) {
+    errEl.textContent = 'Zəhmət olmasa düzgün e-poçt daxil edin.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Göndərilir…';
+
+  // 1. Store in database (anon INSERT via RLS)
+  const { error: dbErr } = await supabase.from('partner_applications').insert({
+    org_name: data.org_name,
+    country: data.country,
+    contact_name: data.contact_name,
+    email: data.email,
+    phone: data.phone || null,
+    website: data.website || null,
+    mission: data.mission || null,
+    collaboration_interest: data.collaboration_interest || null,
+  });
+
+  if (dbErr) {
+    errEl.textContent = 'Müraciət qeyd olunmadı: ' + dbErr.message;
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Müraciəti göndər →';
+    return;
+  }
+
+  // 2. Send email notification (best-effort — data is already stored)
+  try {
+    await fetch(FN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  } catch (e) { /* email failure is non-fatal */ }
+
+  // 3. Show success
+  document.getElementById('formWrap').style.display = 'none';
+  document.getElementById('successView').style.display = 'block';
+  document.getElementById('successView').scrollIntoView({ behavior: 'smooth' });
+  if (window.revealInit) window.revealInit();
+};
+</script>
+</body>
+</html>

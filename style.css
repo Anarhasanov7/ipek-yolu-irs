@@ -899,3 +899,155 @@ footer .footer-social .social-link:hover {
 .news-modal-body p { margin-bottom: 14px; }
 .news-modal-body img { max-width: 100%; border-radius: 12px; margin: 16px 0; }
 .news-modal-body a { color: var(--terracotta); }
+
+/* === APPLICATION FORM (partner / member) === */
+.app-form {
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+}
+.app-form .field { margin-bottom: 22px; }
+.app-form .field label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.app-form .field label .req { color: var(--terracotta); }
+.app-form .field label .hint {
+  color: var(--text-faint);
+  font-weight: 400;
+  font-size: 11px;
+  margin-left: 6px;
+}
+.app-form .field input[type=text],
+.app-form .field input[type=email],
+.app-form .field input[type=url],
+.app-form .field input[type=tel],
+.app-form .field input[type=number],
+.app-form .field textarea,
+.app-form .field select {
+  width: 100%;
+  padding: 13px 15px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  transition: var(--transition);
+}
+.app-form .field input:focus,
+.app-form .field textarea:focus,
+.app-form .field select:focus {
+  outline: none;
+  border-color: var(--terracotta);
+  box-shadow: 0 0 0 3px var(--terracotta-glow);
+}
+.app-form .field textarea {
+  min-height: 110px;
+  resize: vertical;
+  line-height: 1.6;
+}
+.app-form .field input:disabled,
+.app-form .field textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.app-form .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 20px;
+}
+.app-form .form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.app-form .form-actions .btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+.app-form .form-note {
+  font-size: 12px;
+  color: var(--text-faint);
+  margin-top: 16px;
+  line-height: 1.6;
+}
+.app-form .form-note a { color: var(--terracotta); }
+
+/* Success / error states */
+.app-success {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 56px 40px;
+}
+.app-success .check {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+.app-success h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+.app-success p {
+  color: var(--text-dim);
+  font-size: 15px;
+  line-height: 1.7;
+  max-width: 480px;
+  margin: 0 auto 24px;
+}
+.app-error {
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  color: #ff8585;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+/* App type switch (on a combined page) */
+.app-tabs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.app-tab {
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-dim);
+  transition: var(--transition);
+}
+.app-tab:hover { border-color: var(--border-hover); color: var(--text); }
+.app-tab.active {
+  background: linear-gradient(135deg, var(--terracotta), #d05a36);
+  color: #fff;
+  border-color: transparent;
+}
+
+@media (max-width: 640px) {
+  .app-form { padding: 24px; }
+  .app-form .form-grid { grid-template-columns: 1fr; gap: 0; }
+}
