@@ -89,13 +89,14 @@ function stripHtml(s) {
 // Check if an image URL is a generic placeholder/logo (not a real article image)
 function isBadImage(url) {
   if (!url) return true;
+  const u = url.toLowerCase();
   const bad = [
-    'googleusercontent.com/J6_coFbogx', // Google News placeholder
+    'googleusercontent.com/j6_cofbogx', // Google News placeholder
     'logo', 'icon', 'avatar', 'favicon',
     'site-featured', 'default-image', 'placeholder',
     'gstatic.com/gnews', // Google News logo
   ];
-  return bad.some(b => url.toLowerCase().includes(b));
+  return bad.some(b => u.includes(b));
 }
 
 // Fetch og:image from an article page
