@@ -483,6 +483,9 @@ section > * { width: 100%; }
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 8px;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
 }
 .feature-card p { font-size: 14px; color: var(--text-dim); line-height: 1.6; }
 
