@@ -93,11 +93,14 @@ body { background: var(--bg); }
 .analytics-card .num.indigo { color:var(--indigo); }
 .analytics-card .num.teal { color:var(--teal); }
 .analytics-card .lbl { font-size:12px; color:var(--text-dim); margin-top:6px; text-transform:uppercase; letter-spacing:0.5px; }
-.analytics-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:32px; }
-.analytics-grid .form-card { margin-bottom:0; }
+.analytics-grid { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:32px; }
+.analytics-grid .form-card { margin-bottom:0; display:flex; flex-direction:column; }
 .analytics-grid .form-card h2 { font-size:16px; }
+.analytics-grid .form-card .analytics-chart { flex:1; display:flex; align-items:flex-end; justify-content:space-around; min-height:240px; }
 .analytics-grid .span-2 { grid-column:span 2; }
-.analytics-grid .span-3 { grid-column:span 3; }
+.analytics-grid .span-3 { grid-column:span 2; }
+.analytics-grid .rows-2 { grid-row:span 2; }
+.analytics-grid .rows-4 { grid-row:span 4; }
 .analytics-list { display:flex; flex-direction:column; gap:8px; }
 .analytics-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); font-size:13px; }
 .analytics-row:last-child { border-bottom:none; }
@@ -106,6 +109,7 @@ body { background: var(--bg); }
 .analytics-bar { height:4px; background:var(--bg-2); border-radius:2px; margin-top:4px; overflow:hidden; }
 .analytics-bar-fill { height:100%; background:linear-gradient(90deg,var(--terracotta),var(--gold)); border-radius:2px; }
 .analytics-chart { display:flex; align-items:flex-end; gap:4px; height:160px; padding:16px 0; overflow-x:auto; }
+.analytics-grid .analytics-chart { height:auto; min-height:240px; }
 .analytics-chart .bar-col { flex:1; min-width:28px; display:flex; flex-direction:column; align-items:center; gap:6px; }
 .analytics-chart .bar { width:100%; max-width:32px; background:linear-gradient(180deg,var(--terracotta),rgba(232,112,74,0.3)); border-radius:4px 4px 0 0; min-height:2px; transition:height 0.3s; }
 .analytics-chart .bar-label { font-size:10px; color:var(--text-faint); white-space:nowrap; }
@@ -130,8 +134,7 @@ body { background: var(--bg); }
 .social-post-num { font-weight:700; color:var(--terracotta); min-width:36px; }
 .social-post-text { flex:1; font-size:13px; color:var(--text); }
 .social-post-meta { font-size:11px; color:var(--text-faint); margin-top:4px; }
-@media (max-width:600px) { .analytics-cards { grid-template-columns:repeat(2,1fr); } .analytics-grid { grid-template-columns:1fr; } .analytics-grid .span-2, .analytics-grid .span-3 { grid-column:span 1; } .analytics-tabs { flex-wrap:wrap; } }
-@media (min-width:601px) and (max-width:1024px) { .analytics-grid { grid-template-columns:repeat(2,1fr); } .analytics-grid .span-3 { grid-column:span 2; } }
+@media (max-width:600px) { .analytics-cards { grid-template-columns:repeat(2,1fr); } .analytics-grid { grid-template-columns:1fr; } .analytics-grid .span-2, .analytics-grid .span-3 { grid-column:span 1; } .analytics-grid .rows-2, .analytics-grid .rows-4 { grid-row:span 1; } .analytics-tabs { flex-wrap:wrap; } }
 </style>
 </head>
 <body>
@@ -324,7 +327,7 @@ body { background: var(--bg); }
       <div class="loading-inline">Yüklənir…</div>
     </div>
     <div class="analytics-grid">
-      <div class="form-card span-2" id="analyticsChartCard" style="display:none;">
+      <div class="form-card rows-4" id="analyticsChartCard" style="display:none;">
         <h2>Günlük baxışlar</h2>
         <div id="analyticsChart" class="analytics-chart"></div>
       </div>
@@ -344,7 +347,7 @@ body { background: var(--bg); }
         <h2>Cihaz</h2>
         <div id="analyticsDevices" class="analytics-list"><div class="loading-inline">—</div></div>
       </div>
-      <div class="form-card span-3">
+      <div class="form-card span-2">
         <h2>Son ziyarətlər</h2>
         <div id="analyticsRecent"><div class="loading-inline">—</div></div>
       </div>
@@ -364,8 +367,8 @@ body { background: var(--bg); }
     <div class="analytics-cards" id="cfCards">
       <div class="loading-inline">Yüklənir…</div>
     </div>
-    <div class="analytics-grid">
-      <div class="form-card span-2" id="cfChartCard" style="display:none;">
+    <div class="analytics-grid" style="grid-template-rows: repeat(2, minmax(180px, auto));">
+      <div class="form-card rows-2" id="cfChartCard" style="display:none;">
         <h2>Günlük trafik (requests / pageViews / uniques)</h2>
         <div id="cfChart" class="analytics-chart"></div>
       </div>
@@ -394,7 +397,7 @@ body { background: var(--bg); }
       <div class="loading-inline">Yüklənir…</div>
     </div>
     <div class="analytics-grid">
-      <div class="form-card span-2" id="phChartCard" style="display:none;">
+      <div class="form-card rows-4" id="phChartCard" style="display:none;">
         <h2>Günlük trafik (pageviews / unique visitors)</h2>
         <div id="phChart" class="analytics-chart"></div>
       </div>
@@ -414,7 +417,7 @@ body { background: var(--bg); }
         <h2>Cihaz / Brauzer</h2>
         <div id="phDevices" class="analytics-list"><div class="loading-inline">—</div></div>
       </div>
-      <div class="form-card span-3">
+      <div class="form-card span-2">
         <h2>Son hadisələr (son 24 saat)</h2>
         <div id="phRecent"><div class="loading-inline">—</div></div>
       </div>
