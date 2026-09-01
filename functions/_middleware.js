@@ -1,7 +1,6 @@
 // Cloudflare Pages Function middleware — anonymous page view tracking
-// Runs on every request, fire-and-forget via ctx.waitUntil().
 // Privacy-friendly: no cookies, no PII, IP hashed daily (can't track across days).
-// Only tracks HTML page requests, skips static assets, bots, and admin pages.
+// Synchronous with timeout: adds ~50-100ms but ensures tracking completes.
 
 const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsZml6Y2dheXFlY252dGZpaGd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTAzMDUsImV4cCI6MjEwMzU4NjMwNX0.V9MiUESH7Xu1TG4tadkj9a7_wi-pouLPtv3yYTSEn0I';
@@ -68,7 +67,8 @@ async function trackPageView(request) {
 
   const body = JSON.stringify({ path, country, referrer, device, visitor_hash: visitorHash });
 
-  await fetch(SUPABASE_URL + '/rest/v1/page_views', {
+  // Race the fetch against a 2s timeout so tracking never blocks the page for too long
+  const fetchPromise = fetch(SUPABASE_URL + '/rest/v1/page_views', {
     method: 'POST',
     headers: {
       'apikey': SUPABASE_ANON_KEY,
@@ -78,15 +78,17 @@ async function trackPageView(request) {
     },
     body,
   });
+
+  const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 2000));
+  await Promise.race([fetchPromise, timeoutPromise]);
 }
 
 export async function onRequest(context) {
-  // Fire-and-forget: track without blocking the response
+  // Track synchronously with timeout — never blocks more than 2s
   try {
-    context.ctx.waitUntil(
-      trackPageView(context.request).catch(() => {})
-    );
+    await trackPageView(context.request);
   } catch {}
-  // Always pass through to static content
+
+  // Pass through to static content
   return context.next();
 }
