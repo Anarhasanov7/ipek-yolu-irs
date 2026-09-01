@@ -113,7 +113,22 @@ body { background: var(--bg); }
 .analytics-table td { padding:10px 12px; border-bottom:1px solid var(--border); }
 .analytics-table tr:last-child td { border-bottom:none; }
 .country-flag { font-size:16px; margin-right:6px; }
-@media (max-width:600px) { .analytics-cards { grid-template-columns:repeat(2,1fr); } .analytics-grid { grid-template-columns:1fr; } }
+.analytics-tabs { display:flex; gap:0; margin-bottom:24px; border-bottom:2px solid var(--border); }
+.analytics-tab { padding:10px 20px; border:none; background:none; color:var(--text-faint); font-size:14px; font-weight:600; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all 0.2s; }
+.analytics-tab:hover { color:var(--text); }
+.analytics-tab.active { color:var(--terracotta); border-bottom-color:var(--terracotta); }
+.analytics-tab-content { animation:fadeIn 0.3s; }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+.platform-badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:600; margin-right:4px; }
+.platform-badge.published { background:#1a5d3a; color:#7ee8a4; }
+.platform-badge.pending { background:#4a4a5e; color:#b8b8c8; }
+.platform-badge.failed { background:#6b1d1d; color:#f0a0a0; }
+.social-post-row { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); align-items:flex-start; }
+.social-post-row:last-child { border-bottom:none; }
+.social-post-num { font-weight:700; color:var(--terracotta); min-width:36px; }
+.social-post-text { flex:1; font-size:13px; color:var(--text); }
+.social-post-meta { font-size:11px; color:var(--text-faint); margin-top:4px; }
+@media (max-width:600px) { .analytics-cards { grid-template-columns:repeat(2,1fr); } .analytics-grid { grid-template-columns:1fr; } .analytics-tabs { flex-wrap:wrap; } }
 </style>
 </head>
 <body>
@@ -282,40 +297,111 @@ body { background: var(--bg); }
   <div class="admin-header">
     <h1>📊 Analitika</h1>
     <div class="actions">
-      <button class="admin-btn small" onclick="loadAnalytics(7)" id="analytics7">7 gün</button>
-      <button class="admin-btn small" onclick="loadAnalytics(30)" id="analytics30" style="border-color:var(--terracotta);">30 gün</button>
-      <button class="admin-btn small" onclick="loadAnalytics(90)" id="analytics90">90 gün</button>
       <button class="admin-btn small" onclick="toggleAnalytics()">← Xəbərlərə qayıt</button>
     </div>
   </div>
-  <div class="analytics-cards" id="analyticsCards">
-    <div class="loading-inline">Yüklənir…</div>
+
+  <!-- Analytics sub-tabs -->
+  <div class="analytics-tabs">
+    <button class="analytics-tab active" onclick="switchAnalyticsTab('pageviews', this)" id="tabPageviews">👁️ Səhifə baxışları</button>
+    <button class="analytics-tab" onclick="switchAnalyticsTab('cloudflare', this)" id="tabCloudflare">🌐 Cloudflare</button>
+    <button class="analytics-tab" onclick="switchAnalyticsTab('social', this)" id="tabSocial">📱 Sosial media</button>
   </div>
-  <div class="form-card" id="analyticsChartCard" style="display:none;">
-    <h2>Günlük baxışlar</h2>
-    <div id="analyticsChart" class="analytics-chart"></div>
+
+  <!-- TAB 1: Page Views (Supabase) -->
+  <div id="analyticsPageviews" class="analytics-tab-content">
+    <div class="admin-header" style="border:none;padding-top:0;">
+      <div class="actions">
+        <button class="admin-btn small" onclick="loadAnalytics(7)" id="analytics7">7 gün</button>
+        <button class="admin-btn small" onclick="loadAnalytics(30)" id="analytics30" style="border-color:var(--terracotta);">30 gün</button>
+        <button class="admin-btn small" onclick="loadAnalytics(90)" id="analytics90">90 gün</button>
+      </div>
+    </div>
+    <div class="analytics-cards" id="analyticsCards">
+      <div class="loading-inline">Yüklənir…</div>
+    </div>
+    <div class="form-card" id="analyticsChartCard" style="display:none;">
+      <h2>Günlük baxışlar</h2>
+      <div id="analyticsChart" class="analytics-chart"></div>
+    </div>
+    <div class="analytics-grid">
+      <div class="form-card">
+        <h2>Top səhifələr</h2>
+        <div id="analyticsTopPages" class="analytics-list"><div class="loading-inline">—</div></div>
+      </div>
+      <div class="form-card">
+        <h2>Top ölkələr</h2>
+        <div id="analyticsTopCountries" class="analytics-list"><div class="loading-inline">—</div></div>
+      </div>
+      <div class="form-card">
+        <h2>Top mənbələr</h2>
+        <div id="analyticsTopReferrers" class="analytics-list"><div class="loading-inline">—</div></div>
+      </div>
+      <div class="form-card">
+        <h2>Cihaz</h2>
+        <div id="analyticsDevices" class="analytics-list"><div class="loading-inline">—</div></div>
+      </div>
+    </div>
+    <div class="form-card">
+      <h2>Son ziyarətlər</h2>
+      <div id="analyticsRecent"><div class="loading-inline">—</div></div>
+    </div>
   </div>
-  <div class="analytics-grid">
-    <div class="form-card">
-      <h2>Top səhifələr</h2>
-      <div id="analyticsTopPages" class="analytics-list"><div class="loading-inline">—</div></div>
+
+  <!-- TAB 2: Cloudflare Web Analytics -->
+  <div id="analyticsCloudflare" class="analytics-tab-content" style="display:none;">
+    <div class="admin-header" style="border:none;padding-top:0;">
+      <div class="actions">
+        <button class="admin-btn small" onclick="loadCfAnalytics(7)" id="cfAnalytics7">7 gün</button>
+        <button class="admin-btn small" onclick="loadCfAnalytics(30)" id="cfAnalytics30" style="border-color:var(--terracotta);">30 gün</button>
+        <button class="admin-btn small" onclick="loadCfAnalytics(90)" id="cfAnalytics90">90 gün</button>
+        <span style="font-size:11px;color:var(--text-faint);margin-left:8px;">Zone-level HTTP analytics (CF GraphQL API)</span>
+      </div>
     </div>
-    <div class="form-card">
-      <h2>Top ölkələr</h2>
-      <div id="analyticsTopCountries" class="analytics-list"><div class="loading-inline">—</div></div>
+    <div class="analytics-cards" id="cfCards">
+      <div class="loading-inline">Yüklənir…</div>
     </div>
-    <div class="form-card">
-      <h2>Top mənbələr</h2>
-      <div id="analyticsTopReferrers" class="analytics-list"><div class="loading-inline">—</div></div>
+    <div class="form-card" id="cfChartCard" style="display:none;">
+      <h2>Günlük trafik (requests / pageViews / uniques)</h2>
+      <div id="cfChart" class="analytics-chart"></div>
     </div>
-    <div class="form-card">
-      <h2>Cihaz</h2>
-      <div id="analyticsDevices" class="analytics-list"><div class="loading-inline">—</div></div>
+    <div class="analytics-grid">
+      <div class="form-card">
+        <h2>Top ölkələr (son 24s)</h2>
+        <div id="cfTopCountries" class="analytics-list"><div class="loading-inline">—</div></div>
+      </div>
+      <div class="form-card">
+        <h2>Top səhifələr (son 24s)</h2>
+        <div id="cfTopPaths" class="analytics-list"><div class="loading-inline">—</div></div>
+      </div>
     </div>
   </div>
-  <div class="form-card">
-    <h2>Son ziyarətlər</h2>
-    <div id="analyticsRecent"><div class="loading-inline">—</div></div>
+
+  <!-- TAB 3: Social Media Stats -->
+  <div id="analyticsSocial" class="analytics-tab-content" style="display:none;">
+    <div class="admin-header" style="border:none;padding-top:0;">
+      <div class="actions">
+        <button class="admin-btn small" onclick="loadSocialStats()" id="socialRefreshBtn">🔄 Yenilə</button>
+        <span style="font-size:11px;color:var(--text-faint);margin-left:8px;">Threads · Facebook · Instagram (europatheducation.eu)</span>
+      </div>
+    </div>
+    <div class="analytics-cards" id="socialCards">
+      <div class="loading-inline">Yüklənir…</div>
+    </div>
+    <div class="analytics-grid">
+      <div class="form-card">
+        <h2>Platforma statusu</h2>
+        <div id="socialPlatformBreakdown"></div>
+      </div>
+      <div class="form-card">
+        <h2>Şərhlər</h2>
+        <div id="socialCommentsStats"></div>
+      </div>
+    </div>
+    <div class="form-card">
+      <h2>Son postlar</h2>
+      <div id="socialRecentPosts"><div class="loading-inline">—</div></div>
+    </div>
   </div>
 </div>
 
@@ -935,6 +1021,13 @@ window.toggleAnalytics = function() {
     v.style.display = 'block';
     dash.style.display = 'none';
     document.getElementById('appsView').style.display = 'none';
+    // Reset to first tab
+    document.querySelectorAll('.analytics-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tabPageviews').classList.add('active');
+    ['analyticsPageviews', 'analyticsCloudflare', 'analyticsSocial'].forEach(id => {
+      document.getElementById(id).style.display = 'none';
+    });
+    document.getElementById('analyticsPageviews').style.display = 'block';
     loadAnalytics(analyticsCurrentDays);
     v.scrollIntoView({ behavior: 'smooth' });
   } else {
@@ -1030,6 +1123,192 @@ window.loadAnalytics = async function(days = 30) {
       return `<tr><td>${escapeHtml(r.path)}</td><td>${flags[r.country] || ''} ${r.country || '—'}</td><td>${devIcons[r.device] || ''} ${r.device}</td><td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(ref)}</td><td style="white-space:nowrap;color:var(--text-faint);">${time}</td></tr>`;
     }).join('')}</tbody></table>`
     : '<div class="loading-inline">Hələ ziyarət qeyd olunmayıb</div>';
+};
+
+// ---- Analytics tab switching ----
+window.switchAnalyticsTab = function(tab, btn) {
+  document.querySelectorAll('.analytics-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  ['Pageviews', 'Cloudflare', 'Social'].forEach(t => {
+    document.getElementById('analytics' + t).style.display = 'none';
+  });
+  const tabMap = { pageviews: 'analyticsPageviews', cloudflare: 'analyticsCloudflare', social: 'analyticsSocial' };
+  document.getElementById(tabMap[tab]).style.display = 'block';
+  if (tab === 'pageviews') loadAnalytics(analyticsCurrentDays);
+  else if (tab === 'cloudflare') loadCfAnalytics(30);
+  else if (tab === 'social') loadSocialStats();
+};
+
+// ---- Cloudflare Web Analytics (via /api/cf-analytics proxy) ----
+const CF_ADMIN_TOKEN = 'gtdib-admin-analytics-2026';
+let cfCurrentDays = 30;
+
+window.loadCfAnalytics = async function(days = 30) {
+  cfCurrentDays = days;
+  ['7', '30', '90'].forEach(d => {
+    const b = document.getElementById('cfAnalytics' + d);
+    if (b) b.style.borderColor = 'var(--border)';
+  });
+  const active = document.getElementById('cfAnalytics' + days);
+  if (active) active.style.borderColor = 'var(--terracotta)';
+
+  const cards = document.getElementById('cfCards');
+  cards.innerHTML = '<div class="loading-inline">Yüklənir…</div>';
+  document.getElementById('cfTopCountries').innerHTML = '<div class="loading-inline">—</div>';
+  document.getElementById('cfTopPaths').innerHTML = '<div class="loading-inline">—</div>';
+
+  try {
+    const [overviewRes, countriesRes, pathsRes] = await Promise.all([
+      fetch('/api/cf-analytics?type=overview&days=' + days, { headers: { 'X-Admin-Token': CF_ADMIN_TOKEN } }),
+      fetch('/api/cf-analytics?type=countries', { headers: { 'X-Admin-Token': CF_ADMIN_TOKEN } }),
+      fetch('/api/cf-analytics?type=paths', { headers: { 'X-Admin-Token': CF_ADMIN_TOKEN } }),
+    ]);
+
+    const overview = await overviewRes.json();
+    const countriesData = await countriesRes.json();
+    const pathsData = await pathsRes.json();
+
+    if (overview.error) throw new Error(overview.error);
+
+    const t = overview.today || { requests: 0, pageViews: 0, uniques: 0 };
+    const p = overview.period || { requests: 0, pageViews: 0, uniques: 0 };
+
+    cards.innerHTML = `
+      <div class="analytics-card"><div class="num">${t.pageViews || 0}</div><div class="lbl">Bugün pageViews</div></div>
+      <div class="analytics-card"><div class="num gold">${t.uniques || 0}</div><div class="lbl">Bugün uniques</div></div>
+      <div class="analytics-card"><div class="num indigo">${p.pageViews || 0}</div><div class="lbl">${days} gün pageViews</div></div>
+      <div class="analytics-card"><div class="num teal">${p.uniques || 0}</div><div class="lbl">${days} gün uniques</div></div>
+      <div class="analytics-card"><div class="num" style="color:#a78bfa;">${p.requests || 0}</div><div class="lbl">${days} gün requests</div></div>
+    `;
+
+    // Chart
+    const chartCard = document.getElementById('cfChartCard');
+    const chart = document.getElementById('cfChart');
+    const daily = overview.daily || [];
+    if (daily.length > 0) {
+      chartCard.style.display = 'block';
+      const maxV = Math.max(...daily.map(d => d.pageViews || 0), 1);
+      chart.innerHTML = daily.map(d => {
+        const h = Math.max(((d.pageViews || 0) / maxV) * 140, 2);
+        const dt = (d.date || '').slice(5);
+        return `<div class="bar-col"><div class="bar-val">${d.pageViews || 0}</div><div class="bar" style="height:${h}px"></div><div class="bar-label">${dt}</div></div>`;
+      }).join('');
+    } else {
+      chartCard.style.display = 'none';
+    }
+
+    // Top countries
+    const flags = { US:'🇺🇸', IT:'🇮🇹', AZ:'🇦🇿', CN:'🇨🇳', JP:'🇯🇵', HK:'🇭🇰', DE:'🇩🇪', FR:'🇫🇷', GB:'🇬🇧', TR:'🇹🇷', RU:'🇷🇺', NL:'🇳🇱', ES:'🇪🇸', PL:'🇵🇱', GE:'🇬🇪', UA:'🇺🇦', KZ:'🇰🇿', UZ:'🇺🇿' };
+    const countries = countriesData.countries || [];
+    const maxCountry = countries.length > 0 ? countries[0].count : 1;
+    document.getElementById('cfTopCountries').innerHTML = countries.length > 0
+      ? countries.map(c => `<div class="analytics-row"><div class="label">${flags[c.country] || '🌍'} ${c.country || '—'}</div><div class="count">${c.count}</div></div><div class="analytics-bar"><div class="analytics-bar-fill" style="width:${(c.count/maxCountry)*100}%"></div></div>`).join('')
+      : '<div class="loading-inline">Məlumat yoxdur</div>';
+
+    // Top paths
+    const paths = (pathsData.paths || []).filter(p => !p.path.match(/\.(css|js|jpg|png|svg|ico|woff|woff2|ttf|txt|xml|map)$/i) && !p.path.startsWith('/cdn-cgi/') && !p.path.startsWith('/_headers'));
+    const maxPath = paths.length > 0 ? paths[0].count : 1;
+    document.getElementById('cfTopPaths').innerHTML = paths.length > 0
+      ? paths.map(p => `<div class="analytics-row"><div class="label" title="${escapeHtml(p.path)}">${escapeHtml(p.path)}</div><div class="count">${p.count}</div></div><div class="analytics-bar"><div class="analytics-bar-fill" style="width:${(p.count/maxPath)*100}%"></div></div>`).join('')
+      : '<div class="loading-inline">Məlumat yoxdur</div>';
+
+  } catch (e) {
+    cards.innerHTML = '<div class="loading-inline">Xəta: ' + escapeHtml(e.message) + '</div>';
+  }
+};
+
+// ---- Social Media Stats ----
+window.loadSocialStats = async function() {
+  const cards = document.getElementById('socialCards');
+  cards.innerHTML = '<div class="loading-inline">Yüklənir…</div>';
+
+  const { data, error } = await supabase.rpc('get_social_stats');
+  if (error) {
+    cards.innerHTML = '<div class="loading-inline">Xəta: ' + escapeHtml(error.message) + '</div>';
+    return;
+  }
+  const s = data || {};
+  const t = s.totals || {};
+  const pb = s.platform_breakdown || {};
+  const cm = s.comments || {};
+
+  cards.innerHTML = `
+    <div class="analytics-card"><div class="num">${t.total_posts || 0}</div><div class="lbl">Ümumi post</div></div>
+    <div class="analytics-card"><div class="num" style="color:#7ee8a4;">${t.published || 0}</div><div class="lbl">Yayımlanmış</div></div>
+    <div class="analytics-card"><div class="num gold">${t.pending || 0}</div><div class="lbl">Gözləyir</div></div>
+    <div class="analytics-card"><div class="num" style="color:#f0a0a0;">${t.partial || 0}</div><div class="lbl">Qismən</div></div>
+    <div class="analytics-card"><div class="num indigo">${t.with_image || 0}</div><div class="lbl">Şəkilli</div></div>
+  `;
+
+  // Platform breakdown
+  const platformHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center;">
+      <div>
+        <h3 style="font-size:14px;color:var(--text-faint);margin-bottom:8px;">🧵 Threads</h3>
+        <div style="font-size:24px;font-weight:700;color:#7ee8a4;">${pb.threads_published || 0}</div><div style="font-size:11px;color:var(--text-faint);">yayımlanmış</div>
+        <div style="font-size:16px;font-weight:600;color:#b8b8c8;margin-top:4px;">${pb.threads_pending || 0}</div><div style="font-size:11px;color:var(--text-faint);">gözləyir</div>
+        ${pb.threads_failed ? `<div style="font-size:14px;color:#f0a0a0;margin-top:4px;">${pb.threads_failed} xəta</div>` : ''}
+      </div>
+      <div>
+        <h3 style="font-size:14px;color:var(--text-faint);margin-bottom:8px;">📘 Facebook</h3>
+        <div style="font-size:24px;font-weight:700;color:#7ee8a4;">${pb.fb_published || 0}</div><div style="font-size:11px;color:var(--text-faint);">yayımlanmış</div>
+        <div style="font-size:16px;font-weight:600;color:#b8b8c8;margin-top:4px;">${pb.fb_pending || 0}</div><div style="font-size:11px;color:var(--text-faint);">gözləyir</div>
+        ${pb.fb_failed ? `<div style="font-size:14px;color:#f0a0a0;margin-top:4px;">${pb.fb_failed} xəta</div>` : ''}
+      </div>
+      <div>
+        <h3 style="font-size:14px;color:var(--text-faint);margin-bottom:8px;">📷 Instagram</h3>
+        <div style="font-size:24px;font-weight:700;color:#7ee8a4;">${pb.ig_published || 0}</div><div style="font-size:11px;color:var(--text-faint);">yayımlanmış</div>
+        <div style="font-size:16px;font-weight:600;color:#b8b8c8;margin-top:4px;">${pb.ig_pending || 0}</div><div style="font-size:11px;color:var(--text-faint);">gözləyir</div>
+        ${pb.ig_failed ? `<div style="font-size:14px;color:#f0a0a0;margin-top:4px;">${pb.ig_failed} xəta</div>` : ''}
+      </div>
+    </div>
+    ${t.next_scheduled ? `<div style="margin-top:16px;padding:12px;background:var(--bg);border-radius:8px;font-size:13px;">
+      <strong>Növbəti post:</strong> ${new Date(t.next_scheduled).toLocaleString('az-AZ', { dateStyle:'medium', timeStyle:'short' })}
+    </div>` : ''}
+  `;
+  document.getElementById('socialPlatformBreakdown').innerHTML = platformHTML;
+
+  // Comments
+  document.getElementById('socialCommentsStats').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:center;">
+      <div>
+        <div style="font-size:28px;font-weight:700;color:var(--terracotta);">${cm.total || 0}</div>
+        <div style="font-size:12px;color:var(--text-faint);">Ümumi şərh</div>
+      </div>
+      <div>
+        <div style="font-size:28px;font-weight:700;color:#7ee8a4;">${cm.replied || 0}</div>
+        <div style="font-size:12px;color:var(--text-faint);">Cavab verilmiş</div>
+      </div>
+    </div>
+    ${cm.unreplied ? `<div style="margin-top:12px;padding:8px;background:rgba(240,160,160,0.1);border-radius:6px;font-size:12px;color:#f0a0a0;">${cm.unreplied} cavab verilməmiş şərh</div>` : ''}
+    ${cm.auto_replied ? `<div style="margin-top:8px;font-size:11px;color:var(--text-faint);">${cm.auto_replied} avtomatik cavab</div>` : ''}
+  `;
+
+  // Recent posts
+  const recent = s.recent_posts || [];
+  document.getElementById('socialRecentPosts').innerHTML = recent.length > 0
+    ? recent.map(p => {
+        const platforms = p.platforms || {};
+        const platformBadges = Object.entries(platforms).map(([k, v]) => {
+          const labels = { threads: '🧵', facebook: '📘', instagram: '📷', fb_story: '📘-story', ig_story: '📷-story' };
+          return `<span class="platform-badge ${v}">${labels[k] || k} ${v}</span>`;
+        }).join('');
+        const dt = p.published_at ? new Date(p.published_at).toLocaleString('az-AZ', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : (p.scheduled_utc ? '📅 ' + new Date(p.scheduled_utc).toLocaleString('az-AZ', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '—');
+        const stats = p.stats ? Object.entries(p.stats).filter(([k]) => k !== 'post_number').map(([platform, s]) => {
+          if (!s || typeof s !== 'object') return '';
+          const parts = Object.entries(s).filter(([k, v]) => typeof v === 'number' && v > 0).map(([k, v]) => `${k}: ${v}`);
+          return parts.length > 0 ? `<span style="font-size:11px;color:var(--text-faint);margin-right:8px;">${platform}: ${parts.join(', ')}</span>` : '';
+        }).join('') : '';
+        return `<div class="social-post-row">
+          <div class="social-post-num">#${p.post_number}</div>
+          <div class="social-post-text">
+            ${escapeHtml(p.text_preview || '')}${p.has_image ? ' 🖼️' : ''}
+            <div class="social-post-meta">${platformBadges} · ${dt}</div>
+            ${stats ? `<div style="margin-top:4px;">${stats}</div>` : ''}
+          </div>
+        </div>`;
+      }).join('')
+    : '<div class="loading-inline">Post yoxdur</div>';
 };
 </script>
 </body>
