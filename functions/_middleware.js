@@ -1,5 +1,7 @@
 // Cloudflare Pages Function middleware — anonymous page view tracking
-// Privacy-friendly: no cookies, no PII, IP hashed daily.
+// Runs on every request, fire-and-forget via ctx.waitUntil().
+// Privacy-friendly: no cookies, no PII, IP hashed daily (can't track across days).
+// Only tracks HTML page requests, skips static assets, bots, and admin pages.
 
 const SUPABASE_URL = 'https://glfizcgayqecnvtfihgy.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsZml6Y2dheXFlY252dGZpaGd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTAzMDUsImV4cCI6MjEwMzU4NjMwNX0.V9MiUESH7Xu1TG4tadkj9a7_wi-pouLPtv3yYTSEn0I';
@@ -38,14 +40,14 @@ async function trackPageView(request) {
   const url = new URL(request.url);
   const pathname = url.pathname;
 
-  if (STATIC_EXTS.test(pathname)) return 'skip-static';
-  if (pathname.startsWith('/admin') || pathname.startsWith('/api/')) return 'skip-admin';
+  if (STATIC_EXTS.test(pathname)) return;
+  if (pathname.startsWith('/admin') || pathname.startsWith('/api/')) return;
 
   const ua = request.headers.get('User-Agent') || '';
-  if (BOT_UA.test(ua)) return 'skip-bot';
+  if (BOT_UA.test(ua)) return;
 
   const accept = request.headers.get('Accept') || '';
-  if (!accept.includes('text/html') && pathname.includes('.')) return 'skip-nonhtml';
+  if (!accept.includes('text/html') && pathname.includes('.')) return;
 
   const path = normalizePath(pathname);
   const country = (request.cf && request.cf.country) ? request.cf.country : null;
@@ -66,7 +68,7 @@ async function trackPageView(request) {
 
   const body = JSON.stringify({ path, country, referrer, device, visitor_hash: visitorHash });
 
-  const resp = await fetch(SUPABASE_URL + '/rest/v1/page_views', {
+  await fetch(SUPABASE_URL + '/rest/v1/page_views', {
     method: 'POST',
     headers: {
       'apikey': SUPABASE_ANON_KEY,
@@ -76,19 +78,15 @@ async function trackPageView(request) {
     },
     body,
   });
-  return 'insert-' + resp.status;
 }
 
 export async function onRequest(context) {
-  // Synchronous tracking for debugging — add result to response header
-  let trackResult = 'none';
+  // Fire-and-forget: track without blocking the response
   try {
-    trackResult = await trackPageView(context.request);
-  } catch (e) {
-    trackResult = 'error: ' + e.message;
-  }
-
-  const response = await context.next();
-  response.headers.set('X-Track-Status', trackResult);
-  return response;
+    context.ctx.waitUntil(
+      trackPageView(context.request).catch(() => {})
+    );
+  } catch {}
+  // Always pass through to static content
+  return context.next();
 }
