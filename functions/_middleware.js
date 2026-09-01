@@ -39,14 +39,14 @@ async function trackPageView(request) {
   const url = new URL(request.url);
   const pathname = url.pathname;
 
-  if (STATIC_EXTS.test(pathname)) return;
-  if (pathname.startsWith('/admin') || pathname.startsWith('/api/')) return;
+  if (STATIC_EXTS.test(pathname)) return 'skip-static';
+  if (pathname.startsWith('/admin') || pathname.startsWith('/api/')) return 'skip-admin';
 
   const ua = request.headers.get('User-Agent') || '';
-  if (BOT_UA.test(ua)) return;
+  if (BOT_UA.test(ua)) return 'skip-bot';
 
   const accept = request.headers.get('Accept') || '';
-  if (!accept.includes('text/html') && pathname.includes('.')) return;
+  if (!accept.includes('text/html') && pathname.includes('.')) return 'skip-nonhtml';
 
   const path = normalizePath(pathname);
   const country = (request.cf && request.cf.country) ? request.cf.country : null;
@@ -79,16 +79,24 @@ async function trackPageView(request) {
     body,
   });
 
-  const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 2000));
-  await Promise.race([fetchPromise, timeoutPromise]);
+  const timeoutPromise = new Promise(resolve => setTimeout(() => resolve('timeout'), 2000));
+  const result = await Promise.race([fetchPromise, timeoutPromise]);
+  if (result === 'timeout') return 'timeout';
+  if (result && result.status) return 'insert-' + result.status;
+  return 'insert-ok';
 }
 
 export async function onRequest(context) {
   // Track synchronously with timeout — never blocks more than 2s
+  let trackResult = 'none';
   try {
-    await trackPageView(context.request);
-  } catch {}
+    trackResult = await trackPageView(context.request);
+  } catch (e) {
+    trackResult = 'error: ' + (e.message || e);
+  }
 
   // Pass through to static content
-  return context.next();
+  const response = await context.next();
+  response.headers.set('X-Track', trackResult || 'ok');
+  return response;
 }
