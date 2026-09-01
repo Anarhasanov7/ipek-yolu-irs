@@ -87,16 +87,11 @@ async function trackPageView(request) {
 }
 
 export async function onRequest(context) {
-  // Track synchronously with timeout — never blocks more than 2s
-  let trackResult = 'none';
+  // Track synchronously with 2s timeout — never blocks more than 2s
   try {
-    trackResult = await trackPageView(context.request);
-  } catch (e) {
-    trackResult = 'error: ' + (e.message || e);
-  }
+    await trackPageView(context.request);
+  } catch {}
 
   // Pass through to static content
-  const response = await context.next();
-  response.headers.set('X-Track', trackResult || 'ok');
-  return response;
+  return context.next();
 }
