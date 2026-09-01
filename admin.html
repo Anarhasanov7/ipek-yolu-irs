@@ -253,7 +253,8 @@ body { background: var(--bg); }
     </div>
 
     <div class="field">
-      <label>Şəkil <span class="hint">— 1200×675 px (16:9) tövsiyə olunur, maks 5MB</span></label>
+      <label>Şəkil <span class="hint">— 1200×675 px (16:9) tövsiyə olunur, maks 5MB. Əgər öz şəkliniz yoxdursa, galeriyadan seçin.</span></label>
+      <input type="hidden" id="galleryImageUrl" value="">
       <div class="img-upload">
         <img class="preview placeholder" id="imgPreview" alt="">
         <div class="controls">
@@ -263,6 +264,7 @@ body { background: var(--bg); }
           </div>
         </div>
       </div>
+      <div class="gallery-picker" id="galleryPicker"></div>
     </div>
 
     <div class="field-en">
@@ -447,6 +449,15 @@ body { background: var(--bg); }
   </div>
 
 </div>
+
+<style>
+.gallery-picker { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-top:16px; }
+.gallery-thumb { cursor:pointer; border-radius:8px; overflow:hidden; border:2px solid transparent; transition:0.2s; aspect-ratio:16/9; }
+.gallery-thumb:hover { border-color:var(--terracotta); }
+.gallery-thumb.selected { border-color:var(--terracotta); box-shadow:0 0 0 2px var(--terracotta); }
+.gallery-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+@media (max-width:600px) { .gallery-picker { grid-template-columns:repeat(3,1fr); } }
+</style>
 <div class="news-modal" id="appModal" onclick="if(event.target===this)closeAppModal()">
   <div class="news-modal-card" style="max-width:640px;">
     <button class="news-modal-close" onclick="closeAppModal()" aria-label="Bağla">×</button>
@@ -479,6 +490,20 @@ let pickedFile = null;
 let existingImagePath = null;
 let pendingExternalImage = null;
 
+// Preset news image gallery
+const GALLERY_IMAGES = [
+  { file: 'news-gallery/01-cisv-summer-camp.jpg', label: 'CISV yay düşərgəsi' },
+  { file: 'news-gallery/02-erasmus-esn.jpg', label: 'Erasmus tələbə qrupu' },
+  { file: 'news-gallery/03-university-students-portugal.jpg', label: 'Universitet tələbələri' },
+  { file: 'news-gallery/04-students-learning.jpg', label: 'Birlikdə öyrənən tələbələr' },
+  { file: 'news-gallery/05-workcamp-schenkenzell.jpg', label: 'Beynəlxalq könüllü düşərgəsi' },
+  { file: 'news-gallery/06-school-children-break.jpg', label: 'Məktəb uşaqları' },
+  { file: 'news-gallery/07-happy-kids.jpg', label: 'Xoşbəxt uşaqlar' },
+  { file: 'news-gallery/08-evs-volunteer.jpg', label: 'Avropa Könüllü Xidməti' },
+  { file: 'news-gallery/09-ymca-volunteering.jpg', label: 'Gənclər könüllülüyü' },
+  { file: 'news-gallery/10-student-wikipedia.jpg', label: 'Tələbə tədqiqatda' },
+];
+
 // ---- Auth ----
 supabase.auth.onAuthStateChange((_e, s) => {
   session = s;
@@ -498,7 +523,7 @@ window.doLogout = async function() {
   await supabase.auth.signOut();
 };
 function showLogin() { loginView.style.display='block'; dashView.style.display='none'; document.getElementById('appsView').style.display='none'; document.getElementById('analyticsView').style.display='none'; }
-function showDashboard() { loginView.style.display='none'; dashView.style.display='block'; document.getElementById('appsView').style.display='none'; document.getElementById('analyticsView').style.display='none'; loadAdminList(); }
+function showDashboard() { loginView.style.display='none'; dashView.style.display='block'; document.getElementById('appsView').style.display='none'; document.getElementById('analyticsView').style.display='none'; renderGallery(); loadAdminList(); }
 
 // ---- Password Change ----
 window.showPasswordChange = function() {
@@ -529,6 +554,10 @@ window.onImgPick = function(e) {
   const file = e.target.files[0];
   if (!file) return;
   pickedFile = file;
+  pendingExternalImage = null;
+  existingImagePath = null;
+  document.getElementById('galleryImageUrl').value = '';
+  document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('selected'));
   const reader = new FileReader();
   reader.onload = ev => {
     const prev = document.getElementById('imgPreview');
@@ -536,6 +565,28 @@ window.onImgPick = function(e) {
     prev.classList.remove('placeholder');
   };
   reader.readAsDataURL(file);
+};
+
+function renderGallery() {
+  const picker = document.getElementById('galleryPicker');
+  if (!picker) return;
+  picker.innerHTML = GALLERY_IMAGES.map(img => `
+    <div class="gallery-thumb" title="${img.label}" data-src="${img.file}" onclick="selectGalleryImage('${img.file}', this)">
+      <img src="${img.file}" alt="${img.label}" loading="lazy">
+    </div>
+  `).join('');
+}
+
+window.selectGalleryImage = function(url, el) {
+  document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  const prev = document.getElementById('imgPreview');
+  prev.src = url;
+  prev.classList.remove('placeholder');
+  document.getElementById('galleryImageUrl').value = url;
+  pickedFile = null;
+  existingImagePath = null;
+  pendingExternalImage = url;
 };
 
 // ---- Translate (client-side via MyMemory — uses the browser's fresh IP) ----
@@ -743,8 +794,15 @@ window.editNews = async function(id) {
   pendingExternalImage = data.external_image_url || null;
   pickedFile = null;
   const prev = document.getElementById('imgPreview');
+  const thumb = document.querySelector(`.gallery-thumb[data-src="${data.external_image_url || ''}"]`);
+  document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('selected'));
   if (data.image_path) { prev.src = publicImageUrl(data.image_path); prev.classList.remove('placeholder'); }
-  else if (data.external_image_url) { prev.src = data.external_image_url; prev.classList.remove('placeholder'); }
+  else if (data.external_image_url) {
+    prev.src = data.external_image_url;
+    prev.classList.remove('placeholder');
+    document.getElementById('galleryImageUrl').value = data.external_image_url;
+    if (thumb) thumb.classList.add('selected');
+  }
   else { prev.src=''; prev.classList.add('placeholder'); prev.alt='Şəkil yoxdur'; }
   document.getElementById('imgFile').value = '';
   document.getElementById('formTitle').textContent = 'Xəbəri redaktə et';
@@ -753,11 +811,12 @@ window.editNews = async function(id) {
 
 window.resetForm = function() {
   document.getElementById('editId').value = '';
-  ['title_az','body_az','title_en','body_en','image_alt_az','image_alt_en'].forEach(i => document.getElementById(i).value='');
+  ['title_az','body_az','title_en','body_en','image_alt_az','image_alt_en','galleryImageUrl'].forEach(i => document.getElementById(i).value='');
   document.getElementById('imgFile').value = '';
   const prev = document.getElementById('imgPreview');
   prev.src=''; prev.classList.add('placeholder'); prev.alt='Şəkil yoxdur';
   pickedFile = null; existingImagePath = null; pendingExternalImage = null;
+  document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('selected'));
   document.getElementById('formTitle').textContent = 'Yeni xəbər';
   document.getElementById('dateField').style.display = 'none';
   document.getElementById('publishedAt').value = '';
