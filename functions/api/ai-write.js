@@ -57,7 +57,7 @@ Output only the following JSON (no markdown, no extra commentary):
 `;
 
   try {
-    const aiRes = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
+    const aiRes = await env.AI.run('@cf/meta/llama-3-8b-instruct', {
       prompt,
       max_tokens: 1024,
       temperature: 0.6,
@@ -96,7 +96,7 @@ Azerbaijani title: """${title_az}"""
 Azerbaijani body: """${body_az}"""
 `;
 
-    const transRes = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
+    const transRes = await env.AI.run('@cf/meta/llama-3-8b-instruct', {
       prompt: transPrompt,
       max_tokens: 1024,
       temperature: 0.4,
