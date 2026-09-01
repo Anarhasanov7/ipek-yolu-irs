@@ -15,6 +15,13 @@ function jsonResponse(data, status = 200) {
 }
 
 function cleanText(s) {
+  if (!s) return '';
+  if (typeof s !== 'string') {
+    if (Array.isArray(s) && s[0]?.message?.content) s = s[0].message.content;
+    else if (s.response && typeof s.response === 'string') s = s.response;
+    else if (s.text && typeof s.text === 'string') s = s.text;
+    else s = JSON.stringify(s);
+  }
   return s.trim().replace(/^```\w*\n?|\n?```$/g, '').trim();
 }
 
