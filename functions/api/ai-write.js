@@ -59,18 +59,18 @@ export async function onRequestPost(context) {
   const chapters = Math.min(Math.max(parseInt(payload.chapters || 2, 10), 1), 5);
 
   const messages = [
-    { role: 'system', content: 'You are a concise news writer. You respond only with valid, compact JSON. Never add markdown, explanations, or any text outside the JSON object.' },
+    { role: 'system', content: 'You are a concise news writer. You respond only with valid, compact JSON. Never add markdown, explanations, or any text outside the JSON object. Use double quotes for keys and values. Do not use real line breaks inside string values.' },
     { role: 'user', content: `Write a short news article in Azerbaijani about this topic: "${topic}".
 The tone should be ${tone}.
 Write exactly ${chapters} short chapter(s) or paragraph(s). Keep it concise, like a real NGO news article.
-Return only this exact JSON structure, with no text before or after:
-{"title_az": "short catchy title in Azerbaijani", "body_az": "<p>chapter 1</p>\n<p>chapter 2</p>"}` }
+Return only this exact JSON structure, with no text before or after. Separate the body paragraphs with "||" (do not use <p> or newlines inside the JSON value):
+{"title_az": "short catchy title in Azerbaijani", "body_az": "first paragraph||second paragraph"}` }
   ];
 
   try {
     const aiRes = await env.AI.run('@cf/meta/llama-3.1-8b-instruct-fast', {
       messages,
-      max_tokens: 1024,
+      max_tokens: 2048,
       temperature: 0.6,
     });
 
@@ -85,14 +85,14 @@ Return only this exact JSON structure, with no text before or after:
 
     // Ensure body is wrapped in paragraphs
     if (body_az && !body_az.includes('<p>')) {
-      body_az = body_az.split(/\n\n+/).map(p => `<p>${p.trim()}</p>`).join('\n');
+      body_az = body_az.split(/\|\|/).map(p => `<p>${p.trim()}</p>`).join('\n');
     }
 
     // Translate title + body to English
     const transMessages = [
-      { role: 'system', content: 'You are a translator. You respond only with valid JSON. Never add markdown, explanations, or any text outside the JSON object.' },
-      { role: 'user', content: `Translate this Azerbaijani news text to English. Return only JSON:
-{"title_en": "...", "body_en": "..."}
+      { role: 'system', content: 'You are a translator. You respond only with valid JSON. Never add markdown, explanations, or any text outside the JSON object. Do not use real line breaks inside string values.' },
+      { role: 'user', content: `Translate this Azerbaijani news text to English. Return only JSON. Separate the body paragraphs with "||" (do not use <p> or newlines inside the JSON value):
+{"title_en": "...", "body_en": "first paragraph||second paragraph"}
 
 Azerbaijani title: """${title_az}"""
 Azerbaijani body: """${body_az}"""` }
@@ -100,7 +100,7 @@ Azerbaijani body: """${body_az}"""` }
 
     const transRes = await env.AI.run('@cf/meta/llama-3.1-8b-instruct-fast', {
       messages: transMessages,
-      max_tokens: 1024,
+      max_tokens: 2048,
       temperature: 0.4,
     });
 
@@ -110,7 +110,7 @@ Azerbaijani body: """${body_az}"""` }
     const title_en = cleanText(transParsed.title_en || '') || '[English translation pending]';
     let body_en = transParsed.body_en || '';
     if (body_en && !body_en.includes('<p>')) {
-      body_en = body_en.split(/\n\n+/).map(p => `<p>${p.trim()}</p>`).join('\n');
+      body_en = body_en.split(/\|\|/).map(p => `<p>${p.trim()}</p>`).join('\n');
     }
 
     const image_alt_az = `Xəbər şəkli: ${title_az}`;
