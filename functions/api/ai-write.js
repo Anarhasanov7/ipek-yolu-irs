@@ -18,6 +18,18 @@ function cleanText(s) {
   return s.trim().replace(/^```\w*\n?|\n?```$/g, '').trim();
 }
 
+function extractJson(s) {
+  // Try whole string first
+  try { return JSON.parse(s); } catch (e) {}
+  // Find first balanced { ... }
+  let depth = 0, start = -1;
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === '{') { if (depth === 0) start = i; depth++; }
+    else if (s[i] === '}') { depth = Math.max(0, depth - 1); if (depth === 0 && start !== -1) { try { return JSON.parse(s.slice(start, i + 1)); } catch (e) { start = -1; } } }
+  }
+  return null;
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -46,35 +58,26 @@ export async function onRequestPost(context) {
   const tone = (payload.tone || 'informative').trim();
   const chapters = Math.min(Math.max(parseInt(payload.chapters || 2, 10), 1), 5);
 
-  const prompt = `Write a short news article in Azerbaijani about this topic: "${topic}".
+  const messages = [
+    { role: 'system', content: 'You are a concise news writer. You respond only with valid, compact JSON. Never add markdown, explanations, or any text outside the JSON object.' },
+    { role: 'user', content: `Write a short news article in Azerbaijani about this topic: "${topic}".
 The tone should be ${tone}.
 Write exactly ${chapters} short chapter(s) or paragraph(s). Keep it concise, like a real NGO news article.
-Output only the following JSON (no markdown, no extra commentary):
-{
-  "title_az": "short catchy title in Azerbaijani",
-  "body_az": "<p>chapter 1</p>\n<p>chapter 2</p>..."
-}
-`;
+Return only this exact JSON structure, with no text before or after:
+{"title_az": "short catchy title in Azerbaijani", "body_az": "<p>chapter 1</p>\n<p>chapter 2</p>"}` }
+  ];
 
   try {
     const aiRes = await env.AI.run('@cf/meta/llama-3.1-8b-instruct-fast', {
-      prompt,
+      messages,
       max_tokens: 1024,
       temperature: 0.6,
     });
 
     const raw = cleanText(aiRes.response || '');
-    let parsed;
-    try {
-      parsed = JSON.parse(raw);
-    } catch (e) {
-      // Try to extract JSON from a larger block
-      const match = raw.match(/\{[\s\S]*\}/);
-      if (match) {
-        parsed = JSON.parse(match[0]);
-      } else {
-        throw new Error('Could not parse AI response as JSON');
-      }
+    const parsed = extractJson(raw);
+    if (!parsed) {
+      throw new Error('Could not parse AI response as JSON: ' + raw.slice(0, 200));
     }
 
     const title_az = parsed.title_az ? cleanText(parsed.title_az) : '';
@@ -86,30 +89,23 @@ Output only the following JSON (no markdown, no extra commentary):
     }
 
     // Translate title + body to English
-    const transPrompt = `Translate this Azerbaijani news text to English. Return only JSON:
-{
-  "title_en": "...",
-  "body_en": "..."
-}
+    const transMessages = [
+      { role: 'system', content: 'You are a translator. You respond only with valid JSON. Never add markdown, explanations, or any text outside the JSON object.' },
+      { role: 'user', content: `Translate this Azerbaijani news text to English. Return only JSON:
+{"title_en": "...", "body_en": "..."}
 
 Azerbaijani title: """${title_az}"""
-Azerbaijani body: """${body_az}"""
-`;
+Azerbaijani body: """${body_az}"""` }
+    ];
 
     const transRes = await env.AI.run('@cf/meta/llama-3.1-8b-instruct-fast', {
-      prompt: transPrompt,
+      messages: transMessages,
       max_tokens: 1024,
       temperature: 0.4,
     });
 
     const transRaw = cleanText(transRes.response || '');
-    let transParsed;
-    try {
-      transParsed = JSON.parse(transRaw);
-    } catch (e) {
-      const match = transRaw.match(/\{[\s\S]*\}/);
-      transParsed = match ? JSON.parse(match[0]) : {};
-    }
+    const transParsed = extractJson(transRaw) || {};
 
     const title_en = cleanText(transParsed.title_en || '') || '[English translation pending]';
     let body_en = transParsed.body_en || '';
