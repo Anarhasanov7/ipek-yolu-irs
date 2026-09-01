@@ -38,14 +38,12 @@ async function trackPageView(request) {
   const url = new URL(request.url);
   const pathname = url.pathname;
 
-  // Skip static assets, admin, API
   if (STATIC_EXTS.test(pathname)) return 'skip-static';
   if (pathname.startsWith('/admin') || pathname.startsWith('/api/')) return 'skip-admin';
 
   const ua = request.headers.get('User-Agent') || '';
   if (BOT_UA.test(ua)) return 'skip-bot';
 
-  // Only track HTML pages
   const accept = request.headers.get('Accept') || '';
   if (!accept.includes('text/html') && pathname.includes('.')) return 'skip-nonhtml';
 
@@ -82,23 +80,14 @@ async function trackPageView(request) {
 }
 
 export async function onRequest(context) {
-  const { request, ctx } = context;
-
-  // Track page view (fire-and-forget, but also set debug header)
+  // Synchronous tracking for debugging — add result to response header
   let trackResult = 'none';
   try {
-    if (ctx && ctx.waitUntil) {
-      ctx.waitUntil(
-        trackPageView(request)
-          .then(r => { trackResult = r; })
-          .catch(e => { trackResult = 'error: ' + e.message; })
-      );
-    }
+    trackResult = await trackPageView(context.request);
   } catch (e) {
-    trackResult = 'catch: ' + e.message;
+    trackResult = 'error: ' + e.message;
   }
 
-  // Pass through to static content, add debug header
   const response = await context.next();
   response.headers.set('X-Track-Status', trackResult);
   return response;
