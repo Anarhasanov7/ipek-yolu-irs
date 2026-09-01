@@ -221,6 +221,28 @@ body { background: var(--bg); }
       <input type="datetime-local" id="publishedAt">
     </div>
 
+    <!-- AI Writer -->
+    <div class="field" style="background:var(--bg-2);padding:16px;border-radius:var(--radius);margin-bottom:20px;">
+      <label>🤖 AI ilə yazdır</label>
+      <p class="hint" style="margin:0 0 10px;">Mövzu və ya qaynaq qeyd edin, AI qısa 2-3 bölümlük xəbər yazısı və ingiliscə tərcüməsini avtomatik hazırlasın.</p>
+      <input type="text" id="aiTopic" placeholder="Məsələn: GTDİB-in yeni layihəsi haqqında..." style="margin-bottom:10px;">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
+        <select id="aiChapters" class="admin-btn" style="padding:10px 14px;">
+          <option value="2">2 bölüm</option>
+          <option value="3" selected>3 bölüm</option>
+          <option value="4">4 bölüm</option>
+          <option value="5">5 bölüm</option>
+        </select>
+        <select id="aiTone" class="admin-btn" style="padding:10px 14px;">
+          <option value="informative" selected>Məlumat xarakterli</option>
+          <option value="inspirational">İlhamverici</option>
+          <option value="formal">Rəsmi</option>
+        </select>
+        <button class="admin-btn" onclick="generateWithAI()" id="aiWriteBtn">✨ AI ilə yaz</button>
+        <span class="loading-inline" id="aiWriteStatus"></span>
+      </div>
+    </div>
+
     <div class="field">
       <label>Başlıq (Azərbaycanca) <span class="hint">*</span></label>
       <input type="text" id="title_az" placeholder="Xəbərin başlığı">
@@ -529,6 +551,42 @@ async function mmTranslate(text, source='az', target='en') {
   }
   return t;
 }
+
+window.generateWithAI = async function() {
+  const topic = document.getElementById('aiTopic').value.trim();
+  if (!topic) { toast('Zəhmət olmasa mövzu/qaynaq daxil edin', 'err'); return; }
+  const chapters = document.getElementById('aiChapters').value;
+  const tone = document.getElementById('aiTone').value;
+  const btn = document.getElementById('aiWriteBtn');
+  const status = document.getElementById('aiWriteStatus');
+  btn.disabled = true;
+  status.textContent = 'AI yazır…';
+  try {
+    const res = await fetch('/api/ai-write', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Token': 'gtdib-admin-analytics-2026'
+      },
+      body: JSON.stringify({ topic, chapters, tone })
+    });
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || 'AI yazmadı');
+    document.getElementById('title_az').value = data.title_az || '';
+    document.getElementById('body_az').value = data.body_az || '';
+    document.getElementById('title_en').value = data.title_en || '';
+    document.getElementById('body_en').value = data.body_en || '';
+    document.getElementById('image_alt_az').value = data.image_alt_az || '';
+    document.getElementById('image_alt_en').value = data.image_alt_en || '';
+    status.textContent = 'Yazıldı ✓';
+    setTimeout(() => status.textContent = '', 3000);
+    toast('AI mətni hazırladı — şəkli əlavə edib yoxlayın', 'ok');
+  } catch (e) {
+    status.textContent = 'Xəta: ' + e.message;
+    toast('AI yazı xətası — əllə doldurun', 'err');
+  }
+  btn.disabled = false;
+};
 
 window.translateAll = async function() {
   const az = document.getElementById('body_az').value.trim();
