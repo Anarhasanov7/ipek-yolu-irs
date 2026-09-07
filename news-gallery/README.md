@@ -1,6 +1,6 @@
 # News Image Gallery
 
-This folder contains 10 stock images used as preset options in the news admin panel.
+This folder contains 15 stock images used as preset options in the news admin panel.
 All images are sourced from Wikimedia Commons and are freely licensed for reuse.
 
 ## Images
@@ -54,6 +54,31 @@ All images are sourced from Wikimedia Commons and are freely licensed for reuse.
     Author: Kallie Hagel
     License: CC BY-SA 4.0
     Source: https://commons.wikimedia.org/wiki/File:University_student_working_on_a_new_Wikipedia_aticle.jpg
+
+11. `11-youth-volunteers-workshop.jpg` — Wikimania Youth Volunteer Workshop, bonding activity, Singapore, 2023
+    Author: NYAA Council
+    License: CC BY-SA 4.0
+    Source: https://commons.wikimedia.org/wiki/File:Fun_Energiser_Game_01.jpg
+
+12. `12-azerbaijan-youth-wikicamp.jpg` — Young Wikipedians Wikicamp, Lənkəran, Azerbaijan, 2023
+    Author: NMW03
+    License: CC BY-SA 4.0
+    Source: https://commons.wikimedia.org/wiki/File:2023_Young_Wikipedians_Wikicamp_Azerbaijan_379.jpg
+
+13. `13-happy-students-group.jpg` — Happy students of KNUST SHS, Ghana, 2024
+    Author: Asamoah Daniel Kwame Oware
+    License: CC0 1.0 Universal (Public Domain)
+    Source: https://commons.wikimedia.org/wiki/File:KNUST_Shs.jpg
+
+14. `14-smiling-interns.jpg` — Smiling Society of Physics Students interns at a Wikipedia Edit-a-thon, 2023
+    Author: MJ Keller
+    License: CC BY-SA 4.0
+    Source: https://commons.wikimedia.org/wiki/File:SPS_Interns_at_a_Wikipedia_Edit-a-thon.jpg
+
+15. `15-happy-people-community.jpg` — Happy people in Papua New Guinea, community gathering
+    Author: eGuide Travel
+    License: CC BY 2.0
+    Source: https://commons.wikimedia.org/wiki/File:Happy_people_in_PNG_(6357513523).jpg
 
 ## Usage
 
