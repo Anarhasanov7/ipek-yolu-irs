@@ -97,7 +97,7 @@ function isBadImage(url) {
   const bad = [
     'googleusercontent.com/j6_cofbogx', // Google News placeholder
     'logo', 'icon', 'avatar', 'favicon',
-    'site-featured', 'default-image', 'placeholder',
+    'site-featured', 'default-image', 'default_image', 'placeholder',
     'og-image-default', 'og-default', 'default-og',
     'gstatic.com/gnews', // Google News logo
     'static/uzdaily', 'static/logo', 'banner.jpg',
@@ -105,8 +105,42 @@ function isBadImage(url) {
     'yandex.ru/watch', 'mc.yandex', // tracking pixels
     'pixel', 'tracker', 'analytics',
     '1x1', 'spacer.gif', 'blank.gif',
+    'itprod/default', // India Today default placeholder
   ];
   return bad.some(b => u.includes(b));
+}
+
+// Curated Unsplash photos for fallback images (by category).
+// Used when no real og:image can be found, so articles never publish with a blank card.
+// All URLs verified to return HTTP 200.
+const FALLBACK_IMAGES = {
+  erasmus: [
+    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&h=675&fit=crop', // students collaborating
+    'https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=1200&h=675&fit=crop', // students together
+    'https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1200&h=675&fit=crop', // diverse students
+    'https://images.unsplash.com/photo-1760111085279-6c4b6d831acc?w=1200&h=675&fit=crop', // university campus archway
+  ],
+  grants: [
+    'https://images.unsplash.com/photo-1754444239479-d33f23129b24?w=1200&h=675&fit=crop', // Brussels EU flags
+    'https://images.unsplash.com/photo-1754444236075-ae9737ce4ebb?w=1200&h=675&fit=crop', // European Parliament
+    'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=675&fit=crop', // handshake / agreement
+  ],
+  edu: [
+    'https://images.unsplash.com/photo-1769905226600-1d447fe7d020?w=1200&h=675&fit=crop', // graduates in auditorium
+    'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=1200&h=675&fit=crop', // graduation/library
+    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&h=675&fit=crop', // students collaborating
+    'https://images.unsplash.com/photo-1760111085279-6c4b6d831acc?w=1200&h=675&fit=crop', // university campus archway
+  ],
+};
+
+// Pick a fallback image for an article based on its category, avoiding
+// images already used by existing articles.
+function pickFallbackImage(category, existingImages) {
+  const pool = FALLBACK_IMAGES[category] || FALLBACK_IMAGES.edu;
+  for (const img of pool) {
+    if (!existingImages.has(img.toLowerCase())) return img;
+  }
+  return pool[0]; // all used up — reuse first rather than going blank
 }
 
 // Fetch og:image from an article page
@@ -413,7 +447,9 @@ async function main() {
     if (img) {
       console.log(`  ✓ Image found: ${img.slice(0, 80)}`);
     } else {
-      console.log('  ⚠ No image found, publishing without image');
+      // Fallback: use a curated Unsplash image so the card is never blank
+      imageUrl = pickFallbackImage(item.category, existingImages);
+      console.log(`  ⚠ No real image found, using fallback: ${imageUrl.slice(0, 80)}`);
     }
     break;
   }
@@ -457,7 +493,7 @@ async function main() {
   }
 
   console.log(`Published successfully: ${insertData[0]?.title_az || 'unknown'}`);
-  console.log(`Image: ${imageUrl ? 'yes (external)' : 'none'}`);
+  console.log(`Image: ${imageUrl ? 'yes' : 'none'}`);
   console.log('=== Auto-News Complete ===');
 }
 
