@@ -16,6 +16,11 @@
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script>var t=localStorage.getItem("gtdib-theme");if(t==="light")document.documentElement.setAttribute("data-theme","light");</script>
+<style>
+.news-source-badge { display:inline-block; margin-left:8px; padding:2px 10px; border-radius:100px; font-size:10px; font-weight:600; letter-spacing:.3px; background:rgba(74,108,247,.12); color:var(--indigo,#4a6cf7); border:1px solid rgba(74,108,247,.25); vertical-align:middle; }
+.media-archive-note { max-width:720px; margin:0 auto 32px; text-align:center; color:var(--muted,#8b8fa3); font-size:14px; line-height:1.6; }
+#media-list { padding-top:20px; border-top:1px solid var(--border,rgba(255,255,255,.08)); }
+</style>
 </head>
 <body>
 
@@ -59,6 +64,12 @@
   </div>
 </section>
 
+<section id="media-list" style="display:none;">
+  <h2 class="section-title reveal" style="text-align:center;">GTDIB in the media</h2>
+  <p class="media-archive-note reveal">The articles below were published about GTDIB's work by independent media outlets. This section is a media archive — each entry links to the original publication.</p>
+  <div id="media-grid" class="news-grid"></div>
+</section>
+
 <div class="news-modal" id="newsModal" onclick="if(event.target===this)closeNewsModal()">
   <div class="news-modal-card">
     <button class="news-modal-close" onclick="closeNewsModal()" aria-label="Close">×</button>
@@ -89,11 +100,13 @@ import { supabase, publicImageUrl, formatDate } from '../supabase-config.js?v=3'
 
 const grid = document.getElementById('news-grid');
 const empty = document.getElementById('news-empty');
+const mediaSection = document.getElementById('media-list');
+const mediaGrid = document.getElementById('media-grid');
 
 async function loadNews() {
   const { data, error } = await supabase
     .from('news')
-    .select('id, title_en, title_az, body_en, body_az, image_path, external_image_url, image_alt_en, image_alt_az, published_at')
+    .select('id, title_en, title_az, body_en, body_az, image_path, external_image_url, image_alt_en, image_alt_az, published_at, source_url, kind')
     .eq('is_published', true)
     .order('published_at', { ascending: false });
 
@@ -106,11 +119,26 @@ async function loadNews() {
     empty.style.display = 'block';
     return;
   }
-  grid.innerHTML = data.map(n => newsCard(n)).join('');
+  const own = data.filter(n => n.kind !== 'media');
+  const media = data.filter(n => n.kind === 'media');
+  if (own.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+  } else {
+    grid.innerHTML = own.map(n => newsCard(n)).join('');
+  }
+  if (media.length > 0) {
+    mediaSection.style.display = 'block';
+    mediaGrid.innerHTML = media.map(n => newsCard(n, true)).join('');
+  }
   if (window.revealInit) window.revealInit();
 }
 
-function newsCard(n) {
+function outletName(url) {
+  try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return ''; }
+}
+
+function newsCard(n, isMedia) {
   const title = n.title_en || n.title_az || '';
   const body = n.body_en || n.body_az || '';
   const alt = n.image_alt_en || n.image_alt_az || title;
@@ -121,11 +149,14 @@ function newsCard(n) {
   const date = formatDate(n.published_at, 'en-GB');
   const preview = stripHtml(body).slice(0, 180);
   const langBadge = !n.title_en ? '<span class="news-lang-badge">AZ</span>' : '';
+  const srcBadge = isMedia && n.source_url
+    ? `<span class="news-source-badge">${escapeHtml(outletName(n.source_url))}</span>`
+    : '';
   return `
     <article class="card news-card reveal" onclick="location.href='article.html?id=${n.id}'">
       <div class="news-card-img">${img}</div>
       <div class="news-card-body">
-        <div class="news-card-date">${date} ${langBadge}</div>
+        <div class="news-card-date">${date} ${langBadge} ${srcBadge}</div>
         <h3>${escapeHtml(title)}</h3>
         <p>${escapeHtml(preview)}${body && body.length > 180 ? '…' : ''}</p>
         <span class="news-card-more">Read more →</span>

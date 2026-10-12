@@ -16,6 +16,11 @@
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script>var t=localStorage.getItem("gtdib-theme");if(t==="light")document.documentElement.setAttribute("data-theme","light");</script>
+<style>
+.news-source-badge { display:inline-block; margin-left:8px; padding:2px 10px; border-radius:100px; font-size:10px; font-weight:600; letter-spacing:.3px; background:rgba(74,108,247,.12); color:var(--indigo,#4a6cf7); border:1px solid rgba(74,108,247,.25); vertical-align:middle; }
+.media-archive-note { max-width:720px; margin:0 auto 32px; text-align:center; color:var(--muted,#8b8fa3); font-size:14px; line-height:1.6; }
+#media-list { padding-top:20px; border-top:1px solid var(--border,rgba(255,255,255,.08)); }
+</style>
 </head>
 <body>
 
@@ -59,6 +64,12 @@
   </div>
 </section>
 
+<section id="media-list" style="display:none;">
+  <h2 class="section-title reveal" style="text-align:center;">Mediada bizim haqqımızda</h2>
+  <p class="media-archive-note reveal">Aşağıdakı yazılar müstəqil media subyektlərində GTDİB-in fəaliyyəti haqqında yayımlanıb. Bu bölmə media arxividir — orijinal məqaləyə keçid hər yazının içində göstərilir.</p>
+  <div id="media-grid" class="news-grid"></div>
+</section>
+
 <!-- NEWS MODAL -->
 <div class="news-modal" id="newsModal" onclick="if(event.target===this)closeNewsModal()">
   <div class="news-modal-card">
@@ -90,11 +101,13 @@ import { supabase, publicImageUrl, formatDate } from './supabase-config.js?v=3';
 
 const grid = document.getElementById('news-grid');
 const empty = document.getElementById('news-empty');
+const mediaSection = document.getElementById('media-list');
+const mediaGrid = document.getElementById('media-grid');
 
 async function loadNews() {
   const { data, error } = await supabase
     .from('news')
-    .select('id, title_az, body_az, image_path, external_image_url, image_alt_az, published_at')
+    .select('id, title_az, body_az, image_path, external_image_url, image_alt_az, published_at, source_url, kind')
     .eq('is_published', true)
     .order('published_at', { ascending: false });
 
@@ -107,22 +120,40 @@ async function loadNews() {
     empty.style.display = 'block';
     return;
   }
-  grid.innerHTML = data.map(n => newsCard(n)).join('');
+  const own = data.filter(n => n.kind !== 'media');
+  const media = data.filter(n => n.kind === 'media');
+  if (own.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+  } else {
+    grid.innerHTML = own.map(n => newsCard(n)).join('');
+  }
+  if (media.length > 0) {
+    mediaSection.style.display = 'block';
+    mediaGrid.innerHTML = media.map(n => newsCard(n, true)).join('');
+  }
   if (window.revealInit) window.revealInit();
 }
 
-function newsCard(n) {
+function outletName(url) {
+  try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return ''; }
+}
+
+function newsCard(n, isMedia) {
   const imgSrc = n.image_path ? publicImageUrl(n.image_path) : (n.external_image_url || '');
   const img = imgSrc
     ? `<img src="${imgSrc}" alt="${escapeHtml(n.image_alt_az || n.title_az)}" loading="lazy">`
     : '';
   const date = formatDate(n.published_at, 'az-AZ');
   const preview = stripHtml(n.body_az).slice(0, 180);
+  const badge = isMedia && n.source_url
+    ? `<span class="news-source-badge">${escapeHtml(outletName(n.source_url))}</span>`
+    : '';
   return `
     <article class="card news-card reveal" onclick="location.href='article.html?id=${n.id}'">
       <div class="news-card-img">${img}</div>
       <div class="news-card-body">
-        <div class="news-card-date">${date}</div>
+        <div class="news-card-date">${date} ${badge}</div>
         <h3>${escapeHtml(n.title_az)}</h3>
         <p>${escapeHtml(preview)}${n.body_az && n.body_az.length > 180 ? '…' : ''}</p>
         <span class="news-card-more">Davamını oxu →</span>

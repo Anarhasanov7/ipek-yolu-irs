@@ -58,6 +58,7 @@
     <h1 id="artTitle" style="font-family:'Space Grotesk';font-size:28px;line-height:1.3;margin:8px 0 24px;"></h1>
     <img id="artImg" src="" alt="" style="width:100%;border-radius:16px;margin-bottom:24px;display:none;">
     <div id="artText" class="news-modal-body" style="font-size:16px;line-height:1.8;color:var(--text);"></div>
+    <div id="artSource" style="display:none;margin-top:28px;padding:16px 20px;border-radius:12px;border:1px solid var(--border);background:var(--surface,#14161f);font-size:14px;line-height:1.6;"></div>
     <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);">
       <a href="news.html" style="color:var(--terracotta);text-decoration:none;">← Bütün xəbərlər</a>
     </div>
@@ -149,6 +150,14 @@ async function loadArticle() {
   document.getElementById('artDate').textContent = formatDate(data.published_at, 'az-AZ');
   document.getElementById('artTitle').textContent = data.title_az;
   document.getElementById('artText').innerHTML = data.body_az;
+
+  if (data.source_url) {
+    const host = (() => { try { return new URL(data.source_url).hostname.replace(/^www\./, ''); } catch { return ''; } })();
+    const srcBox = document.getElementById('artSource');
+    srcBox.innerHTML = `📰 <strong>Media arxivi</strong> — bu yazı ilk dəfə <strong>${host}</strong> saytında yayımlanıb. ` +
+      `<a href="${data.source_url}" target="_blank" rel="noopener" style="color:var(--terracotta);">Orijinal məqaləni oxu →</a>`;
+    srcBox.style.display = 'block';
+  }
 
   if (imgSrc) {
     const img = document.getElementById('artImg');
