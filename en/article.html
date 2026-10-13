@@ -58,6 +58,7 @@
     <h1 id="artTitle" style="font-family:'Space Grotesk';font-size:28px;line-height:1.3;margin:8px 0 24px;"></h1>
     <img id="artImg" src="" alt="" style="width:100%;border-radius:16px;margin-bottom:24px;display:none;">
     <div id="artText" class="news-modal-body" style="font-size:16px;line-height:1.8;color:var(--text);"></div>
+    <div id="artSource" style="display:none;margin-top:28px;padding:16px 20px;border-radius:12px;border:1px solid var(--border);background:var(--surface,#14161f);font-size:14px;line-height:1.6;"></div>
     <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);">
       <a href="news.html" style="color:var(--terracotta);text-decoration:none;">← All news</a>
     </div>
@@ -79,13 +80,18 @@
 </footer>
 
 <script src="../script.js?v=12"></script>
+<script src="../news-data.js?v=1"></script>
 <script type="module">
 import { supabase, publicImageUrl, formatDate } from '../supabase-config.js?v=3';
 
 const params = new URLSearchParams(location.search);
 const articleId = params.get('id');
+const mediaIdx = params.get('m');
 
 async function loadArticle() {
+  if (mediaIdx !== null) {
+    return renderMedia(parseInt(mediaIdx, 10));
+  }
   if (!articleId) {
     showError();
     return;
@@ -163,6 +169,28 @@ async function loadArticle() {
   // Update AZ lang link
   document.getElementById('langLink').href = `/article.html?id=${data.id}`;
 
+  document.getElementById('article-loading').style.display = 'none';
+  document.getElementById('article-body').style.display = 'block';
+}
+
+// Media archive entries are static — render without Supabase.
+function renderMedia(i) {
+  const m = (window.GTDIB_STATIC_MEDIA || [])[i];
+  if (!m) return showError();
+  document.title = m.te + ' — GTDIB';
+  document.getElementById('artDate').textContent = formatDate(m.d, 'en-GB');
+  document.getElementById('artTitle').textContent = m.te || m.t;
+  document.getElementById('artText').innerHTML = m.b || '';
+  const img = document.getElementById('artImg');
+  img.src = '../' + m.i;
+  img.alt = m.te || m.t;
+  img.style.display = 'block';
+  const srcBox = document.getElementById('artSource');
+  const host = (() => { try { return new URL(m.u).hostname.replace(/^www\./, ''); } catch { return m.o; } })();
+  srcBox.innerHTML = `📰 <strong>Media archive</strong> — this article was first published on <strong>${host}</strong>. ` +
+    `<a href="${m.u}" target="_blank" rel="noopener" style="color:var(--terracotta);">Read the original →</a>`;
+  srcBox.style.display = 'block';
+  document.getElementById('langLink').href = `/article.html?m=${i}`;
   document.getElementById('article-loading').style.display = 'none';
   document.getElementById('article-body').style.display = 'block';
 }

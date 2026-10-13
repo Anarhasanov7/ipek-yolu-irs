@@ -80,13 +80,18 @@
 </footer>
 
 <script src="script.js?v=12"></script>
+<script src="news-data.js?v=1"></script>
 <script type="module">
 import { supabase, publicImageUrl, formatDate } from './supabase-config.js?v=3';
 
 const params = new URLSearchParams(location.search);
 const articleId = params.get('id');
+const mediaIdx = params.get('m');
 
 async function loadArticle() {
+  if (mediaIdx !== null) {
+    return renderMedia(parseInt(mediaIdx, 10));
+  }
   if (!articleId) {
     showError();
     return;
@@ -169,6 +174,28 @@ async function loadArticle() {
   // Update EN lang link
   document.getElementById('langLink').href = `/en/article.html?id=${data.id}`;
 
+  document.getElementById('article-loading').style.display = 'none';
+  document.getElementById('article-body').style.display = 'block';
+}
+
+// Media archive entries are static — render without Supabase.
+function renderMedia(i) {
+  const m = (window.GTDIB_STATIC_MEDIA || [])[i];
+  if (!m) return showError();
+  document.title = m.t + ' — GTDİB';
+  document.getElementById('artDate').textContent = formatDate(m.d, 'az-AZ');
+  document.getElementById('artTitle').textContent = m.t;
+  document.getElementById('artText').innerHTML = m.b || '';
+  const img = document.getElementById('artImg');
+  img.src = m.i;
+  img.alt = m.t;
+  img.style.display = 'block';
+  const srcBox = document.getElementById('artSource');
+  const host = (() => { try { return new URL(m.u).hostname.replace(/^www\./, ''); } catch { return m.o; } })();
+  srcBox.innerHTML = `📰 <strong>Media arxivi</strong> — bu yazı ilk dəfə <strong>${host}</strong> saytında yayımlanıb. ` +
+    `<a href="${m.u}" target="_blank" rel="noopener" style="color:var(--terracotta);">Orijinal məqaləni oxu →</a>`;
+  srcBox.style.display = 'block';
+  document.getElementById('langLink').href = `/en/article.html?m=${i}`;
   document.getElementById('article-loading').style.display = 'none';
   document.getElementById('article-body').style.display = 'block';
 }

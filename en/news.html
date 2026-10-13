@@ -105,10 +105,10 @@ const mediaSection = document.getElementById('media-list');
 const mediaGrid = document.getElementById('media-grid');
 
 const STATIC_NEWS = (window.GTDIB_STATIC_NEWS || []).map(n => ({ ...n, _static: true }));
-const STATIC_MEDIA = (window.GTDIB_STATIC_MEDIA || []).map(m => ({
-  title_en: m.te, title_az: m.t, body_en: '', body_az: '', published_at: m.d,
+const STATIC_MEDIA = (window.GTDIB_STATIC_MEDIA || []).map((m, i) => ({
+  title_en: m.te, title_az: m.t, body_en: '', body_az: m.b || '', published_at: m.d,
   source_url: m.u, external_image_url: '../' + m.i, image_alt_en: m.te,
-  image_alt_az: m.t, kind: 'media', _static: true,
+  image_alt_az: m.t, kind: 'media', _static: true, _midx: i,
 }));
 
 async function loadNews() {
@@ -143,8 +143,8 @@ async function loadNews() {
 }
 
 function cardClick(n) {
-  if (n._static && n.kind === 'media' && n.source_url) {
-    return `window.open('${escapeHtml(n.source_url)}','_blank','noopener')`;
+  if (n._static && n.kind === 'media') {
+    return `location.href='article.html?m=${n._midx}'`;
   }
   return `openNewsModal('${n.id}')`;
 }
