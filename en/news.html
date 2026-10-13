@@ -95,6 +95,7 @@
 </footer>
 
 <script src="../script.js?v=12"></script>
+<script src="../news-data.js?v=1"></script>
 <script type="module">
 import { supabase, publicImageUrl, formatDate } from '../supabase-config.js?v=3';
 
@@ -103,24 +104,31 @@ const empty = document.getElementById('news-empty');
 const mediaSection = document.getElementById('media-list');
 const mediaGrid = document.getElementById('media-grid');
 
-async function loadNews() {
-  const { data, error } = await supabase
-    .from('news')
-    .select('id, title_en, title_az, body_en, body_az, image_path, external_image_url, image_alt_en, image_alt_az, published_at, source_url, kind')
-    .eq('is_published', true)
-    .order('published_at', { ascending: false });
+const STATIC_NEWS = (window.GTDIB_STATIC_NEWS || []).map(n => ({ ...n, _static: true }));
+const STATIC_MEDIA = (window.GTDIB_STATIC_MEDIA || []).map(m => ({
+  title_en: m.te, title_az: m.t, body_en: '', body_az: '', published_at: m.d,
+  source_url: m.u, external_image_url: '../' + m.i, image_alt_en: m.te,
+  image_alt_az: m.t, kind: 'media', _static: true,
+}));
 
-  if (error) {
-    grid.innerHTML = '<div class="news-loading">Failed to load news.</div>';
-    return;
+async function loadNews() {
+  let data;
+  try {
+    const res = await supabase
+      .from('news')
+      .select('id, title_en, title_az, body_en, body_az, image_path, external_image_url, image_alt_en, image_alt_az, published_at, source_url, kind')
+      .eq('is_published', true)
+      .order('published_at', { ascending: false });
+    if (res.error) throw res.error;
+    data = res.data;
+  } catch {
+    data = null;
   }
-  if (!data || data.length === 0) {
-    grid.style.display = 'none';
-    empty.style.display = 'block';
-    return;
-  }
+  if (!data || data.length === 0) data = STATIC_NEWS;
+
   const own = data.filter(n => n.kind !== 'media');
-  const media = data.filter(n => n.kind === 'media');
+  let media = data.filter(n => n.kind === 'media');
+  if (media.length === 0) media = STATIC_MEDIA;
   if (own.length === 0) {
     grid.style.display = 'none';
     empty.style.display = 'block';
@@ -132,6 +140,13 @@ async function loadNews() {
     mediaGrid.innerHTML = media.map(n => newsCard(n, true)).join('');
   }
   if (window.revealInit) window.revealInit();
+}
+
+function cardClick(n) {
+  if (n._static && n.kind === 'media' && n.source_url) {
+    return `window.open('${escapeHtml(n.source_url)}','_blank','noopener')`;
+  }
+  return `openNewsModal('${n.id}')`;
 }
 
 function outletName(url) {
@@ -152,8 +167,9 @@ function newsCard(n, isMedia) {
   const srcBadge = isMedia && n.source_url
     ? `<span class="news-source-badge">${escapeHtml(outletName(n.source_url))}</span>`
     : '';
+  const click = n._static ? cardClick(n) : `location.href='article.html?id=${n.id}'`;
   return `
-    <article class="card news-card reveal" onclick="location.href='article.html?id=${n.id}'">
+    <article class="card news-card reveal" onclick="${click}">
       <div class="news-card-img">${img}</div>
       <div class="news-card-body">
         <div class="news-card-date">${date} ${langBadge} ${srcBadge}</div>
@@ -165,10 +181,14 @@ function newsCard(n, isMedia) {
 }
 
 window.openNewsModal = async function(id) {
-  const { data } = await supabase
-    .from('news')
-    .select('title_en, title_az, body_en, body_az, image_path, external_image_url, image_alt_en, image_alt_az, published_at')
-    .eq('id', id).single();
+  let data = STATIC_NEWS.find(n => String(n.id) === String(id));
+  if (!data) {
+    const res = await supabase
+      .from('news')
+      .select('title_en, title_az, body_en, body_az, image_path, external_image_url, image_alt_en, image_alt_az, published_at')
+      .eq('id', id).single();
+    data = res.data;
+  }
   if (!data) return;
   const title = data.title_en || data.title_az || '';
   const body = data.body_en || data.body_az || '';
