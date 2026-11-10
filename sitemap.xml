@@ -197,4 +197,20 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://gtdib.org/layiheler/gizli-tehlike-askar-umid</loc>
+    <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/layiheler/gizli-tehlike-askar-umid"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/layiheler/gizli-tehlike-askar-umid"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/layiheler/gizli-tehlike-askar-umid"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gtdib.org/en/layiheler/gizli-tehlike-askar-umid</loc>
+    <xhtml:link rel="alternate" hreflang="az" href="https://gtdib.org/layiheler/gizli-tehlike-askar-umid"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://gtdib.org/en/layiheler/gizli-tehlike-askar-umid"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://gtdib.org/layiheler/gizli-tehlike-askar-umid"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
